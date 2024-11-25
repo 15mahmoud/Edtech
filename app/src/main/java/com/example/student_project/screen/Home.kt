@@ -57,7 +57,9 @@ import androidx.navigation.NavController
 import com.example.student_project.R
 import com.example.student_project.screen.component.BottomNavItem
 import com.example.student_project.screen.component.SubjectRow
+import com.example.student_project.screen.component.TopLiveTutorItem
 import com.example.student_project.screen.component.TrendingCourseRow
+import com.example.student_project.ui.theme.lightGray
 import com.example.student_project.ui.theme.lightOrange
 
 
@@ -98,6 +100,19 @@ fun HomeScreen(navController: NavController) {
             12.99,
             R.drawable.star_filled,
             4.7
+        )
+    )
+    val topLiveMentorList = listOf(
+        TopLiveTutorItem(
+            "Albert Flores",
+            "Math 116",
+            R.drawable.mentor_img
+        ),
+        TopLiveTutorItem(
+            "Darrell Steward",
+            "Bio 120",
+            R.drawable.second_mentor_img
+
         )
     )
     Scaffold(
@@ -151,8 +166,9 @@ fun HomeScreen(navController: NavController) {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Live Subject Tutoring",
+                        fontSize = 15.sp,
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(top = 15.dp)
+                        modifier = Modifier.padding(top = 15.dp, start = 7.dp)
                     )
 
                     Button(
@@ -214,8 +230,9 @@ fun HomeScreen(navController: NavController) {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Trending Courses",
+                        fontSize = 15.sp,
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(top = 15.dp)
+                        modifier = Modifier.padding(top = 15.dp, start = 7.dp)
                     )
 
                     Button(
@@ -245,7 +262,7 @@ fun HomeScreen(navController: NavController) {
                             modifier = Modifier
 
                                 .width(200.dp)
-                                .height(266.dp)
+                                .height(200.dp)
                                 .padding(2.dp)
                                 .clip(RoundedCornerShape(15.dp))
                                 .clickable {
@@ -268,7 +285,7 @@ fun HomeScreen(navController: NavController) {
                                 modifier = Modifier
                                     .padding(start = 7.dp)
                             )
-                            Row {
+                            Row(modifier = Modifier.padding(top = 5.dp)) {
 
                                 Text(
                                     text = "$" + course.price.toString(),
@@ -285,11 +302,10 @@ fun HomeScreen(navController: NavController) {
                                     Modifier
                                         .width(12.dp)
                                         .height(12.dp)
-
                                 )
                                 Text(
                                     text = course.rankingNumber.toString(),
-                                    fontSize = 12.sp, modifier = Modifier.padding(start = 7.dp)
+                                    fontSize = 12.sp, modifier = Modifier.padding(start = 4.dp)
                                 )
                             }
 
@@ -298,7 +314,93 @@ fun HomeScreen(navController: NavController) {
 
                     }
 
-                }//next section
+                }
+                Text(
+                    modifier = Modifier.padding(start = 7.dp, bottom = 5.dp),
+                    text = "Weekly TopLive Tutors ",
+                    fontSize = 15.sp,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                ) {
+                    //we will change this subject list with another list we will get from api
+                    //we suppose to modify this size to match all device
+                    itemsIndexed(topLiveMentorList) { index, mentor ->
+                        Box(
+                            modifier = Modifier
+                                .width(140.dp)
+                                .height(136.dp)
+                                .padding(5.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .border(
+                                    width = 2.dp,
+                                    color = lightGray,
+                                    shape = RoundedCornerShape(14.dp)
+                                )
+                                .background(Color.White)
+                                .clickable {
+                                    //here i will put code to navigate to the disired course
+                                },
+
+                            ) {
+                            Image(
+                                painter = painterResource(id = mentor.tutorImage),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .width(60.dp)
+                                    .height(60.dp)
+                                    .padding(10.dp)
+                                    .align(alignment = Alignment.TopCenter)
+                            )
+                            Text(
+                                text = mentor.nameOfTutor,
+                                style = MaterialTheme.typography.headlineLarge,
+                                fontSize = 15.sp,
+                                modifier = Modifier
+                                    .padding(top = 25.dp)
+                                    .align(alignment = Alignment.Center)
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(bottom = 25.dp),
+                                text = mentor.theCourseName,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.Gray
+                            )
+
+                        }
+
+
+                    }
+
+                    }
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Top New Courses",
+                        fontSize = 15.sp,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(top = 15.dp,start = 7.dp)
+                    )
+
+                    Button(
+                        modifier = Modifier
+                            .align(alignment = Alignment.CenterEnd),
+                        onClick = {
+                            //here we write code to navigate to all subject
+                        }, colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        )
+                    ) {
+                        Row {
+                            Text(text = "All subject", fontSize = 10.sp, color = Color.Blue)
+                            //here we put image for a right arrow
+                        }
+                    }
+                }//next
             }
 
         }
