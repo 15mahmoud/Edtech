@@ -102,6 +102,23 @@ fun HomeScreen(navController: NavController) {
             4.7
         )
     )
+    val topNewCourses = listOf(
+        TrendingCourseRow(
+            "Intro to PhotoGraphy and Editing",
+            R.drawable.top_new_course_img,
+            12.99,
+            R.drawable.star_filled,
+            4.5
+        ),
+        TrendingCourseRow(
+
+            "Another Course ",
+            R.drawable.second_top_new_course,
+            12.99,
+            R.drawable.star_filled,
+            4.7
+        )
+    )
     val topLiveMentorList = listOf(
         TopLiveTutorItem(
             "Albert Flores",
@@ -377,13 +394,13 @@ fun HomeScreen(navController: NavController) {
 
                     }
 
-                    }
+                }
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Top New Courses",
                         fontSize = 15.sp,
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(top = 15.dp,start = 7.dp)
+                        modifier = Modifier.padding(top = 15.dp, start = 7.dp)
                     )
 
                     Button(
@@ -400,7 +417,72 @@ fun HomeScreen(navController: NavController) {
                             //here we put image for a right arrow
                         }
                     }
-                }//next
+                }
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                ) {
+                    //we will change this subject list with another list we will get from api
+                    //we suppose to modify this size to match all device
+                    itemsIndexed(topNewCourses) { index, course ->
+                        Column(
+                            modifier = Modifier
+
+                                .width(200.dp)
+                                .height(200.dp)
+                                .padding(2.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .clickable {
+                                    //here i will put code to navigate to the disired course
+                                },
+
+                            ) {
+                            Image(
+                                painter = painterResource(id = course.imgId),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .height(120.dp)
+                                    .padding(5.dp)
+                            )
+                            Text(
+                                text = course.title,
+                                style = MaterialTheme.typography.headlineLarge,
+                                fontSize = 15.sp,
+                                modifier = Modifier
+                                    .padding(start = 7.dp)
+                            )
+                            Row(modifier = Modifier.padding(top = 5.dp)) {
+
+                                Text(
+                                    text = "$" + course.price.toString(),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Spacer(
+                                    modifier = Modifier
+                                        .height(5.dp)
+                                        .width(60.dp)
+                                )
+                                Image(
+                                    painter = painterResource(id = course.rankingImg),
+                                    contentDescription = null,
+                                    Modifier
+                                        .width(12.dp)
+                                        .height(12.dp)
+                                )
+                                Text(
+                                    text = course.rankingNumber.toString(),
+                                    fontSize = 12.sp, modifier = Modifier.padding(start = 4.dp)
+                                )
+                            }
+
+                        }
+
+
+                    }
+
+                }
             }
 
         }
