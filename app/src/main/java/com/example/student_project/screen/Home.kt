@@ -57,6 +57,7 @@ import androidx.navigation.NavController
 import com.example.student_project.R
 import com.example.student_project.screen.component.BottomNavItem
 import com.example.student_project.screen.component.SubjectRow
+import com.example.student_project.screen.component.TrendingCourseRow
 import com.example.student_project.ui.theme.lightOrange
 
 
@@ -80,6 +81,23 @@ fun HomeScreen(navController: NavController) {
             R.drawable.architect,
             "Arch 116",
             Color.Blue
+        )
+    )
+    val trendingCoursesList = listOf(
+        TrendingCourseRow(
+            "Advanced Front_End Programing Techniques",
+            R.drawable.course_image,
+            12.99,
+            R.drawable.star_filled,
+            4.5
+        ),
+        TrendingCourseRow(
+
+            "Ultimate CyberSecurity For Beginner",
+            R.drawable.second_sourse_image,
+            12.99,
+            R.drawable.star_filled,
+            4.7
         )
     )
     Scaffold(
@@ -134,7 +152,7 @@ fun HomeScreen(navController: NavController) {
                     Text(
                         text = "Live Subject Tutoring",
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(top = 5.dp)
+                        modifier = Modifier.padding(top = 15.dp)
                     )
 
                     Button(
@@ -189,9 +207,98 @@ fun HomeScreen(navController: NavController) {
                             )
                         }
 
+
                     }
 
                 }
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Trending Courses",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(top = 15.dp)
+                    )
+
+                    Button(
+                        modifier = Modifier
+                            .align(alignment = Alignment.CenterEnd),
+                        onClick = {
+                            //here we write code to navigate to all subject
+                        }, colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        )
+                    ) {
+                        Row {
+                            Text(text = "All subject", fontSize = 10.sp, color = Color.Blue)
+                            //here we put image for a right arrow
+                        }
+                    }
+                }
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                ) {
+                    //we will change this subject list with another list we will get from api
+                    //we suppose to modify this size to match all device
+                    itemsIndexed(trendingCoursesList) { index, course ->
+                        Column(
+                            modifier = Modifier
+
+                                .width(200.dp)
+                                .height(266.dp)
+                                .padding(2.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .clickable {
+                                    //here i will put code to navigate to the disired course
+                                },
+
+                            ) {
+                            Image(
+                                painter = painterResource(id = course.imgId),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .height(120.dp)
+                                    .padding(5.dp)
+                            )
+                            Text(
+                                text = course.title,
+                                style = MaterialTheme.typography.headlineLarge,
+                                fontSize = 15.sp,
+                                modifier = Modifier
+                                    .padding(start = 7.dp)
+                            )
+                            Row {
+
+                                Text(
+                                    text = "$" + course.price.toString(),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Spacer(
+                                    modifier = Modifier
+                                        .height(5.dp)
+                                        .width(60.dp)
+                                )
+                                Image(
+                                    painter = painterResource(id = course.rankingImg),
+                                    contentDescription = null,
+                                    Modifier
+                                        .width(12.dp)
+                                        .height(12.dp)
+
+                                )
+                                Text(
+                                    text = course.rankingNumber.toString(),
+                                    fontSize = 12.sp, modifier = Modifier.padding(start = 7.dp)
+                                )
+                            }
+
+                        }
+
+
+                    }
+
+                }//next section
             }
 
         }
