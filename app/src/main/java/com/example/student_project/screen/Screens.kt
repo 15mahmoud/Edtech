@@ -11,6 +11,7 @@ sealed class Screens(
     data object HomeScreen : Screens("home_screen")
     data object LearningScreen : Screens("learning_screen")
     data object ProfileScreen : Screens("profile_screen")
+    data object FilterScreen : Screens("filter_screen")
 
 
 }

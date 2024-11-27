@@ -2,6 +2,7 @@ package com.example.student_project.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,10 +33,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
+import com.example.student_project.ui.theme.lightGreen
 
 @Composable
 fun NameAndEmailScreen(navController: NavController) {
@@ -51,21 +56,22 @@ fun NameAndEmailScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = "Enter name and email",
-                style = MaterialTheme.typography.headlineLarge,
-                fontSize = 30.sp,
-                color = Color.Black,
-                modifier = Modifier
-                    .padding(top = 75.dp)
-                    .align(Alignment.TopCenter)
-            )
             Column(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxWidth()
             ) {
+                Text(
+                    text = "Enter your name and email",
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontSize = 30.sp,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .padding(top = 32.dp, start = 10.dp)
+
+                )
 
                 Row {
                     TextField(
@@ -122,12 +128,10 @@ fun NameAndEmailScreen(navController: NavController) {
                     Button(
                         onClick = { navController.navigate(Screens.LoginScreen.route) },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(
-                                id = R.color.light_green
-                            )
+                            containerColor = Color.Transparent
                         )
                     ) {
-                        Text(text = "login")
+                        Text(text = "login", color = lightGreen)
                     }
                 }
                 Spacer(
@@ -135,11 +139,18 @@ fun NameAndEmailScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(20.dp)
                 )
+
                 Button(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                     onClick = {
-                        //here will be nav with parameter
-                        navController.navigate(Screens.SignupScreen.route)
+                        if (firstNameState.isNotEmpty() && lastNameState.isNotEmpty() && emailState.isNotEmpty()) {
+                            //here will be nav with parameter
+                            navController.navigate(Screens.SignupScreen.route)
+                        } else {
+                            //handle the empty state
+                        }
                     }, shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(
@@ -147,40 +158,37 @@ fun NameAndEmailScreen(navController: NavController) {
                         )
                     )
                 ) {
-                    Text(text = "Continue")
+                    Text(text = "Continue", fontWeight = FontWeight.Bold)
                 }
-            }
-            Column(
-                modifier = Modifier.align(Alignment.BottomCenter)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(bottom = 50.dp)
-                        .align(Alignment.CenterHorizontally),
-                    text = "Or sign up with social account"
-                )
-
-                Button(
-                    modifier = Modifier
-                        .padding(bottom = 20.dp)
-                        .border(
-                            2.dp, Color.Black,
-                            RectangleShape
-                        ), onClick = { /*TODO*/ },
-                    colors = ButtonDefaults.buttonColors(
-                        Color.Transparent
-                    )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Row {
-                        Image(
-                            painter = painterResource(id = R.drawable.google_img),
-                            contentDescription = null
+                    Button(
+                        onClick = { /* Handle Google sign-in */ },
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        ),
+                        modifier = Modifier.border(
+                            width = 1.dp,
+                            color = Color.Black,
+                            shape = RoundedCornerShape(10.dp)
                         )
-                        Spacer(modifier = Modifier.width(5.dp))
-                        Text(text = "Continue with google", color = Color.Black)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Image(
+                                painter = painterResource(id = R.drawable.google_img),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = "Continue with Google", color = Color.Black)
+                        }
                     }
                 }
             }
+
         }
     }
 }

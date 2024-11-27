@@ -1,5 +1,6 @@
 package com.example.student_project.navigation
 
+import SignUpScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,8 +12,8 @@ import com.example.student_project.screen.LoginScreen
 import com.example.student_project.screen.NameAndEmailScreen
 import com.example.student_project.screen.ProfileScreen
 import com.example.student_project.screen.Screens
-import com.example.student_project.screen.SignUpScreen
 import com.example.student_project.screen.SplashScreen
+import com.example.student_project.screen.filtering.FilterScreen
 
 @Composable
 fun Navigation() {
@@ -43,7 +44,9 @@ val navController  = rememberNavController()
         composable(Screens.ProfileScreen.route){
             ProfileScreen(navController = navController)
         }
-
+composable(Screens.FilterScreen.route){
+    FilterScreen(navController)
+}
 
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -148,33 +149,49 @@ fun HomeScreen(navController: NavController) {
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
+                Row(modifier = Modifier.fillMaxWidth()) {
 
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(
-                            width = 3.dp,
-                            color = Color.White,
-                            shape = RoundedCornerShape(10.dp)
-                        ),
-                    value = searchState,
-                    onValueChange = {
-                        //here when value change we will give this value to back end to search
-                        //and then we get the result
-                        searchState = it
-                    }, placeholder = {
-                        Text(text = "search", fontSize = 22.sp, color = Color.Gray)
-                    }, leadingIcon = {
+                    TextField(
+                        modifier = Modifier
+                            .border(
+                                width = 3.dp,
+                                color = Color.White,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        value = searchState,
+                        onValueChange = {
+                            //here when value change we will give this value to back end to search
+                            //and then we get the result
+                            searchState = it
+                        }, placeholder = {
+                            Text(text = "search", fontSize = 22.sp, color = Color.Gray)
+                        }, leadingIcon = {
+                            Image(
+                                modifier = Modifier,
+                                painter = painterResource(id = R.drawable.baseline_search_24),
+                                contentDescription = null
+                            )
+                        }, colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent
+                        )
+                    )
+                    //this is filter button
+                    //we will need to modify this
+                    Button(
+                        onClick = {
+                            navController.navigate(Screens.FilterScreen.route)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Black
+                        )
+                    ) {
                         Image(
-                            modifier = Modifier,
-                            painter = painterResource(id = R.drawable.baseline_search_24),
+                            painter = painterResource(id = R.drawable.move_to_filter),
                             contentDescription = null
                         )
-                    }, colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent
-                    )
-                )
+                    }
+                }
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -490,6 +507,7 @@ fun HomeScreen(navController: NavController) {
 
 }
 
+//i should move those 2 function from here may be i make another file for them
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldTopAppBar() {
