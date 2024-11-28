@@ -1,8 +1,11 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.ktfmt)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -53,6 +56,11 @@ android {
 
 ktfmt {
     kotlinLangStyle()
+}
+tasks.withType<Detekt>().configureEach {
+    reports {
+        html.required.set(true) // observe findings in your browser with structure and code snippets
+    }
 }
 dependencies {
 
