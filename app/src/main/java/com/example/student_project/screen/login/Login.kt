@@ -1,4 +1,4 @@
-package com.example.student_project.screen
+package com.example.student_project.screen.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
+import com.example.student_project.screen.Screens
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -134,11 +135,15 @@ fun LoginScreen(navController: NavController) {
                 )
                 Button(
                     onClick = {
-                        //we check on user data
-                        //we will send data to back to check if true the move to next false make error
+                        if(emailState.isNotEmpty()&&passwordState.isNotEmpty()){
 
-                        //will navigate to dash bord screen
-                        navController.navigate(Screens.HomeScreen.route)
+                            //we check on user data
+                            //we will send data to back to check if true the move to next false make error
+
+                            //will navigate to Home screen
+                            navController.navigate(Screens.HomeScreen.route)
+                        }
+                        //else show some error massage
 
                     }, shape = RoundedCornerShape(10.dp), modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(

@@ -1,10 +1,9 @@
-package com.example.student_project.screen
+package com.example.student_project.screen.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,10 +55,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
-import com.example.student_project.screen.component.BottomNavItem
-import com.example.student_project.screen.component.SubjectRow
-import com.example.student_project.screen.component.TopLiveTutorItem
-import com.example.student_project.screen.component.TrendingCourseRow
+import com.example.student_project.screen.Screens
+import com.example.student_project.data.component.BottomNavItem
+import com.example.student_project.data.component.SubjectRow
+import com.example.student_project.data.component.TopLiveTutorItem
+import com.example.student_project.data.component.TrendingCourseRow
 import com.example.student_project.ui.theme.lightGray
 import com.example.student_project.ui.theme.lightOrange
 
@@ -180,7 +180,7 @@ fun HomeScreen(navController: NavController) {
                     //we will need to modify this
                     Button(
                         onClick = {
-                            navController.navigate(Screens.FilterScreen.route)
+                            navController.navigate(Screens.MentorFilterScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Black
