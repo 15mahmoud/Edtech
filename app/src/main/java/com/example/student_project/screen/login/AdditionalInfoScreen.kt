@@ -1,4 +1,4 @@
-package com.example.student_project.screen
+package com.example.student_project.screen.login
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
+import com.example.student_project.screen.Screens
 
 @Composable
 fun AdditionalInfoScreen(
@@ -41,10 +42,14 @@ fun AdditionalInfoScreen(
     DropDown(navController)
 }
 
+
+//we need to modify this code to make it usable for every place in our code
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDown(navController: NavController) {
+
     val major = listOf("cs", "it", "other")
+
     val university = listOf("tanta", "other")
     var isExpandedForMajor by remember {
         mutableStateOf(false)
