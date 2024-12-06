@@ -9,4 +9,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_orange">#E48F5145</color>
+    <color name="icon_gray">#9E9E9E</color>
+    <color name="button_color">#1C1C1C</color>
 </resources>
