@@ -78,12 +78,12 @@ fun HomeScreen(navController: NavController) {
         SubjectRow(
             R.drawable.math,
             "Math 116",
-            Color.Red
+            listOf(Color.Red,Color.White)
         ),
         SubjectRow(
             R.drawable.architect,
             "Arch 116",
-            Color.Blue
+            listOf(Color.White,Color.Blue)
         )
     )
     val trendingCoursesList = listOf(
@@ -234,7 +234,7 @@ fun HomeScreen(navController: NavController) {
                                 .height(80.dp)
                                 .padding(2.dp)
                                 .clip(RoundedCornerShape(15.dp))
-                                .background(subject.color)
+                                .background(Brush.verticalGradient(subject.color))
                                 .clickable {
                                     //here i will put code to navigate to the disired course
                                 },
@@ -522,7 +522,7 @@ fun ScaffoldTopAppBar() {
                             listOf(
                                 lightOrange,
                                 Color.Transparent
-                            )
+                            ), radius = 500f
                         )
                     )
                     .padding(20.dp)

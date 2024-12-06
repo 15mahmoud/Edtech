@@ -7,7 +7,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.student_project.R
-
+val RobotoRegular = FontFamily(
+    Font(R.font.roboto_regular)
+)
+val RobotoBold = FontFamily(
+    Font(R.font.roboto_bold)
+)
+val RobotoThin = FontFamily(
+    Font(R.font.roboto_thin)
+)
+//not used yet
+val RobotLight = FontFamily(
+    Font(R.font.roboto_light)
+)
 val EncodeSens = FontFamily(
     Font(R.font.encode_sans_bold)
 )
@@ -27,19 +39,14 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
     headlineLarge = TextStyle(
-        fontFamily = EncodeSens,
-        fontWeight = FontWeight.Bold,
-        fontSize = 24.sp
+        fontFamily = RobotoBold
     ),
     headlineSmall = TextStyle(
-        fontFamily = AROneSansRegular,
-        fontWeight = FontWeight.Thin,
-        fontSize = 12.sp
+        fontFamily = RobotoThin
+
     ),
     titleMedium = TextStyle(
-        fontFamily = SFProDisplay,
-        fontWeight = FontWeight.Medium,
-        fontSize = 15.sp
+        fontFamily = RobotoRegular
     )
 
     /* Other default text styles to override
