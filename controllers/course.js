@@ -24,11 +24,13 @@ exports.createCourse = async (req, res) => {
         // console.log("instructions = ", instructions)
 
         // get thumbnail of course
-        const thumbnail = req.files?.thumbnailImage;
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        // const thumbnail = req.files?.thumbnailImage;
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
 
         // validation
         if (!courseName || !courseDescription || !whatYouWillLearn || !price
-            || !category || !thumbnail || !instructions.length || !tag.length) {
+            || !category || !instructions.length || !tag.length) {
             return res.status(400).json({
                 success: false,
                 message: 'All Fileds are required'
@@ -55,12 +57,12 @@ exports.createCourse = async (req, res) => {
 
 
         // upload thumbnail to cloudinary
-        const thumbnailDetails = await uploadImageToCloudinary(thumbnail, process.env.FOLDER_NAME);
+        // const thumbnailDetails = await uploadImageToCloudinary(thumbnail, process.env.FOLDER_NAME);
 
         // create new course - entry in DB
         const newCourse = await Course.create({
             courseName, courseDescription, instructor: instructorId, whatYouWillLearn, price, category: categoryDetails._id,
-            tag, status, instructions, thumbnail: thumbnailDetails.secure_url, createdAt: Date.now(),
+            tag, status, instructions, createdAt: Date.now(),
         });
 
         // add course id to instructor courses list, this is bcoz - it will show all created courses by instructor 
