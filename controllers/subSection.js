@@ -20,6 +20,7 @@ exports.createSubSection = async (req, res) => {
                 success: false,
                 message: 'All fields are required'
             })
+            
         }
 
         // upload video to cloudinary
