@@ -20,7 +20,7 @@ import com.example.student_project.screen.login.SignUpScreen
 fun Navigation() {
     val navController = rememberNavController()
     //start from splash
-    NavHost(navController = navController, startDestination = Screens.SignupScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.SplashScreen.route) {
         composable(Screens.SplashScreen.route) {
             SplashScreen(navController)
         }

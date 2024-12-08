@@ -27,7 +27,7 @@ fun SplashScreen(navController: NavController) {
         )
         LaunchedEffect(timeState) {
             delay(2000)
-            navController.navigate(Screens.NameAndEmailScreen.route)
+            navController.navigate(Screens.LoginScreen.route)
         }
     }
 }
