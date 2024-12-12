@@ -1,4 +1,4 @@
-package com.example.student_project.screen.component
+package com.example.student_project.data.component
 
 data class TopLiveTutorItem(
     val nameOfTutor: String,

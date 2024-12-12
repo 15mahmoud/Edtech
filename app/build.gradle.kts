@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("kotlin-parcelize")
     alias(libs.plugins.ktfmt)
 }
 
@@ -65,6 +66,10 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.auth)
+    //new
+    implementation(libs.androidx.window)
+    implementation(libs.androidx.window.v110)
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
