@@ -1,7 +1,6 @@
 package com.example.student_project.data
 
 import android.os.Parcelable
-import androidx.versionedparcelable.ParcelField
 import kotlinx.parcelize.Parcelize
 
 data class SearchResult(
@@ -14,10 +13,10 @@ data class SearchResult(
     val degreeAndCertificate: String,
     val timeSlots: List<String>,
     val experience: String,
-    val hourlyRate: Double
+    val hourlyRate: Double,
 )
 
-//object will be send from filter to filter result
+// object will be send from filter to filter result
 @Parcelize
 data class FilterationRequest(
     val subject: String,
@@ -26,5 +25,5 @@ data class FilterationRequest(
     val experience: String,
     val degreeAndCertificate: String,
     val rating: Double,
-    val hourlyRate: Double
+    val hourlyRate: Double,
 ) : Parcelable

@@ -42,145 +42,117 @@ import com.example.student_project.ui.theme.lightGreen
 
 @Composable
 fun NameAndEmailScreen(navController: NavController) {
-    var firstNameState by remember {
-        mutableStateOf("")
-    }
-    var lastNameState by remember {
-        mutableStateOf("")
-    }
-    var emailState by remember {
-        mutableStateOf("")
-    }
+    var firstNameState by remember { mutableStateOf("") }
+    var lastNameState by remember { mutableStateOf("") }
+    var emailState by remember { mutableStateOf("") }
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
         ) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxWidth()
-            ) {
+            Column(modifier = Modifier.align(Alignment.Center).fillMaxWidth()) {
                 Text(
                     text = "Enter your name and email",
                     style = MaterialTheme.typography.headlineLarge,
                     fontSize = 30.sp,
                     color = Color.Black,
-                    modifier = Modifier
-                        .padding(top = 32.dp, start = 10.dp)
-
+                    modifier = Modifier.padding(top = 32.dp, start = 10.dp),
                 )
 
                 Row {
                     TextField(
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .padding(10.dp),
+                        modifier = Modifier.weight(0.5f).padding(10.dp),
                         value = firstNameState,
-                        onValueChange = {
-                            firstNameState = it
-                        },
+                        onValueChange = { firstNameState = it },
                         label = { Text(text = "first name") },
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent
-                        )
+                        colors =
+                            TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.Transparent,
+                                focusedContainerColor = Color.Transparent,
+                            ),
                     )
                     TextField(
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .padding(10.dp),
+                        modifier = Modifier.weight(0.5f).padding(10.dp),
                         value = lastNameState,
-                        onValueChange = {
-                            lastNameState = it
-                        },
+                        onValueChange = { lastNameState = it },
                         label = { Text(text = "last name") },
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent
-                        )
+                        colors =
+                            TextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.Transparent,
+                                focusedContainerColor = Color.Transparent,
+                            ),
                     )
                 }
                 TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
+                    modifier = Modifier.fillMaxWidth().padding(10.dp),
                     value = emailState,
-                    onValueChange = {
-                        emailState = it
-                    },
+                    onValueChange = { emailState = it },
                     label = { Text(text = "email") },
                     leadingIcon = {
                         Image(
                             painter = painterResource(id = R.drawable.baseline_email_24),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent
-                    )
+                    colors =
+                        TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                        ),
                 )
                 Row(modifier = Modifier.align(Alignment.End)) {
                     Text(text = "Already have an account?", fontSize = 10.sp)
                     Button(
                         onClick = { navController.navigate(Screens.LoginScreen.route) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        )
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     ) {
                         Text(text = "login", color = lightGreen)
                     }
                 }
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp)
-                )
+                Spacer(modifier = Modifier.fillMaxWidth().height(20.dp))
 
                 Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     onClick = {
-                        if (firstNameState.isNotEmpty() && lastNameState.isNotEmpty() && emailState.isNotEmpty()) {
-                            //here will be nav with parameter
+                        if (
+                            firstNameState.isNotEmpty() &&
+                                lastNameState.isNotEmpty() &&
+                                emailState.isNotEmpty()
+                        ) {
+                            // here will be nav with parameter
                             navController.navigate(Screens.SignupScreen.route)
                         } else {
-                            //handle the empty state
+                            // handle the empty state
                         }
-                    }, shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(
-                            id = R.color.light_green
-                        )
-                    )
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.light_green)
+                        ),
                 ) {
                     Text(text = "Continue", fontWeight = FontWeight.Bold)
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Button(
                         onClick = { /* Handle Google sign-in */ },
                         shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        ),
-                        modifier = Modifier.border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(10.dp)
-                        )
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        modifier =
+                            Modifier.border(
+                                width = 1.dp,
+                                color = Color.Black,
+                                shape = RoundedCornerShape(10.dp),
+                            ),
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Image(
                                 painter = painterResource(id = R.drawable.google_img),
-                                contentDescription = null
+                                contentDescription = null,
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(text = "Continue with Google", color = Color.Black)
@@ -188,7 +160,6 @@ fun NameAndEmailScreen(navController: NavController) {
                     }
                 }
             }
-
         }
     }
 }
