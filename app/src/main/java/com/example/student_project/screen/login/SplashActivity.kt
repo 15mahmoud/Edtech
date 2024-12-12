@@ -21,9 +21,7 @@ fun SplashScreen(navController: NavController) {
         Image(
             painter = painterResource(id = R.drawable.splash_screen),
             contentDescription = null,
-            modifier = Modifier
-                .align(alignment = Alignment.Center)
-                .fillMaxSize()
+            modifier = Modifier.align(alignment = Alignment.Center).fillMaxSize(),
         )
         LaunchedEffect(timeState) {
             delay(2000)
@@ -31,4 +29,3 @@ fun SplashScreen(navController: NavController) {
         }
     }
 }
-

@@ -17,20 +17,12 @@ import com.example.student_project.screen.home.ScaffoldTopAppBar
 
 @Composable
 fun LearningScreen(navController: NavController) {
-    val selectedItemIndex by rememberSaveable {
-        mutableStateOf(1)
-    }
+    val selectedItemIndex by rememberSaveable { mutableStateOf(1) }
     Scaffold(
-        Modifier
-            .fillMaxSize()
-            .background(Color.White),
+        Modifier.fillMaxSize().background(Color.White),
         topBar = { ScaffoldTopAppBar() },
-        bottomBar = {
-            BottomNavBar(selectedItemIndex, navController)
-        }
+        bottomBar = { BottomNavBar(selectedItemIndex, navController) },
     ) { innerPadding ->
-        Column(Modifier.padding(innerPadding)) {
-
-        }
+        Column(Modifier.padding(innerPadding)) {}
     }
 }

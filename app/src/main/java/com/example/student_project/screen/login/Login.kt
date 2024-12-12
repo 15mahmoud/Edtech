@@ -58,101 +58,80 @@ fun LoginScreen(navController: NavController) {
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     val scope = rememberCoroutineScope()
-    var emailState by remember {
-        mutableStateOf("")
-    }
-    var emailError by remember {
-        mutableStateOf(false)
-    }
-    var passwordState by remember {
-        mutableStateOf("")
-    }
-    var passwordError by remember {
-        mutableStateOf(false)
-    }
-    var showPassword by remember {
-        mutableStateOf(false)
-    }
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-
-    ) { innerPadding ->
-
+    var emailState by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf(false) }
+    var passwordState by remember { mutableStateOf("") }
+    var passwordError by remember { mutableStateOf(false) }
+    var showPassword by remember { mutableStateOf(false) }
+    Scaffold(modifier = Modifier.fillMaxSize().background(Color.White)) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = "Login to your Account",
                 style = MaterialTheme.typography.headlineLarge,
                 fontSize = 30.sp,
                 color = headLineColor,
-                modifier = Modifier
-                    .padding(top = 100.dp, start = 10.dp)
-                    .align(alignment = Alignment.TopCenter)
+                modifier =
+                    Modifier.padding(top = 100.dp, start = 10.dp)
+                        .align(alignment = Alignment.TopCenter),
             )
-            Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxWidth()
-            ) {
+            Column(modifier = Modifier.align(Alignment.Center).fillMaxWidth()) {
 
-//we need to make shadow
+                // we need to make shadow
                 TextField(
                     value = emailState,
                     onValueChange = {
                         emailState = it
                         emailError = it.isEmpty()
                     },
-                    modifier = Modifier
-                        .width(screenWidth * 90 / 100)
-                        .align(alignment = Alignment.CenterHorizontally)
-                        .shadow(
-                            elevation = 6.dp,
-                            shape = MaterialTheme.shapes.small,
-                            ambientColor = Color.Gray,
-                            spotColor = Color.LightGray
-                        )
+                    modifier =
+                        Modifier.width(screenWidth * 90 / 100)
+                            .align(alignment = Alignment.CenterHorizontally)
+                            .shadow(
+                                elevation = 6.dp,
+                                shape = MaterialTheme.shapes.small,
+                                ambientColor = Color.Gray,
+                                spotColor = Color.LightGray,
+                            )
                     //  .shadow(elevation = 2.dp, ambientColor = Color.Gray),
                     ,
                     label = { Text(text = "Email") },
                     leadingIcon = {
                         Image(
                             painter = painterResource(id = R.drawable.baseline_email_24),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     isError = emailError,
                     singleLine = true,
-//                    supportingText = {
-//                        if (emailError) {
-//                            Text(
-//                                text = "Email cannot be empty",
-//                                color = MaterialTheme.colorScheme.error
-//                            )
-//                        }
-//                    },
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = textFieldColor,
-                        focusedContainerColor = textFieldColor,
-                        unfocusedIndicatorColor = textFieldColor,
-                        focusedIndicatorColor = textFieldColor
-                    )
+                    //                    supportingText = {
+                    //                        if (emailError) {
+                    //                            Text(
+                    //                                text = "Email cannot be empty",
+                    //                                color = MaterialTheme.colorScheme.error
+                    //                            )
+                    //                        }
+                    //                    },
+                    colors =
+                        TextFieldDefaults.colors(
+                            unfocusedContainerColor = textFieldColor,
+                            focusedContainerColor = textFieldColor,
+                            unfocusedIndicatorColor = textFieldColor,
+                            focusedIndicatorColor = textFieldColor,
+                        ),
                 )
                 TextField(
-                    modifier = Modifier
-                        .width(screenWidth * 90 / 100)
-                        .align(alignment = Alignment.CenterHorizontally)
-                        .shadow(
-                            elevation = 6.dp,
-                            shape = MaterialTheme.shapes.small,
-                            ambientColor = Color.Gray,
-                            spotColor = Color.LightGray
-                        )
+                    modifier =
+                        Modifier.width(screenWidth * 90 / 100)
+                            .align(alignment = Alignment.CenterHorizontally)
+                            .shadow(
+                                elevation = 6.dp,
+                                shape = MaterialTheme.shapes.small,
+                                ambientColor = Color.Gray,
+                                spotColor = Color.LightGray,
+                            )
                     // .shadow(elevation = 2.dp, ambientColor = Color.Gray)
                     //      .border(width = 1.dp, color = Color.Transparent),
                     ,
@@ -165,166 +144,144 @@ fun LoginScreen(navController: NavController) {
                     leadingIcon = {
                         Image(
                             painter = painterResource(id = R.drawable.baseline_lock_24),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     trailingIcon = {
                         Button(
-                            onClick = {
-                                showPassword = !showPassword
-                            }, colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.Transparent
-                            )
+                            onClick = { showPassword = !showPassword },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.show_pass),
                                 modifier = Modifier.size(17.dp),
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                     },
                     singleLine = true,
                     isError = passwordError,
-//                    supportingText = {
-//                        if (passwordError) {
-//                            Text(
-//                                text = "Password cannot be empty",
-//                                color = MaterialTheme.colorScheme.error
-//                            )
-//                        }
-//                    },
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = textFieldColor,
-                        focusedContainerColor = textFieldColor,
-                        unfocusedIndicatorColor = textFieldColor,
-                        focusedIndicatorColor = textFieldColor
-                    ),
-
-                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
+                    //                    supportingText = {
+                    //                        if (passwordError) {
+                    //                            Text(
+                    //                                text = "Password cannot be empty",
+                    //                                color = MaterialTheme.colorScheme.error
+                    //                            )
+                    //                        }
+                    //                    },
+                    colors =
+                        TextFieldDefaults.colors(
+                            unfocusedContainerColor = textFieldColor,
+                            focusedContainerColor = textFieldColor,
+                            unfocusedIndicatorColor = textFieldColor,
+                            focusedIndicatorColor = textFieldColor,
+                        ),
+                    visualTransformation =
+                        if (showPassword) VisualTransformation.None
+                        else PasswordVisualTransformation(),
                 )
 
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp)
-                )
+                Spacer(modifier = Modifier.fillMaxWidth().height(20.dp))
                 Button(
                     onClick = {
-                        if (emailState.isNotEmpty() && passwordState.isNotEmpty() && emailState.endsWith(
-                                "@gmail.com"
-                            )
+                        if (
+                            emailState.isNotEmpty() &&
+                                passwordState.isNotEmpty() &&
+                                emailState.endsWith("@gmail.com")
                         ) {
 
-                            //we check on user data
-                            //we will send data to back to check if true the move to next false make error
+                            // we check on user data
+                            // we will send data to back to check if true the move to next false
+                            // make error
 
-                            //will navigate to Home screen
+                            // will navigate to Home screen
                             navController.navigate(Screens.HomeScreen.route)
                         } else {
                             scope.launch {
-                                SnackbarHostState().showSnackbar(
-                                    message = "You invalid info",
-                                    duration = SnackbarDuration.Short
-                                )
+                                SnackbarHostState()
+                                    .showSnackbar(
+                                        message = "You invalid info",
+                                        duration = SnackbarDuration.Short,
+                                    )
                             }
                         }
-
-
                     },
                     shape = RoundedCornerShape(100.dp),
-                    modifier = Modifier
-                        .height(screenHeight * 6 / 100)
-                        .width(screenWidth * 90 / 100)
-                        .align(alignment = Alignment.CenterHorizontally),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(
-                            id = R.color.button_color
-                        )
-                    )
+                    modifier =
+                        Modifier.height(screenHeight * 6 / 100)
+                            .width(screenWidth * 90 / 100)
+                            .align(alignment = Alignment.CenterHorizontally),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.button_color)
+                        ),
                 ) {
                     Text(
                         text = "Sign in",
                         style = MaterialTheme.typography.headlineLarge,
-                        color = Color.White
+                        color = Color.White,
                     )
                 }
                 TextButton(
                     onClick = {
-                        //will nav to the forget screen
+                        // will nav to the forget screen
                     },
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .align(alignment = Alignment.CenterHorizontally)
+                    modifier =
+                        Modifier.padding(10.dp).align(alignment = Alignment.CenterHorizontally),
                 ) {
                     Text(
                         text = "Forgot the password?",
                         fontSize = 16.sp,
                         color = buttonColor,
-                        style = MaterialTheme.typography.headlineLarge
+                        style = MaterialTheme.typography.headlineLarge,
                     )
                 }
             }
-            Column(
-                modifier = Modifier.align(Alignment.BottomCenter)
-            ) {
+            Column(modifier = Modifier.align(Alignment.BottomCenter)) {
                 Text(
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                        .align(alignment = Alignment.CenterHorizontally), text = "Or continue with"
+                    modifier =
+                        Modifier.padding(bottom = 10.dp)
+                            .align(alignment = Alignment.CenterHorizontally),
+                    text = "Or continue with",
                 )
                 Row {
                     Button(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .border(
-                                1.dp, borderButton,
-                                RoundedCornerShape(16.dp)
-                            ), onClick = { /*TODO*/ },
-                        colors = ButtonDefaults.buttonColors(
-                            Color.Transparent
-                        )
+                        modifier =
+                            Modifier.padding(10.dp)
+                                .border(1.dp, borderButton, RoundedCornerShape(16.dp)),
+                        onClick = { /*TODO*/ },
+                        colors = ButtonDefaults.buttonColors(Color.Transparent),
                     ) {
                         Image(
                             modifier = Modifier.size(17.dp),
                             painter = painterResource(id = R.drawable.facebook),
-                            contentDescription = null
+                            contentDescription = null,
                         )
-
                     }
                     Button(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .border(
-                                1.dp, borderButton,
-                                RoundedCornerShape(16.dp)
-                            ), onClick = { /*TODO*/ },
-                        colors = ButtonDefaults.buttonColors(
-                            Color.Transparent
-                        )
+                        modifier =
+                            Modifier.padding(10.dp)
+                                .border(1.dp, borderButton, RoundedCornerShape(16.dp)),
+                        onClick = { /*TODO*/ },
+                        colors = ButtonDefaults.buttonColors(Color.Transparent),
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.google_img),
-                            contentDescription = null
+                            contentDescription = null,
                         )
-
                     }
                     Button(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .border(
-                                1.dp, borderButton,
-                                RoundedCornerShape(16.dp)
-                            ), onClick = { /*TODO*/ },
-                        colors = ButtonDefaults.buttonColors(
-                            Color.Transparent
-                        )
+                        modifier =
+                            Modifier.padding(10.dp)
+                                .border(1.dp, borderButton, RoundedCornerShape(16.dp)),
+                        onClick = { /*TODO*/ },
+                        colors = ButtonDefaults.buttonColors(Color.Transparent),
                     ) {
                         Image(
                             modifier = Modifier.size(17.dp),
                             painter = painterResource(id = R.drawable.apple),
-                            contentDescription = null
+                            contentDescription = null,
                         )
-
                     }
                 }
 
@@ -333,22 +290,17 @@ fun LoginScreen(navController: NavController) {
                         text = "Don't have an account?",
                         modifier = Modifier.padding(top = 17.dp),
                         fontSize = 14.sp,
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.headlineSmall,
                     )
-                    TextButton(
-                        onClick = {
-                            navController.navigate(Screens.SignupScreen.route)
-                        }
-                    ) {
+                    TextButton(onClick = { navController.navigate(Screens.SignupScreen.route) }) {
                         Text(
                             text = "sign up",
                             fontSize = 14.sp,
                             color = buttonColor,
-                            style = MaterialTheme.typography.headlineLarge
+                            style = MaterialTheme.typography.headlineLarge,
                         )
                     }
                 }
-
             }
         }
     }
