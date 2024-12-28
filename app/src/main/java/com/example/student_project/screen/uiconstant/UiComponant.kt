@@ -11,11 +11,14 @@ import androidx.navigation.NavController
 import com.example.student_project.R
 
 @Composable
-fun PopBackStackEntry(navController: NavController){
-    IconButton(onClick = { navController.popBackStack() }, modifier = Modifier.padding(top = 20.dp)) {
+fun PopBackStackEntry(navController: NavController) {
+    IconButton(
+        onClick = { navController.popBackStack() },
+        modifier = Modifier.padding(top = 20.dp),
+    ) {
         Icon(
             painter = painterResource(id = R.drawable.baseline_arrow_back_24),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }

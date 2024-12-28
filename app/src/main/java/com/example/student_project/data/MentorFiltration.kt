@@ -13,13 +13,13 @@ data class SearchResult(
     val degreeAndCertificate: String,
     val timeSlots: List<String>,
     val experience: String,
-    val hourlyRate: Double
+    val hourlyRate: Double,
 )
 
-//object will be send from filter to filter result
+// object will be send from filter to filter result
 @Parcelize
 data class FiltrationRequest(
     val jopTitle: String,
     val rating: Double,
-    val hourlyRate: Double
+    val hourlyRate: Double,
 ) : Parcelable
