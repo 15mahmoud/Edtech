@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
-import com.example.student_project.screen.Screens
+import com.example.student_project.navigation.Screens
 import com.example.student_project.screen.uiconstant.PopBackStackEntry
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.textFieldColor
@@ -69,7 +69,7 @@ fun AdditionalInfoScreen(navController: NavController) {
     var phoneEmptyError by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        Row(modifier = Modifier.padding(top = 50.dp, start = 20.dp)) {
+        Row(modifier = Modifier.padding(top = 50.dp)) {
             PopBackStackEntry(navController)
             Text(
                 text = "Fill Your Profile",
@@ -111,7 +111,13 @@ fun AdditionalInfoScreen(navController: NavController) {
                         ambientColor = Color.Gray,
                         spotColor = Color.LightGray,
                     ),
-            label = { Text(text = "Full Name") },
+            label = {
+                Text(
+                    text = "Full Name",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(id = R.color.icon_gray),
+                )
+            },
             isError = nameError,
             singleLine = true,
             // supporting text
@@ -136,7 +142,13 @@ fun AdditionalInfoScreen(navController: NavController) {
                         ambientColor = Color.Gray,
                         spotColor = Color.LightGray,
                     ),
-            label = { Text(text = "Nickname") },
+            label = {
+                Text(
+                    text = "Nickname",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(id = R.color.icon_gray),
+                )
+            },
             singleLine = true,
             colors =
                 TextFieldDefaults.colors(
@@ -160,7 +172,13 @@ fun AdditionalInfoScreen(navController: NavController) {
                         ambientColor = Color.Gray,
                         spotColor = Color.LightGray,
                     ),
-            label = { Text(text = "Date of Birth") },
+            label = {
+                Text(
+                    text = "Date of Birth",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(id = R.color.icon_gray),
+                )
+            },
             singleLine = true,
             colors =
                 TextFieldDefaults.colors(
@@ -184,7 +202,13 @@ fun AdditionalInfoScreen(navController: NavController) {
                         ambientColor = Color.Gray,
                         spotColor = Color.LightGray,
                     ),
-            label = { Text(text = "Email") },
+            label = {
+                Text(
+                    text = "Email",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(id = R.color.icon_gray),
+                )
+            },
             singleLine = true,
             colors =
                 TextFieldDefaults.colors(
@@ -211,7 +235,13 @@ fun AdditionalInfoScreen(navController: NavController) {
                         ambientColor = Color.Gray,
                         spotColor = Color.LightGray,
                     ),
-            label = { Text(text = "Phone Number") },
+            label = {
+                Text(
+                    text = "Phone Number",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(id = R.color.icon_gray),
+                )
+            },
             isError =
                 if (
                     phoneEmptyError || (phoneState.length != 11 && phoneState.all { it.isLetter() })

@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.student_project.R
-import com.example.student_project.screen.Screens
+import com.example.student_project.navigation.Screens
 import kotlinx.coroutines.delay
 
 @Composable

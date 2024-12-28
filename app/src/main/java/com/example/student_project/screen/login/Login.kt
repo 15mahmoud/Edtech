@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
-import com.example.student_project.screen.Screens
+import com.example.student_project.navigation.Screens
 import com.example.student_project.ui.theme.borderButton
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.headLineColor
@@ -87,7 +87,8 @@ fun LoginScreen(navController: NavController) {
                         emailError = it.isEmpty()
                     },
                     modifier =
-                        Modifier.width(screenWidth * 90 / 100)
+                        Modifier.padding(10.dp)
+                            .width(screenWidth * 90 / 100)
                             .align(alignment = Alignment.CenterHorizontally)
                             .shadow(
                                 elevation = 6.dp,
@@ -97,7 +98,13 @@ fun LoginScreen(navController: NavController) {
                             )
                     //  .shadow(elevation = 2.dp, ambientColor = Color.Gray),
                     ,
-                    label = { Text(text = "Email") },
+                    label = {
+                        Text(
+                            text = "Email",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = colorResource(id = R.color.icon_gray),
+                        )
+                    },
                     leadingIcon = {
                         Image(
                             painter = painterResource(id = R.drawable.baseline_email_24),
@@ -124,7 +131,8 @@ fun LoginScreen(navController: NavController) {
                 )
                 TextField(
                     modifier =
-                        Modifier.width(screenWidth * 90 / 100)
+                        Modifier.padding(10.dp)
+                            .width(screenWidth * 90 / 100)
                             .align(alignment = Alignment.CenterHorizontally)
                             .shadow(
                                 elevation = 6.dp,
@@ -140,7 +148,13 @@ fun LoginScreen(navController: NavController) {
                         passwordState = it
                         passwordError = it.isEmpty()
                     },
-                    label = { Text(text = "Password") },
+                    label = {
+                        Text(
+                            text = "Password",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = colorResource(id = R.color.icon_gray),
+                        )
+                    },
                     leadingIcon = {
                         Image(
                             painter = painterResource(id = R.drawable.baseline_lock_24),
@@ -180,8 +194,9 @@ fun LoginScreen(navController: NavController) {
                         if (showPassword) VisualTransformation.None
                         else PasswordVisualTransformation(),
                 )
-
-                Spacer(modifier = Modifier.fillMaxWidth().height(20.dp))
+                // we will remove this after we make local storage
+                // it remember me feature
+                Spacer(modifier = Modifier.fillMaxWidth().height(40.dp))
                 Button(
                     onClick = {
                         if (
@@ -224,7 +239,11 @@ fun LoginScreen(navController: NavController) {
                 }
                 TextButton(
                     onClick = {
-                        // will nav to the forget screen
+                        // first we will check if email exist
+                        // if it exist
+                        // we will send email to this screen
+                        // if its not we will show error
+                        navController.navigate(Screens.EmailAndPhoneScreen.route)
                     },
                     modifier =
                         Modifier.padding(10.dp).align(alignment = Alignment.CenterHorizontally),
