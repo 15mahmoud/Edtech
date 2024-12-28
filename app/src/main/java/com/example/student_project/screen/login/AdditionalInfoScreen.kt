@@ -54,35 +54,19 @@ import com.example.student_project.ui.theme.textFieldColor
 import kotlinx.coroutines.launch
 
 @Composable
-fun AdditionalInfoScreen(
-    navController: NavController
-) {
+fun AdditionalInfoScreen(navController: NavController) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     val scope = rememberCoroutineScope()
 
-    var nameState by remember {
-        mutableStateOf("")
-    }
-    var nameError by remember {
-        mutableStateOf(false)
-    }
-    var nicknameState by remember {
-        mutableStateOf("")
-    }
-    var dateOfBirthState by remember {
-        mutableStateOf("")
-    }
-    var emailState by remember {
-        mutableStateOf("")
-    }
-    var phoneState by remember {
-        mutableStateOf("")
-    }
-    var phoneEmptyError by remember {
-        mutableStateOf(false)
-    }
+    var nameState by remember { mutableStateOf("") }
+    var nameError by remember { mutableStateOf(false) }
+    var nicknameState by remember { mutableStateOf("") }
+    var dateOfBirthState by remember { mutableStateOf("") }
+    var emailState by remember { mutableStateOf("") }
+    var phoneState by remember { mutableStateOf("") }
+    var phoneEmptyError by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         Row(modifier = Modifier.padding(top = 50.dp)) {
@@ -92,28 +76,22 @@ fun AdditionalInfoScreen(
                 style = MaterialTheme.typography.headlineLarge,
                 fontSize = 24.sp,
                 color = headLineColor,
-                modifier = Modifier
-                    .padding(top = 30.dp, start = 10.dp)
+                modifier = Modifier.padding(top = 30.dp, start = 10.dp),
             )
         }
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier.fillMaxWidth().padding(10.dp),
+            horizontalArrangement = Arrangement.Center,
         ) {
             Card(
-                modifier = Modifier
-                    .size(150.dp)
-                    .align(alignment = Alignment.CenterVertically),
-                shape = CircleShape, colors = CardDefaults.cardColors(
-                    containerColor = Color.Transparent
-                )
+                modifier = Modifier.size(150.dp).align(alignment = Alignment.CenterVertically),
+                shape = CircleShape,
+                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.profile_pics),
                     contentDescription = "profile pic",
-                    modifier = Modifier.size(150.dp)
+                    modifier = Modifier.size(150.dp),
                 )
             }
         }
@@ -123,248 +101,239 @@ fun AdditionalInfoScreen(
                 nameState = it
                 nameError = it.isEmpty()
             },
-            modifier = Modifier
-                .width(screenWidth * 90 / 100)
-                .align(alignment = Alignment.CenterHorizontally)
-                .padding(5.dp)
-                .shadow(
-                    elevation = 6.dp,
-                    shape = MaterialTheme.shapes.small,
-                    ambientColor = Color.Gray,
-                    spotColor = Color.LightGray
-                ),
+            modifier =
+                Modifier.width(screenWidth * 90 / 100)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(5.dp)
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = MaterialTheme.shapes.small,
+                        ambientColor = Color.Gray,
+                        spotColor = Color.LightGray,
+                    ),
             label = {
                 Text(
                     text = "Full Name",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = colorResource(
-                        id = R.color.icon_gray
-                    )
+                    color = colorResource(id = R.color.icon_gray),
                 )
             },
             isError = nameError,
             singleLine = true,
-            //supporting text
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = textFieldColor,
-                focusedContainerColor = textFieldColor,
-                unfocusedIndicatorColor = textFieldColor,
-                focusedIndicatorColor = textFieldColor
-            )
+            // supporting text
+            colors =
+                TextFieldDefaults.colors(
+                    unfocusedContainerColor = textFieldColor,
+                    focusedContainerColor = textFieldColor,
+                    unfocusedIndicatorColor = textFieldColor,
+                    focusedIndicatorColor = textFieldColor,
+                ),
         )
         TextField(
             value = nicknameState,
-            onValueChange = {
-                nicknameState = it
-            },
-            modifier = Modifier
-                .width(screenWidth * 90 / 100)
-                .align(alignment = Alignment.CenterHorizontally)
-                .padding(5.dp)
-                .shadow(
-                    elevation = 6.dp,
-                    shape = MaterialTheme.shapes.small,
-                    ambientColor = Color.Gray,
-                    spotColor = Color.LightGray
-                ),
+            onValueChange = { nicknameState = it },
+            modifier =
+                Modifier.width(screenWidth * 90 / 100)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(5.dp)
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = MaterialTheme.shapes.small,
+                        ambientColor = Color.Gray,
+                        spotColor = Color.LightGray,
+                    ),
             label = {
                 Text(
                     text = "Nickname",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = colorResource(
-                        id = R.color.icon_gray
-                    )
+                    color = colorResource(id = R.color.icon_gray),
                 )
             },
             singleLine = true,
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = textFieldColor,
-                focusedContainerColor = textFieldColor,
-                unfocusedIndicatorColor = textFieldColor,
-                focusedIndicatorColor = textFieldColor
-            )
+            colors =
+                TextFieldDefaults.colors(
+                    unfocusedContainerColor = textFieldColor,
+                    focusedContainerColor = textFieldColor,
+                    unfocusedIndicatorColor = textFieldColor,
+                    focusedIndicatorColor = textFieldColor,
+                ),
         )
         TextField(
             value = dateOfBirthState,
-            onValueChange = {
-                dateOfBirthState = it
-            },
-            modifier = Modifier
-                .width(screenWidth * 90 / 100)
-                .align(alignment = Alignment.CenterHorizontally)
-                .padding(5.dp)
-                //i need to add border
-                .shadow(
-                    elevation = 6.dp,
-                    shape = MaterialTheme.shapes.small,
-                    ambientColor = Color.Gray,
-                    spotColor = Color.LightGray
-                ),
+            onValueChange = { dateOfBirthState = it },
+            modifier =
+                Modifier.width(screenWidth * 90 / 100)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(5.dp)
+                    // i need to add border
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = MaterialTheme.shapes.small,
+                        ambientColor = Color.Gray,
+                        spotColor = Color.LightGray,
+                    ),
             label = {
                 Text(
                     text = "Date of Birth",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = colorResource(
-                        id = R.color.icon_gray
-                    )
+                    color = colorResource(id = R.color.icon_gray),
                 )
             },
             singleLine = true,
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = textFieldColor,
-                focusedContainerColor = textFieldColor,
-                unfocusedIndicatorColor = textFieldColor,
-                focusedIndicatorColor = textFieldColor
-            )
+            colors =
+                TextFieldDefaults.colors(
+                    unfocusedContainerColor = textFieldColor,
+                    focusedContainerColor = textFieldColor,
+                    unfocusedIndicatorColor = textFieldColor,
+                    focusedIndicatorColor = textFieldColor,
+                ),
         )
         TextField(
             value = emailState,
-            onValueChange = {
-                emailState = it
-            },
-            modifier = Modifier
-                .width(screenWidth * 90 / 100)
-                .align(alignment = Alignment.CenterHorizontally)
-                .padding(5.dp)
-                //i need to add border
-                .shadow(
-                    elevation = 6.dp,
-                    shape = MaterialTheme.shapes.small,
-                    ambientColor = Color.Gray,
-                    spotColor = Color.LightGray
-                ),
+            onValueChange = { emailState = it },
+            modifier =
+                Modifier.width(screenWidth * 90 / 100)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(5.dp)
+                    // i need to add border
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = MaterialTheme.shapes.small,
+                        ambientColor = Color.Gray,
+                        spotColor = Color.LightGray,
+                    ),
             label = {
                 Text(
                     text = "Email",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = colorResource(
-                        id = R.color.icon_gray
-                    )
+                    color = colorResource(id = R.color.icon_gray),
                 )
             },
             singleLine = true,
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = textFieldColor,
-                focusedContainerColor = textFieldColor,
-                unfocusedIndicatorColor = textFieldColor,
-                focusedIndicatorColor = textFieldColor
-            )
+            colors =
+                TextFieldDefaults.colors(
+                    unfocusedContainerColor = textFieldColor,
+                    focusedContainerColor = textFieldColor,
+                    unfocusedIndicatorColor = textFieldColor,
+                    focusedIndicatorColor = textFieldColor,
+                ),
         )
         TextField(
             value = phoneState,
             onValueChange = {
                 phoneState = it
-                //this need modify need to make sure this is number
+                // this need modify need to make sure this is number
                 phoneEmptyError = it.isEmpty()
-
             },
-            modifier = Modifier
-                .width(screenWidth * 90 / 100)
-                .align(alignment = Alignment.CenterHorizontally)
-                .padding(5.dp)
-                .shadow(
-                    elevation = 6.dp,
-                    shape = MaterialTheme.shapes.small,
-                    ambientColor = Color.Gray,
-                    spotColor = Color.LightGray
-                ),
+            modifier =
+                Modifier.width(screenWidth * 90 / 100)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(5.dp)
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = MaterialTheme.shapes.small,
+                        ambientColor = Color.Gray,
+                        spotColor = Color.LightGray,
+                    ),
             label = {
                 Text(
                     text = "Phone Number",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = colorResource(
-                        id = R.color.icon_gray
-                    )
+                    color = colorResource(id = R.color.icon_gray),
                 )
             },
-            isError = if (phoneEmptyError || (phoneState.length != 11 && phoneState.all { it.isLetter() })) true else phoneState.isEmpty(),
+            isError =
+                if (
+                    phoneEmptyError || (phoneState.length != 11 && phoneState.all { it.isLetter() })
+                )
+                    true
+                else phoneState.isEmpty(),
             singleLine = true,
-//            supportingText = {
-//                if (phoneEmptyError) {
-//                    Text(
-//                        text = "Phone cannot be empty ",
-//                        color = MaterialTheme.colorScheme.error
-//                    )
-//                }else if (phoneState.length != 11 && phoneState.all { !it.isLetter() }){
-//                 Text(text = "Please enter a valid Phone ",
-//                     color = MaterialTheme.colorScheme.error)
-//                }
-//            },
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = textFieldColor,
-                focusedContainerColor = textFieldColor,
-                unfocusedIndicatorColor = textFieldColor,
-                focusedIndicatorColor = textFieldColor
-            )
+            //            supportingText = {
+            //                if (phoneEmptyError) {
+            //                    Text(
+            //                        text = "Phone cannot be empty ",
+            //                        color = MaterialTheme.colorScheme.error
+            //                    )
+            //                }else if (phoneState.length != 11 && phoneState.all { !it.isLetter()
+            // }){
+            //                 Text(text = "Please enter a valid Phone ",
+            //                     color = MaterialTheme.colorScheme.error)
+            //                }
+            //            },
+            colors =
+                TextFieldDefaults.colors(
+                    unfocusedContainerColor = textFieldColor,
+                    focusedContainerColor = textFieldColor,
+                    unfocusedIndicatorColor = textFieldColor,
+                    focusedIndicatorColor = textFieldColor,
+                ),
         )
 
-        //DropDown(navController)
+        // DropDown(navController)
 
         Button(
             onClick = {
                 // Handle sign-up logic here, including validation
-                if (nameState.isNotEmpty() && phoneState.isNotEmpty() && phoneState.length == 11 && phoneState.all { it.isDigit() }
+                if (
+                    nameState.isNotEmpty() &&
+                        phoneState.isNotEmpty() &&
+                        phoneState.length == 11 &&
+                        phoneState.all { it.isDigit() }
                 ) {
                     // Proceed to next screen or perform sign-up actions
-                    //this one will change
+                    // this one will change
                     navController.navigate(Screens.HomeScreen.route)
                 } else {
                     scope.launch {
-                        SnackbarHostState().showSnackbar(
-                            message = "You invalid info",
-                            duration = SnackbarDuration.Short
-                        )
+                        SnackbarHostState()
+                            .showSnackbar(
+                                message = "You invalid info",
+                                duration = SnackbarDuration.Short,
+                            )
                     }
                 }
             },
             shape = RoundedCornerShape(100.dp),
-            modifier = Modifier
-                .padding(top = 40.dp)
-                .align(alignment = Alignment.CenterHorizontally)
-//                .width(screenWidth * 90 / 100)
-                .height(screenHeight * 6 / 100),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(
-                    id = R.color.button_color
-                )
-            )
+            modifier =
+                Modifier.padding(top = 40.dp)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    //                .width(screenWidth * 90 / 100)
+                    .height(screenHeight * 6 / 100),
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.button_color)
+                ),
         ) {
             Text(
                 text = "Continue",
                 style = MaterialTheme.typography.headlineLarge,
-                color = Color.White
+                color = Color.White,
             )
         }
     }
 }
 
-
-//we need to modify this code to make it usable for every place in our code
+// we need to modify this code to make it usable for every place in our code
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDown(navController: NavController) {
-//this is wrong
+    // this is wrong
 
     val university = listOf("tanta", "other")
-    var isExpandedForUniversity by remember {
-        mutableStateOf(false)
-    }
-    var universityChoiceState by remember {
-        mutableStateOf("Pick your University")
-    }
+    var isExpandedForUniversity by remember { mutableStateOf(false) }
+    var universityChoiceState by remember { mutableStateOf("Pick your University") }
 
     Box(modifier = Modifier.fillMaxSize()) {
-
-
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
-
             ExposedDropdownMenuBox(
                 expanded = isExpandedForUniversity,
-                onExpandedChange = { isExpandedForUniversity = !isExpandedForUniversity }) {
+                onExpandedChange = { isExpandedForUniversity = !isExpandedForUniversity },
+            ) {
                 TextField(
                     value = universityChoiceState,
                     onValueChange = {},
@@ -372,60 +341,55 @@ fun DropDown(navController: NavController) {
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForUniversity)
                     },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier
-                        .menuAnchor()
-                        .width(350.dp)
-                        .border(
-                            1.dp, Color.Gray,
-                            RoundedCornerShape(10.dp)
-                        )
-
+                    colors =
+                        ExposedDropdownMenuDefaults.textFieldColors(
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                        ),
+                    modifier =
+                        Modifier.menuAnchor()
+                            .width(350.dp)
+                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     expanded = isExpandedForUniversity,
-                    onDismissRequest = { isExpandedForUniversity = false }) {
+                    onDismissRequest = { isExpandedForUniversity = false },
+                ) {
                     university.forEachIndexed { index, text ->
-
                         DropdownMenuItem(
-
                             text = { Text(text = text) },
                             onClick = {
                                 universityChoiceState = university[index]
                                 isExpandedForUniversity = false
-                            }
+                            },
                         )
                     }
                 }
             }
-//            Spacer(
-//                modifier = Modifier
-//                    .width(327.dp)
-//                    .height(44.dp)
-//            )
-//            Button(
-//                onClick = {
-//                    //there will be code to send data to back
-//                    //this data is the state of university and major
-////will nav to dashboard screen
-//
-//                    navController.navigate(Screens.HomeScreen.route)
-//                }, shape = RoundedCornerShape(10.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = colorResource(
-//                        id = R.color.light_green
-//                    )
-//                ),
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(50.dp)
-//            ) {
-//                Text(text = "Continue", fontSize = 20.sp)
-//            }
+            //            Spacer(
+            //                modifier = Modifier
+            //                    .width(327.dp)
+            //                    .height(44.dp)
+            //            )
+            //            Button(
+            //                onClick = {
+            //                    //there will be code to send data to back
+            //                    //this data is the state of university and major
+            //// will nav to dashboard screen
+            //
+            //                    navController.navigate(Screens.HomeScreen.route)
+            //                }, shape = RoundedCornerShape(10.dp),
+            //                colors = ButtonDefaults.buttonColors(
+            //                    containerColor = colorResource(
+            //                        id = R.color.light_green
+            //                    )
+            //                ),
+            //                modifier = Modifier
+            //                    .fillMaxWidth()
+            //                    .height(50.dp)
+            //            ) {
+            //                Text(text = "Continue", fontSize = 20.sp)
+            //            }
         }
     }
-
 }

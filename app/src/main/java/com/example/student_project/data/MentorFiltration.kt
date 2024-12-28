@@ -18,8 +18,5 @@ data class SearchResult(
 
 // object will be send from filter to filter result
 @Parcelize
-data class FiltrationRequest(
-    val jopTitle: String,
-    val rating: Double,
-    val hourlyRate: Double,
-) : Parcelable
+data class FiltrationRequest(val jopTitle: String, val rating: Double, val hourlyRate: Double) :
+    Parcelable

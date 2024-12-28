@@ -31,87 +31,85 @@ import com.example.student_project.ui.theme.darkerGrayColor
 @Composable
 fun CourseFilterScreen(navController: NavController) {
     Scaffold(
-        topBar = {
-            ScaffoldFilterScreenTopBar(navController = navController)
-        }, bottomBar = {
+        topBar = { ScaffoldFilterScreenTopBar(navController = navController) },
+        bottomBar = {
             NavigationBar {
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(
-                        8.dp,
-                        alignment = Alignment.CenterHorizontally
-                    )
+                    horizontalArrangement =
+                        Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
                 ) {
-                    Button(modifier = Modifier.weight(0.4f),
+                    Button(
+                        modifier = Modifier.weight(0.4f),
                         border = BorderStroke(1.dp, Color.Gray),
                         shape = RoundedCornerShape(120.dp),
-
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                        onClick = { navController.navigate(Screens.MentorFilterScreen.route) }) {
+                        onClick = { navController.navigate(Screens.MentorFilterScreen.route) },
+                    ) {
                         Text(
                             text = "Reset Filter",
                             style = MaterialTheme.typography.titleMedium,
-                            color = buttonColor
+                            color = buttonColor,
                         )
                     }
-                    Button(modifier = Modifier.weight(0.4f),
+                    Button(
+                        modifier = Modifier.weight(0.4f),
                         shape = RoundedCornerShape(120.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
                         onClick = {
-                            //filled object first then we will send it to TopCourse screen
-                            //var filterationRequest = FilterationRequest()
+                            // filled object first then we will send it to TopCourse screen
+                            // var filterationRequest = FilterationRequest()
 
-                            //navigate with arguments "filteration object" to search result
-                        }) {
+                            // navigate with arguments "filteration object" to search result
+                        },
+                    ) {
                         Text(text = "Apply Filter", style = MaterialTheme.typography.titleMedium)
                     }
                 }
             }
-        }
+        },
     ) { innerPadding ->
-        Column(
-            Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-        ) {
+        Column(Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
             Text(
                 text = "I'm looking for",
                 Modifier.padding(10.dp),
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.headlineLarge,
-                color = buttonColor
+                color = buttonColor,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(
-                    8.dp,
-                    alignment = Alignment.CenterHorizontally
-                )
+                horizontalArrangement =
+                    Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
             ) {
-                Button(modifier = Modifier.weight(0.4f),
+                Button(
+                    modifier = Modifier.weight(0.4f),
                     border = BorderStroke(1.dp, Color.Gray),
-                    shape = RoundedCornerShape(120.dp),colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent), onClick = {
-                    navController.navigate(Screens.MentorFilterScreen.route)
-                }) {
+                    shape = RoundedCornerShape(120.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    onClick = { navController.navigate(Screens.MentorFilterScreen.route) },
+                ) {
                     Text(
                         text = "Tutor",
                         fontSize = 14.sp,
                         fontWeight = FontWeight(500),
                         color = darkerGrayColor,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
-                Button(modifier = Modifier.weight(0.4f),
+                Button(
+                    modifier = Modifier.weight(0.4f),
                     border = BorderStroke(1.dp, Color.Gray),
-                    shape = RoundedCornerShape(120.dp),colors = ButtonDefaults.buttonColors(containerColor = buttonColor), onClick = {
-
-                }) {
+                    shape = RoundedCornerShape(120.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+                    onClick = {},
+                ) {
                     Text(
                         text = "Course",
                         fontSize = 14.sp,
                         fontWeight = FontWeight(500),
                         color = darkerGrayColor,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
             }

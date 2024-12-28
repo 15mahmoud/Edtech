@@ -52,69 +52,64 @@ fun EmailAndPhoneScreen(navController: NavController) {
                 style = MaterialTheme.typography.headlineLarge,
                 fontSize = 24.sp,
                 color = headLineColor,
-                modifier = Modifier
-                    .padding(top = 30.dp, start = 10.dp)
+                modifier = Modifier.padding(top = 30.dp, start = 10.dp),
             )
         }
-        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Image(
-                modifier = Modifier
-                    .width(screenWidth * 64 / 100)
-                    .height(screenHeight * 28 / 100)
-                    .align(alignment = Alignment.CenterVertically),
+                modifier =
+                    Modifier.width(screenWidth * 64 / 100)
+                        .height(screenHeight * 28 / 100)
+                        .align(alignment = Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.forgot_password),
-                contentDescription = null
+                contentDescription = null,
             )
         }
         Text(
-            modifier = Modifier
-                .align(alignment = Alignment.CenterHorizontally)
-                .padding(top = 50.dp, start = 10.dp, end = 10.dp, bottom = 10.dp),
+            modifier =
+                Modifier.align(alignment = Alignment.CenterHorizontally)
+                    .padding(top = 50.dp, start = 10.dp, end = 10.dp, bottom = 10.dp),
             text = "Select which contact details should we use to reset your password",
             style = MaterialTheme.typography.titleMedium,
-            fontSize = 18.sp
+            fontSize = 18.sp,
         )
         Box(modifier = Modifier.fillMaxWidth()) {
             Column {
                 Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(screenHeight * 20 / 100)
-                        .padding(10.dp)
-                        .clickable {
-                            //here we call backend and give email and back will response with phone number
-                            //will navigate to otp code screen and we will pass phone with it to give it to back to give me code
-                            navController.navigate(Screens.OtpScreen.route)
-
-                        },
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .height(screenHeight * 20 / 100)
+                            .padding(10.dp)
+                            .clickable {
+                                // here we call backend and give email and back will response with
+                                // phone number
+                                // will navigate to otp code screen and we will pass phone with it
+                                // to give it to back to give me code
+                                navController.navigate(Screens.OtpScreen.route)
+                            },
                     shape = RoundedCornerShape(20.dp),
                     border = BorderStroke(width = 3.dp, color = borderButton),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Transparent
-                    )
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(), verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Card(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .height(screenHeight * 9 / 100)
-                                .width(screenWidth * 19 / 100),
+                            modifier =
+                                Modifier.padding(10.dp)
+                                    .height(screenHeight * 9 / 100)
+                                    .width(screenWidth * 19 / 100),
                             shape = CircleShape,
-                            colors = CardDefaults.cardColors(
-                                containerColor = cardColor
-                            )
+                            colors = CardDefaults.cardColors(containerColor = cardColor),
                         ) {
                             Image(
-                                modifier = Modifier
-                                    .padding(15.dp)
-                                    .align(alignment = Alignment.CenterHorizontally)
-                                    .size(30.dp),
+                                modifier =
+                                    Modifier.padding(15.dp)
+                                        .align(alignment = Alignment.CenterHorizontally)
+                                        .size(30.dp),
                                 painter = painterResource(id = R.drawable.sms),
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                         Column(modifier = Modifier.padding(start = 15.dp)) {
@@ -123,56 +118,50 @@ fun EmailAndPhoneScreen(navController: NavController) {
                                 text = "via SMS:",
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = darkerGrayColor,
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
                             )
                             Text(
                                 modifier = Modifier.padding(2.dp),
                                 text = "here we will take phone from backend",
                                 style = MaterialTheme.typography.headlineLarge,
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
                             )
-
-
                         }
                     }
                 }
                 Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(screenHeight * 20 / 100)
-                        .padding(10.dp)
-                        .clickable {
-                            //will navigate to otp code screen and we will pass email with it to give it to backend to give me code
-                            navController.navigate(Screens.OtpScreen.route)
-                        },
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .height(screenHeight * 20 / 100)
+                            .padding(10.dp)
+                            .clickable {
+                                // will navigate to otp code screen and we will pass email with it
+                                // to give it to backend to give me code
+                                navController.navigate(Screens.OtpScreen.route)
+                            },
                     shape = RoundedCornerShape(20.dp),
                     border = BorderStroke(width = 3.dp, color = borderButton),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Transparent
-                    )
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(), verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Card(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .height(screenHeight * 9 / 100)
-                                .width(screenWidth * 19 / 100),
+                            modifier =
+                                Modifier.padding(10.dp)
+                                    .height(screenHeight * 9 / 100)
+                                    .width(screenWidth * 19 / 100),
                             shape = CircleShape,
-                            colors = CardDefaults.cardColors(
-                                containerColor = cardColor
-                            )
+                            colors = CardDefaults.cardColors(containerColor = cardColor),
                         ) {
                             Image(
-                                modifier = Modifier
-                                    .padding(15.dp)
-                                    .align(alignment = Alignment.CenterHorizontally)
-                                    .size(30.dp),
+                                modifier =
+                                    Modifier.padding(15.dp)
+                                        .align(alignment = Alignment.CenterHorizontally)
+                                        .size(30.dp),
                                 painter = painterResource(id = R.drawable.gmail_otp),
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                         Column(modifier = Modifier.padding(start = 15.dp)) {
@@ -181,20 +170,18 @@ fun EmailAndPhoneScreen(navController: NavController) {
                                 text = "via Email:",
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = darkerGrayColor,
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
                             )
                             Text(
                                 modifier = Modifier.padding(2.dp),
                                 text = "here we take email from login",
                                 style = MaterialTheme.typography.headlineLarge,
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
                             )
                         }
                     }
                 }
             }
         }
-
     }
 }
-

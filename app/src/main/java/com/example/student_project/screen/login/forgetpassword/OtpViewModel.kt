@@ -10,6 +10,7 @@ private const val VALID_OTP_CODE = "1414"
 class OtpViewModel : ViewModel() {
     private val _state = MutableStateFlow(OtpState())
     val state = _state.asStateFlow()
+
     fun onAction(action: OtpAction) {
         when (action) {
             is OtpAction.OnEnterNumber -> {
@@ -17,62 +18,58 @@ class OtpViewModel : ViewModel() {
             }
 
             is OtpAction.OnChangeFieldFocus -> {
-                _state.update {
-                    it.copy(
-                        focusedIndex = action.index
-                    )
-                }
-
+                _state.update { it.copy(focusedIndex = action.index) }
             }
 
             OtpAction.OnKeyboardBack -> {
                 val previousIndex = getPreviousFocusedIndex(state.value.focusedIndex)
                 _state.update {
                     it.copy(
-                        code = it.code.mapIndexed { index, number ->
-                            if (index == previousIndex) {
-                                null
-                            } else {
-                                number
-                            }
-                        },
-                        focusedIndex = previousIndex
+                        code =
+                            it.code.mapIndexed { index, number ->
+                                if (index == previousIndex) {
+                                    null
+                                } else {
+                                    number
+                                }
+                            },
+                        focusedIndex = previousIndex,
                     )
-
                 }
             }
         }
     }
 
-
     private fun enterNumber(number: Int?, index: Int) {
-        val newCode = state.value.code.mapIndexed { currentindex, currentNumber ->
-            if (currentindex == index) {
-                number
-            } else {
-                currentNumber
+        val newCode =
+            state.value.code.mapIndexed { currentindex, currentNumber ->
+                if (currentindex == index) {
+                    number
+                } else {
+                    currentNumber
+                }
             }
-        }
         val wasNumberRemoved = number == null
         _state.update {
             it.copy(
                 code = newCode,
-                focusedIndex = if (wasNumberRemoved || it.code.getOrNull(index) != null) {
-                    it.focusedIndex
-                } else {
-                    getNextFocusedTextFieldIndex(
-                        currentCode = it.code,
-                        currentFocusedIndex = it.focusedIndex
-                    )
-                },
-                //none mean that the newCode will never had the value in none
-                isValid = if (newCode.none { it == null }) {
-                    //here we will change code with the one we got from  backend and check if it true
-                    newCode.joinToString("") == VALID_OTP_CODE
-                } else null
-
+                focusedIndex =
+                    if (wasNumberRemoved || it.code.getOrNull(index) != null) {
+                        it.focusedIndex
+                    } else {
+                        getNextFocusedTextFieldIndex(
+                            currentCode = it.code,
+                            currentFocusedIndex = it.focusedIndex,
+                        )
+                    },
+                // none mean that the newCode will never had the value in none
+                isValid =
+                    if (newCode.none { it == null }) {
+                        // here we will change code with the one we got from  backend and check if
+                        // it true
+                        newCode.joinToString("") == VALID_OTP_CODE
+                    } else null,
             )
-
         }
     }
 
@@ -82,7 +79,7 @@ class OtpViewModel : ViewModel() {
 
     private fun getNextFocusedTextFieldIndex(
         currentCode: List<Int?>,
-        currentFocusedIndex: Int?
+        currentFocusedIndex: Int?,
     ): Int? {
         if (currentFocusedIndex == null) {
             return null
@@ -92,14 +89,13 @@ class OtpViewModel : ViewModel() {
         }
         return getFirstEmptyFieldIndexAfterFocusedIndex(
             code = currentCode,
-            currentFocusedIndex = currentFocusedIndex
+            currentFocusedIndex = currentFocusedIndex,
         )
-
     }
 
     private fun getFirstEmptyFieldIndexAfterFocusedIndex(
         code: List<Int?>,
-        currentFocusedIndex: Int
+        currentFocusedIndex: Int,
     ): Int? {
 
         code.forEachIndexed { index, number ->

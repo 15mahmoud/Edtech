@@ -47,59 +47,60 @@ fun MentorFilterResultScreen(
     navController: NavController,
     jopTitle: String?,
     rating: Float?,
-    hourlyRate: Float?
+    hourlyRate: Float?,
 ) {
-    val searchList = listOf(
-        SearchResult(
-            imgId = R.drawable.search_result_img1,
-            mentorName = "Eleanor Pena",
-            jopTitle = "MATH 116",
-            university = "Kobenhavens",
-            rating = 5.0,
-            availability = listOf("Saturday", "Sunday", "Friday"),
-            degreeAndCertificate = "Master's in Applied Mathematics",
-            timeSlots = listOf("Morning"),
-            experience = "1-3 Years",
-            hourlyRate = 30.0
-        ),
-        SearchResult(
-            imgId = R.drawable.search_result_img2,
-            mentorName = "Robert Fox",
-            jopTitle = "MATH 116",
-            university = "Oxford",
-            rating = 4.5,
-            availability = listOf("Saturday", "Wednesday", "Friday"),
-            degreeAndCertificate = "Bachelor's in Applied Mathematics",
-            timeSlots = listOf("Evening"),
-            experience = "3-6 Years",
-            hourlyRate = 30.0
-        ),
-                SearchResult(
+    val searchList =
+        listOf(
+            SearchResult(
+                imgId = R.drawable.search_result_img1,
+                mentorName = "Eleanor Pena",
+                jopTitle = "MATH 116",
+                university = "Kobenhavens",
+                rating = 5.0,
+                availability = listOf("Saturday", "Sunday", "Friday"),
+                degreeAndCertificate = "Master's in Applied Mathematics",
+                timeSlots = listOf("Morning"),
+                experience = "1-3 Years",
+                hourlyRate = 30.0,
+            ),
+            SearchResult(
+                imgId = R.drawable.search_result_img2,
+                mentorName = "Robert Fox",
+                jopTitle = "MATH 116",
+                university = "Oxford",
+                rating = 4.5,
+                availability = listOf("Saturday", "Wednesday", "Friday"),
+                degreeAndCertificate = "Bachelor's in Applied Mathematics",
+                timeSlots = listOf("Evening"),
+                experience = "3-6 Years",
+                hourlyRate = 30.0,
+            ),
+            SearchResult(
                 imgId = R.drawable.profile_pics,
-        mentorName = "Ihab",
-        jopTitle = "ARCH 117",
-        university = "Oxford",
-        rating = 4.5,
-        availability = listOf("Saturday", "Wednesday", "Friday"),
-        degreeAndCertificate = "Bachelor's in Applied Mathematics",
-        timeSlots = listOf("Evening"),
-        experience = "3-6 Years",
-        hourlyRate = 10.0
-    ),
-    SearchResult(
-        imgId = R.drawable.profile,
-        mentorName = "Ramadan",
-        jopTitle = "ARCH 117",
-        university = "Oxford",
-        rating = 4.5,
-        availability = listOf("Saturday", "Wednesday", "Friday"),
-        degreeAndCertificate = "Bachelor's in Applied Mathematics",
-        timeSlots = listOf("Evening"),
-        experience = "3-6 Years",
-        hourlyRate = 20.0
-    )
-    )
-    //for showing search Text field
+                mentorName = "Ihab",
+                jopTitle = "ARCH 117",
+                university = "Oxford",
+                rating = 4.5,
+                availability = listOf("Saturday", "Wednesday", "Friday"),
+                degreeAndCertificate = "Bachelor's in Applied Mathematics",
+                timeSlots = listOf("Evening"),
+                experience = "3-6 Years",
+                hourlyRate = 10.0,
+            ),
+            SearchResult(
+                imgId = R.drawable.profile,
+                mentorName = "Ramadan",
+                jopTitle = "ARCH 117",
+                university = "Oxford",
+                rating = 4.5,
+                availability = listOf("Saturday", "Wednesday", "Friday"),
+                degreeAndCertificate = "Bachelor's in Applied Mathematics",
+                timeSlots = listOf("Evening"),
+                experience = "3-6 Years",
+                hourlyRate = 20.0,
+            ),
+        )
+    // for showing search Text field
     var togel by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -107,17 +108,23 @@ fun MentorFilterResultScreen(
                 title = {
                     Row(modifier = Modifier.fillMaxWidth()) {
                         IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null,
+                            )
                         }
                         Text(
                             text = "Filters",
                             modifier = Modifier.padding(top = 10.dp),
                             style = MaterialTheme.typography.headlineLarge,
                             fontSize = 24.sp,
-                            fontWeight = FontWeight(700)
+                            fontWeight = FontWeight(700),
                         )
                         Spacer(modifier = Modifier.width(175.dp))
-                        IconButton(modifier = Modifier.padding(top=5.dp), onClick = { togel=!togel }) {
+                        IconButton(
+                            modifier = Modifier.padding(top = 5.dp),
+                            onClick = { togel = !togel },
+                        ) {
                             Icon(imageVector = Icons.Default.Search, contentDescription = null)
                         }
                     }
@@ -126,68 +133,67 @@ fun MentorFilterResultScreen(
         }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            if (togel){
+            if (togel) {
                 Text(text = "this will be search")
             }
             LazyColumn() {
                 itemsIndexed(searchList) { index, item ->
-
-                    if (item.jopTitle == jopTitle && item.rating >= rating!! && item.hourlyRate <= hourlyRate!!) {
+                    if (
+                        item.jopTitle == jopTitle &&
+                            item.rating >= rating!! &&
+                            item.hourlyRate <= hourlyRate!!
+                    ) {
                         MentorResult(
                             name = item.mentorName,
                             title = item.jopTitle,
-                            imgId = item.imgId, onClickListener ={string->
-//here we will navigate to details screen
-                            })
+                            imgId = item.imgId,
+                            onClickListener = { string ->
+                                // here we will navigate to details screen
+                            },
+                        )
                     }
-
                 }
             }
         }
 
-//            //take object from MentorFilter and show it here
+        //            //take object from MentorFilter and show it here
     }
 }
 
-//this string may change to list of strings
-//may be we modify this and make it for course and mentor result
+// this string may change to list of strings
+// may be we modify this and make it for course and mentor result
 @Composable
-fun MentorResult(name: String, title: String, imgId: Int,onClickListener: (String) -> Unit) {
+fun MentorResult(name: String, title: String, imgId: Int, onClickListener: (String) -> Unit) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onClickListener(name)
-            },
-        contentColor = Color.White
+        modifier = Modifier.fillMaxWidth().clickable { onClickListener(name) },
+        contentColor = Color.White,
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Image(
                 painter = painterResource(id = imgId),
                 contentDescription = null,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .height(screenHeight * 6 / 100)
-                    .width(screenWidth * 16 / 100)
+                modifier =
+                    Modifier.padding(10.dp)
+                        .height(screenHeight * 6 / 100)
+                        .width(screenWidth * 16 / 100),
             )
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.headlineLarge,
                     fontSize = 18.sp,
-                    color = buttonColor
+                    color = buttonColor,
                 )
                 Text(
                     text = title,
                     style = MaterialTheme.typography.headlineMedium,
                     fontSize = 14.sp,
-                    color = jopTitleColor
+                    color = jopTitleColor,
                 )
             }
         }
     }
-
 }

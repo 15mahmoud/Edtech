@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -56,21 +55,13 @@ import com.example.student_project.ui.theme.darkerGrayColor
 fun MentorFilterScreen(navController: NavController) {
     val major = listOf("MATH 116", "ARCH 117", "other")
     var isExpandedForMajor by remember { mutableStateOf(false) }
-    var majorChoiceState by remember {
-        mutableStateOf("MATH 116")
-    }
+    var majorChoiceState by remember { mutableStateOf("MATH 116") }
     val yearOfExperience = listOf("1-3 Years", "3-6 Years", "+6 Years")
-    var isExpandedForExperience by remember {
-        mutableStateOf(false)
-    }
-    var yearOfExperienceChoiceState by remember {
-        mutableStateOf("1-3 Years")
-    }
+    var isExpandedForExperience by remember { mutableStateOf(false) }
+    var yearOfExperienceChoiceState by remember { mutableStateOf("1-3 Years") }
     val degreeAndCertificate =
         listOf("Master's in Applied Mathematics", "Bachelor's in Applied Mathematics")
-    var isExpandedForDegree by remember {
-        mutableStateOf(false)
-    }
+    var isExpandedForDegree by remember { mutableStateOf(false) }
     var degreeAndCertificateChoiceState by remember {
         mutableStateOf("Master's in Applied Mathematics")
     }
@@ -82,120 +73,118 @@ fun MentorFilterScreen(navController: NavController) {
 
     val timeSlotSelected = mutableListOf<String?>()
 
-    Scaffold(modifier = Modifier.padding(16.dp),
-        topBar = {
-            ScaffoldFilterScreenTopBar(navController = navController)
-        }, bottomBar = {
+    Scaffold(
+        modifier = Modifier.padding(16.dp),
+        topBar = { ScaffoldFilterScreenTopBar(navController = navController) },
+        bottomBar = {
             NavigationBar {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                        .background(Color.Transparent),
-                    horizontalArrangement = Arrangement.spacedBy(
-                        8.dp,
-                        alignment = Alignment.CenterHorizontally
-                    )
+                    modifier = Modifier.fillMaxWidth().padding(10.dp).background(Color.Transparent),
+                    horizontalArrangement =
+                        Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
                 ) {
-                    Button(modifier = Modifier.weight(0.4f),
+                    Button(
+                        modifier = Modifier.weight(0.4f),
                         border = BorderStroke(1.dp, Color.Gray),
                         shape = RoundedCornerShape(120.dp),
-
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                        onClick = { navController.navigate(Screens.MentorFilterScreen.route) }) {
+                        onClick = { navController.navigate(Screens.MentorFilterScreen.route) },
+                    ) {
                         Text(
                             text = "Reset Filter",
                             style = MaterialTheme.typography.titleMedium,
-                            color = buttonColor
+                            color = buttonColor,
                         )
                     }
-                    Button(modifier = Modifier.weight(0.4f),
+                    Button(
+                        modifier = Modifier.weight(0.4f),
                         shape = RoundedCornerShape(120.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
                         onClick = {
-                            //filled object first then we will send it to TopMentor screen
-                            //var filterationRequest = FilterationRequest()
-                            //note that every arg must have /
-                            //its like web url
-                            navController.navigate(Screens.MentorFilterResultScreen.route + "/$majorChoiceState" + "/$selectedRating" + "/$hourlyRate")
-                            //navigate with arguments "filteration object" to search result
-                        }) {
+                            // filled object first then we will send it to TopMentor screen
+                            // var filterationRequest = FilterationRequest()
+                            // note that every arg must have /
+                            // its like web url
+                            navController.navigate(
+                                Screens.MentorFilterResultScreen.route +
+                                    "/$majorChoiceState" +
+                                    "/$selectedRating" +
+                                    "/$hourlyRate"
+                            )
+                            // navigate with arguments "filteration object" to search result
+                        },
+                    ) {
                         Text(text = "Apply Filter", style = MaterialTheme.typography.titleMedium)
                     }
                 }
             }
-        }
+        },
     ) { innerPadding ->
-        Column(
-            Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-        ) {
+        Column(Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
             Text(
                 text = "I'm looking for",
                 Modifier.padding(10.dp),
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.headlineLarge,
-                color = buttonColor
+                color = buttonColor,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(
-                    8.dp,
-                    alignment = Alignment.CenterHorizontally
-                )
+                horizontalArrangement =
+                    Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
             ) {
-                Button(modifier = Modifier.weight(0.4f),
+                Button(
+                    modifier = Modifier.weight(0.4f),
                     border = BorderStroke(1.dp, Color.Gray),
                     shape = RoundedCornerShape(120.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
-                    onClick = {}) {
+                    onClick = {},
+                ) {
                     Text(
                         text = "Tutor",
                         color = darkerGrayColor,
                         fontSize = 14.sp,
                         fontWeight = FontWeight(500),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
-                Button(modifier = Modifier.weight(0.4f),
+                Button(
+                    modifier = Modifier.weight(0.4f),
                     border = BorderStroke(1.dp, Color.Gray),
                     shape = RoundedCornerShape(120.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                    onClick = {
-                        navController.navigate(Screens.CourseFilterScreen.route)
-
-                    }) {
+                    onClick = { navController.navigate(Screens.CourseFilterScreen.route) },
+                ) {
                     Text(
                         text = "Course",
                         fontSize = 14.sp,
                         fontWeight = FontWeight(500),
                         color = darkerGrayColor,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
             }
-
-
 
             Text(
                 text = "Job Title",
                 Modifier.padding(10.dp),
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.headlineLarge,
-                color = buttonColor
+                color = buttonColor,
             )
 
-            ExposedDropdownMenuBox(modifier = Modifier
-//                .border(
-//                width = 1.dp, color = Color.Gray,
-//                RoundedCornerShape(10.dp)
-//            )
+            ExposedDropdownMenuBox(
+                modifier = Modifier
+                //                .border(
+                //                width = 1.dp, color = Color.Gray,
+                //                RoundedCornerShape(10.dp)
+                //            )
                 ,
                 expanded = isExpandedForMajor,
-                onExpandedChange = { isExpandedForMajor = !isExpandedForMajor }) {
-                //here we will make stack layout and we will put BasicTextField
-                //and we will but icon that indicate to dropDownMenuBox
+                onExpandedChange = { isExpandedForMajor = !isExpandedForMajor },
+            ) {
+                // here we will make stack layout and we will put BasicTextField
+                // and we will but icon that indicate to dropDownMenuBox
                 TextField(
                     value = majorChoiceState,
                     onValueChange = { majorChoiceState = it },
@@ -203,34 +192,35 @@ fun MentorFilterScreen(navController: NavController) {
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForMajor)
                     },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(
-                        unfocusedContainerColor = Color.Green,
-                        focusedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-//                        .border(
-//                            6.dp, Color.Green,
-//                            RoundedCornerShape(10.dp)
-//                        )
+                    colors =
+                        ExposedDropdownMenuDefaults.textFieldColors(
+                            unfocusedContainerColor = Color.Green,
+                            focusedContainerColor = Color.Transparent,
+                        ),
+                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    //                        .border(
+                    //                            6.dp, Color.Green,
+                    //                            RoundedCornerShape(10.dp)
+                    //                        )
 
                 )
-                ExposedDropdownMenu(modifier = Modifier.border(
-                    width = 1.dp, color = Color.Gray,
-                    RoundedCornerShape(10.dp)
-                ),
+                ExposedDropdownMenu(
+                    modifier =
+                        Modifier.border(
+                            width = 1.dp,
+                            color = Color.Gray,
+                            RoundedCornerShape(10.dp),
+                        ),
                     expanded = isExpandedForMajor,
-                    onDismissRequest = { isExpandedForMajor = false }) {
+                    onDismissRequest = { isExpandedForMajor = false },
+                ) {
                     major.forEachIndexed { index, text ->
-
                         DropdownMenuItem(
-
                             text = { Text(text = text) },
                             onClick = {
                                 majorChoiceState = major[index]
                                 isExpandedForMajor = false
-                            }
+                            },
                         )
                     }
                 }
@@ -241,82 +231,52 @@ fun MentorFilterScreen(navController: NavController) {
                 Modifier.padding(10.dp),
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.headlineLarge,
-                color = buttonColor
+                color = buttonColor,
             )
-            //implement lazy row for days ass button
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-            ) {
+            // implement lazy row for days ass button
+            Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+                DayBickerButton(timeSlot = "Saturday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Saturday", onClick = { s ->
-                    daySelected.add(s)
-                })
+                DayBickerButton(timeSlot = "Sunday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Sunday", onClick = { s ->
-                    daySelected.add(s)
-                })
+                DayBickerButton(timeSlot = "Monday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Monday", onClick = { s ->
-                    daySelected.add(s)
-                })
+                DayBickerButton(timeSlot = "Tuesday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Tuesday", onClick = { s ->
-                    daySelected.add(s)
-                })
+                DayBickerButton(timeSlot = "Wednesday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Wednesday", onClick = { s ->
-                    daySelected.add(s)
-                })
+                DayBickerButton(timeSlot = "Thursday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Thursday", onClick = { s ->
-                    daySelected.add(s)
-                })
-
-                DayBickerButton(timeSlot = "Friday", onClick = { s ->
-                    daySelected.add(s)
-                })
+                DayBickerButton(timeSlot = "Friday", onClick = { s -> daySelected.add(s) })
             }
             Text(
                 text = "Time slot",
                 Modifier.padding(10.dp),
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.headlineLarge,
-                color = buttonColor
+                color = buttonColor,
             )
-            //same as the top one
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-            ) {
+            // same as the top one
+            Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+                DayBickerButton(timeSlot = "Morning", onClick = { s -> timeSlotSelected.add(s) })
 
-                DayBickerButton(timeSlot = "Morning", onClick = { s ->
-                    timeSlotSelected.add(s)
-                })
+                DayBickerButton(timeSlot = "Afternoon", onClick = { s -> timeSlotSelected.add(s) })
 
-                DayBickerButton(timeSlot = "Afternoon", onClick = { s ->
-                    timeSlotSelected.add(s)
-                })
-
-                DayBickerButton(timeSlot = "Evening", onClick = { s ->
-                    timeSlotSelected.add(s)
-                })
+                DayBickerButton(timeSlot = "Evening", onClick = { s -> timeSlotSelected.add(s) })
             }
-
 
             Text(
                 text = "Tutoring Experience",
                 Modifier.padding(10.dp),
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.headlineLarge,
-                color = buttonColor
+                color = buttonColor,
             )
-            //implement drop down menu
+            // implement drop down menu
             ExposedDropdownMenuBox(
                 expanded = isExpandedForExperience,
-                onExpandedChange = { isExpandedForExperience = !isExpandedForExperience }) {
+                onExpandedChange = { isExpandedForExperience = !isExpandedForExperience },
+            ) {
                 TextField(
                     value = yearOfExperienceChoiceState,
                     onValueChange = { yearOfExperienceChoiceState = it },
@@ -324,31 +284,27 @@ fun MentorFilterScreen(navController: NavController) {
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForExperience)
                     },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                        .border(
-                            1.dp, Color.Gray,
-                            RoundedCornerShape(10.dp)
-                        )
-
+                    colors =
+                        ExposedDropdownMenuDefaults.textFieldColors(
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                        ),
+                    modifier =
+                        Modifier.menuAnchor()
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     expanded = isExpandedForExperience,
-                    onDismissRequest = { isExpandedForExperience = false }) {
+                    onDismissRequest = { isExpandedForExperience = false },
+                ) {
                     yearOfExperience.forEachIndexed { index, text ->
-
                         DropdownMenuItem(
-
                             text = { Text(text = text) },
                             onClick = {
                                 yearOfExperienceChoiceState = yearOfExperience[index]
                                 isExpandedForExperience = false
-                            }
+                            },
                         )
                     }
                 }
@@ -358,16 +314,16 @@ fun MentorFilterScreen(navController: NavController) {
                 Modifier.padding(10.dp),
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.headlineLarge,
-                color = buttonColor
+                color = buttonColor,
             )
-            //same as top
-            //drop down box
-            ExposedDropdownMenuBox(modifier = Modifier.border(
-                width = 1.dp, color = Color.Gray,
-                RoundedCornerShape(10.dp)
-            ),
+            // same as top
+            // drop down box
+            ExposedDropdownMenuBox(
+                modifier =
+                    Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
                 expanded = isExpandedForDegree,
-                onExpandedChange = { isExpandedForDegree = !isExpandedForDegree }) {
+                onExpandedChange = { isExpandedForDegree = !isExpandedForDegree },
+            ) {
                 TextField(
                     value = degreeAndCertificateChoiceState,
                     onValueChange = { degreeAndCertificateChoiceState = it },
@@ -375,32 +331,33 @@ fun MentorFilterScreen(navController: NavController) {
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForDegree)
                     },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                        .border(
-                            1.dp, Color.Gray,
-                            RoundedCornerShape(10.dp)
-                        )
-
+                    colors =
+                        ExposedDropdownMenuDefaults.textFieldColors(
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                        ),
+                    modifier =
+                        Modifier.menuAnchor()
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
-                ExposedDropdownMenu(modifier = Modifier.border(
-                    width = 1.dp, color = Color.Gray,
-                    RoundedCornerShape(10.dp)
-                ),
+                ExposedDropdownMenu(
+                    modifier =
+                        Modifier.border(
+                            width = 1.dp,
+                            color = Color.Gray,
+                            RoundedCornerShape(10.dp),
+                        ),
                     expanded = isExpandedForDegree,
-                    onDismissRequest = { isExpandedForDegree = false }) {
+                    onDismissRequest = { isExpandedForDegree = false },
+                ) {
                     degreeAndCertificate.forEachIndexed { index, text ->
                         DropdownMenuItem(
                             text = { Text(text = text) },
                             onClick = {
                                 degreeAndCertificateChoiceState = degreeAndCertificate[index]
                                 isExpandedForDegree = false
-                            }
+                            },
                         )
                     }
                 }
@@ -411,28 +368,27 @@ fun MentorFilterScreen(navController: NavController) {
                 Modifier.padding(10.dp),
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.headlineLarge,
-                color = buttonColor
+                color = buttonColor,
             )
-            //implement stars that can filled
-            Row(
-                Modifier.padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            // implement stars that can filled
+            Row(Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 (1..5).forEach { number ->
                     IconButton(onClick = { selectedRating = number.toDouble() }) {
                         Icon(
                             imageVector = Icons.Filled.Star,
                             contentDescription = "Rating Star",
-                            tint = if (number.toDouble() <= selectedRating) Color.Yellow else Color.Gray
+                            tint =
+                                if (number.toDouble() <= selectedRating) Color.Yellow
+                                else Color.Gray,
                         )
                     }
                 }
-                //we will delete this text
+                // we will delete this text
                 Text(
                     modifier = Modifier.padding(start = 8.dp, top = 12.dp),
                     text = "$selectedRating",
                     fontSize = 14.sp,
-                    color = Color.Gray
+                    color = Color.Gray,
                 )
             }
 
@@ -441,47 +397,41 @@ fun MentorFilterScreen(navController: NavController) {
                 Modifier.padding(10.dp),
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.headlineLarge,
-                color = buttonColor
+                color = buttonColor,
             )
 
-            //implement slider
+            // implement slider
             // Hourly Rate Section
             Column {
                 Slider(
                     thumb = {
                         Spacer(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .background(Color.White, CircleShape)
-                                .border(width = 2.dp, color = buttonColor, shape = CircleShape)
+                            modifier =
+                                Modifier.size(20.dp)
+                                    .background(Color.White, CircleShape)
+                                    .border(width = 2.dp, color = buttonColor, shape = CircleShape)
                         )
                     },
                     modifier = Modifier.padding(start = 10.dp),
                     value = hourlyRate.toFloat(),
                     onValueChange = { hourlyRate = it.toDouble() },
                     valueRange = 0f..100f,
-                    colors = SliderDefaults.colors(
-                        thumbColor = buttonColor,
-                        activeTrackColor = buttonColor
-                    )
+                    colors =
+                        SliderDefaults.colors(
+                            thumbColor = buttonColor,
+                            activeTrackColor = buttonColor,
+                        ),
                 )
-                Text(
-                    text = "${hourlyRate} USD/hour",
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
+                Text(text = "${hourlyRate} USD/hour", fontSize = 14.sp, color = Color.Gray)
             }
 
-
             Spacer(modifier = Modifier.height(16.dp))
-
-
         }
     }
 }
 
-//we will change this to lambda fun that will take string and will return -> string
-//then take the returning string and put it in a a list
+// we will change this to lambda fun that will take string and will return -> string
+// then take the returning string and put it in a a list
 @Composable
 fun DayBickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
     var selected by remember { mutableStateOf(false) }
@@ -493,15 +443,13 @@ fun DayBickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
         },
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(containerColor = color),
-        modifier = Modifier
-            .padding(5.dp)
+        modifier = Modifier.padding(5.dp),
     ) {
         Text(
             text = timeSlot.toString(),
             style = MaterialTheme.typography.titleMedium,
             color = darkerGrayColor,
-            fontSize = 12.sp
+            fontSize = 12.sp,
         )
     }
 }
-

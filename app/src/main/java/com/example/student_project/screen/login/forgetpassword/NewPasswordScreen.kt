@@ -66,27 +66,26 @@ fun NewPasswordScreen(navController: NavController) {
                 style = MaterialTheme.typography.headlineLarge,
                 fontSize = 24.sp,
                 color = headLineColor,
-                modifier = Modifier
-                    .padding(top = 30.dp, start = 10.dp)
+                modifier = Modifier.padding(top = 30.dp, start = 10.dp),
             )
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Image(
-                modifier = Modifier
-                    .width(screenWidth * 64 / 100)
-                    .height(screenHeight * 28 / 100)
-                    .align(alignment = Alignment.CenterVertically),
+                modifier =
+                    Modifier.width(screenWidth * 64 / 100)
+                        .height(screenHeight * 28 / 100)
+                        .align(alignment = Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.change_password),
-                contentDescription = null
+                contentDescription = null,
             )
         }
         Text(
-            modifier = Modifier
-                .align(alignment = Alignment.CenterHorizontally)
-                .padding(top = 50.dp, start = 10.dp, end = 10.dp, bottom = 10.dp),
+            modifier =
+                Modifier.align(alignment = Alignment.CenterHorizontally)
+                    .padding(top = 50.dp, start = 10.dp, end = 10.dp, bottom = 10.dp),
             text = "Create New Password",
             style = MaterialTheme.typography.titleMedium,
-            fontSize = 18.sp
+            fontSize = 18.sp,
         )
         TextField(
             value = password,
@@ -98,58 +97,55 @@ fun NewPasswordScreen(navController: NavController) {
                 Text(
                     "Password",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = colorResource(
-                        id = R.color.icon_gray
-                    )
+                    color = colorResource(id = R.color.icon_gray),
                 )
             },
             leadingIcon = {
                 Image(
                     painter = painterResource(id = R.drawable.baseline_lock_24),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             },
             trailingIcon = {
                 Button(
-                    onClick = {
-                        showPassword = !showPassword
-                    }, colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent
-                    )
+                    onClick = { showPassword = !showPassword },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.show_pass),
                         modifier = Modifier.size(17.dp),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             },
-            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation =
+                if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
             isError = passwordError,
-//                        supportingText = {
-//                            if (passwordError) {
-//                                Text(
-//                                    text = "Password cannot be empty",
-//                                    color = MaterialTheme.colorScheme.error
-//                                )
-//                            }
-//                        },
-            modifier = Modifier
-                .padding(10.dp)
-                .width(screenWidth * 90 / 100)
-                .align(alignment = Alignment.CenterHorizontally)
-                .shadow(
-                    elevation = 6.dp,
-                    shape = MaterialTheme.shapes.small,
-                    ambientColor = Color.Gray,
-                    spotColor = Color.LightGray
+            //                        supportingText = {
+            //                            if (passwordError) {
+            //                                Text(
+            //                                    text = "Password cannot be empty",
+            //                                    color = MaterialTheme.colorScheme.error
+            //                                )
+            //                            }
+            //                        },
+            modifier =
+                Modifier.padding(10.dp)
+                    .width(screenWidth * 90 / 100)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = MaterialTheme.shapes.small,
+                        ambientColor = Color.Gray,
+                        spotColor = Color.LightGray,
+                    ),
+            colors =
+                TextFieldDefaults.colors(
+                    unfocusedContainerColor = textFieldColor,
+                    focusedContainerColor = textFieldColor,
+                    unfocusedIndicatorColor = textFieldColor,
+                    focusedIndicatorColor = textFieldColor,
                 ),
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = textFieldColor,
-                focusedContainerColor = textFieldColor,
-                unfocusedIndicatorColor = textFieldColor,
-                focusedIndicatorColor = textFieldColor
-            )
         )
 
         TextField(
@@ -162,93 +158,86 @@ fun NewPasswordScreen(navController: NavController) {
                 Text(
                     "Confirm Password",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = colorResource(
-                        id = R.color.icon_gray
-                    )
+                    color = colorResource(id = R.color.icon_gray),
                 )
             },
             isError = confirmPasswordError,
-//                        supportingText = {
-//                            if (confirmPasswordError) {
-//                                Text(
-//                                    text = "Passwords don't match",
-//                                    color = MaterialTheme.colorScheme.error
-//                                )
-//                            }
-//                        },
+            //                        supportingText = {
+            //                            if (confirmPasswordError) {
+            //                                Text(
+            //                                    text = "Passwords don't match",
+            //                                    color = MaterialTheme.colorScheme.error
+            //                                )
+            //                            }
+            //                        },
             leadingIcon = {
                 Image(
                     painter = painterResource(id = R.drawable.baseline_lock_24),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             },
             trailingIcon = {
                 Button(
-                    onClick = {
-                        showConfirmPassword = !showConfirmPassword
-                    }, colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent
-                    )
+                    onClick = { showConfirmPassword = !showConfirmPassword },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.show_pass),
                         modifier = Modifier.size(17.dp),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             },
-            visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier
-                .padding(10.dp)
-                .width(screenWidth * 90 / 100)
-                .align(alignment = Alignment.CenterHorizontally)
-                .shadow(
-                    elevation = 6.dp,
-                    shape = MaterialTheme.shapes.small,
-                    ambientColor = Color.Gray,
-                    spotColor = Color.LightGray
+            visualTransformation =
+                if (showConfirmPassword) VisualTransformation.None
+                else PasswordVisualTransformation(),
+            modifier =
+                Modifier.padding(10.dp)
+                    .width(screenWidth * 90 / 100)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = MaterialTheme.shapes.small,
+                        ambientColor = Color.Gray,
+                        spotColor = Color.LightGray,
+                    ),
+            colors =
+                TextFieldDefaults.colors(
+                    unfocusedContainerColor = textFieldColor,
+                    focusedContainerColor = textFieldColor,
+                    unfocusedIndicatorColor = textFieldColor,
+                    focusedIndicatorColor = textFieldColor,
                 ),
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = textFieldColor,
-                focusedContainerColor = textFieldColor,
-                unfocusedIndicatorColor = textFieldColor,
-                focusedIndicatorColor = textFieldColor
-            )
         )
-        //this will be for remember me feature
+        // this will be for remember me feature
         Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
                 // Handle sign-up logic here, including validation
-                if (
-                    password.isNotEmpty() && confirmPassword == password
-                ) {
+                if (password.isNotEmpty() && confirmPassword == password) {
                     // send this password to the backend with email to modify it
-                    //and then back to login
+                    // and then back to login
                     navController.navigate(Screens.LoginScreen.route)
                 } else {
                     Toast.makeText(context, "You insert invalid info", Toast.LENGTH_SHORT).show()
                 }
             },
             shape = RoundedCornerShape(100.dp),
-            modifier = Modifier
-                .padding(top = 40.dp)
-                .align(alignment = Alignment.CenterHorizontally)
-//                .width(screenWidth * 90 / 100)
-                .height(screenHeight * 6 / 100),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(
-                    id = R.color.button_color
-                )
-            )
+            modifier =
+                Modifier.padding(top = 40.dp)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    //                .width(screenWidth * 90 / 100)
+                    .height(screenHeight * 6 / 100),
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.button_color)
+                ),
         ) {
             Text(
                 text = "Continue",
                 style = MaterialTheme.typography.headlineLarge,
-                color = Color.White
+                color = Color.White,
             )
         }
-
-
     }
 }

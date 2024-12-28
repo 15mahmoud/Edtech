@@ -28,8 +28,8 @@ import com.example.student_project.R
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.darkerGrayColor
 
-//we will change this to lambda fun that will take string and will return -> string
-//then take the returning string and put it in a a list
+// we will change this to lambda fun that will take string and will return -> string
+// then take the returning string and put it in a a list
 @Composable
 fun DayBickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
     var selected by remember { mutableStateOf(false) }
@@ -41,20 +41,19 @@ fun DayBickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
         },
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(containerColor = color),
-        modifier = Modifier
-            .padding(5.dp)
+        modifier = Modifier.padding(5.dp),
     ) {
         Text(
             text = timeSlot.toString(),
             style = MaterialTheme.typography.titleMedium,
             color = darkerGrayColor,
-            fontSize = 12.sp
+            fontSize = 12.sp,
         )
     }
 }
 
-//we need to add these
-//after modify it
+// we need to add these
+// after modify it
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldFilterScreenTopBar(navController: NavController) {
@@ -64,22 +63,17 @@ fun ScaffoldFilterScreenTopBar(navController: NavController) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Image(
                         painter = painterResource(id = R.drawable.baseline_arrow_back_24),
-                        contentDescription = null
+                        contentDescription = null,
                     )
-
                 }
                 Text(
                     text = "Filters",
                     modifier = Modifier.padding(top = 12.dp),
                     style = MaterialTheme.typography.headlineLarge,
                     fontSize = 24.sp,
-                    fontWeight = FontWeight(700)
+                    fontWeight = FontWeight(700),
                 )
-
             }
-
-
         }
     )
-
 }
