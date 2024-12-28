@@ -20,10 +20,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
@@ -40,8 +42,11 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,20 +54,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
-import com.example.student_project.screen.Screens
-import com.example.student_project.data.component.BottomNavItem
-import com.example.student_project.data.component.SubjectRow
+import com.example.student_project.data.CourseRepo
+import com.example.student_project.navigation.Screens
+import com.example.student_project.data.component.Course
 import com.example.student_project.data.component.TopLiveTutorItem
-import com.example.student_project.data.component.TrendingCourseRow
+import com.example.student_project.screen.home.data.BottomNavItem
 import com.example.student_project.ui.theme.lightGray
 import com.example.student_project.ui.theme.lightOrange
+import com.example.student_project.ui.theme.starFillingColor
 
+val courseRepo = CourseRepo()
+
+data class HomeScreenState(val courses: List<Course>, val trendingCourses: List<Course>)
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -74,52 +84,14 @@ fun HomeScreen(navController: NavController) {
         mutableStateOf("")
     }
     val scrollState = rememberScrollState()
-    val subjectList = listOf(
-        SubjectRow(
-            R.drawable.math,
-            "Math 116",
-            listOf(Color.Red,Color.White)
-        ),
-        SubjectRow(
-            R.drawable.architect,
-            "Arch 116",
-            listOf(Color.White,Color.Blue)
-        )
-    )
-    val trendingCoursesList = listOf(
-        TrendingCourseRow(
-            "Advanced Front_End Programing Techniques",
-            R.drawable.course_image,
-            12.99,
-            R.drawable.star_filled,
-            4.5
-        ),
-        TrendingCourseRow(
+    val scope = rememberCoroutineScope()
 
-            "Ultimate CyberSecurity For Beginner",
-            R.drawable.second_sourse_image,
-            12.99,
-            R.drawable.star_filled,
-            4.7
-        )
-    )
-    val topNewCourses = listOf(
-        TrendingCourseRow(
-            "Intro to PhotoGraphy and Editing",
-            R.drawable.top_new_course_img,
-            12.99,
-            R.drawable.star_filled,
-            4.5
-        ),
-        TrendingCourseRow(
-
-            "Another Course ",
-            R.drawable.second_top_new_course,
-            12.99,
-            R.drawable.star_filled,
-            4.7
-        )
-    )
+    val state = remember { mutableStateOf(HomeScreenState(emptyList(), emptyList())) }
+    LaunchedEffect(scope) {
+        val courseList = courseRepo.getCourseList()
+        val trendingCoursesList = courseRepo.getTrendingCourse()
+        state.value = HomeScreenState(courseList, trendingCoursesList)
+    }
     val topLiveMentorList = listOf(
         TopLiveTutorItem(
             "Albert Flores",
@@ -171,6 +143,7 @@ fun HomeScreen(navController: NavController) {
                                 painter = painterResource(id = R.drawable.baseline_search_24),
                                 contentDescription = null
                             )
+                            //here we can make trailing icon that can be clickable
                         }, colors = TextFieldDefaults.colors(
                             unfocusedContainerColor = Color.Transparent,
                             focusedContainerColor = Color.Transparent
@@ -197,70 +170,9 @@ fun HomeScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(10.dp)
                 )
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Live Subject Tutoring",
-                        fontSize = 15.sp,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(top = 15.dp, start = 7.dp)
-                    )
 
-                    Button(
-                        modifier = Modifier
-                            .align(alignment = Alignment.CenterEnd),
-                        onClick = {
-                            //here we write code to navigate to all subject
-                        }, colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        )
-                    ) {
-                        Row {
-                            Text(text = "All subject", fontSize = 10.sp, color = Color.Blue)
-                            //here we put image for a right arrow
-                        }
-                    }
-                }
+//we will make pager(slider)
 
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp),
-                ) {
-                    //we will change this subject list with another list we will get from api
-                    itemsIndexed(subjectList) { index, subject ->
-                        Box(
-                            modifier = Modifier
-                                .width(159.dp)
-                                .height(80.dp)
-                                .padding(2.dp)
-                                .clip(RoundedCornerShape(15.dp))
-                                .background(Brush.verticalGradient(subject.color))
-                                .clickable {
-                                    //here i will put code to navigate to the disired course
-                                },
-
-                            ) {
-                            Image(
-                                painter = painterResource(id = subject.img),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .align(alignment = Alignment.TopStart)
-                                    .padding(10.dp)
-                            )
-                            Text(
-                                text = subject.title,
-                                fontSize = 10.sp,
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .padding(start = 7.dp)
-                            )
-                        }
-
-
-                    }
-
-                }
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Trending Courses",
@@ -291,60 +203,11 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     //we will change this subject list with another list we will get from api
                     //we suppose to modify this size to match all device
-                    itemsIndexed(trendingCoursesList) { index, course ->
-                        Column(
-                            modifier = Modifier
-
-                                .width(200.dp)
-                                .height(200.dp)
-                                .padding(2.dp)
-                                .clip(RoundedCornerShape(15.dp))
-                                .clickable {
-                                    //here i will put code to navigate to the disired course
-                                },
-
-                            ) {
-                            Image(
-                                painter = painterResource(id = course.imgId),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .width(200.dp)
-                                    .height(120.dp)
-                                    .padding(5.dp)
-                            )
-                            Text(
-                                text = course.title,
-                                style = MaterialTheme.typography.headlineLarge,
-                                fontSize = 15.sp,
-                                modifier = Modifier
-                                    .padding(start = 7.dp)
-                            )
-                            Row(modifier = Modifier.padding(top = 5.dp)) {
-
-                                Text(
-                                    text = "$" + course.price.toString(),
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Spacer(
-                                    modifier = Modifier
-                                        .height(5.dp)
-                                        .width(60.dp)
-                                )
-                                Image(
-                                    painter = painterResource(id = course.rankingImg),
-                                    contentDescription = null,
-                                    Modifier
-                                        .width(12.dp)
-                                        .height(12.dp)
-                                )
-                                Text(
-                                    text = course.rankingNumber.toString(),
-                                    fontSize = 12.sp, modifier = Modifier.padding(start = 4.dp)
-                                )
-                            }
-
+                    itemsIndexed(state.value.trendingCourses) { index, course ->
+                        CourseRaw(course) { it ->
+                            //navigate
+                        navController.navigate(Screens.CourseDetailScreen.route+"/${it.title}")
                         }
-
 
                     }
 
@@ -442,61 +305,11 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     //we will change this subject list with another list we will get from api
                     //we suppose to modify this size to match all device
-                    itemsIndexed(topNewCourses) { index, course ->
-                        Column(
-                            modifier = Modifier
+                    itemsIndexed(state.value.courses) { index, course ->
+                       CourseRaw(course){it->
+                           navController.navigate(Screens.CourseDetailScreen.route+"/${it.title}")
 
-                                .width(200.dp)
-                                .height(200.dp)
-                                .padding(2.dp)
-                                .clip(RoundedCornerShape(15.dp))
-                                .clickable {
-                                    //here i will put code to navigate to the disired course
-                                },
-
-                            ) {
-                            Image(
-                                painter = painterResource(id = course.imgId),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .width(200.dp)
-                                    .height(120.dp)
-                                    .padding(5.dp)
-                            )
-                            Text(
-                                text = course.title,
-                                style = MaterialTheme.typography.headlineLarge,
-                                fontSize = 15.sp,
-                                modifier = Modifier
-                                    .padding(start = 7.dp)
-                            )
-                            Row(modifier = Modifier.padding(top = 5.dp)) {
-
-                                Text(
-                                    text = "$" + course.price.toString(),
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Spacer(
-                                    modifier = Modifier
-                                        .height(5.dp)
-                                        .width(60.dp)
-                                )
-                                Image(
-                                    painter = painterResource(id = course.rankingImg),
-                                    contentDescription = null,
-                                    Modifier
-                                        .width(12.dp)
-                                        .height(12.dp)
-                                )
-                                Text(
-                                    text = course.rankingNumber.toString(),
-                                    fontSize = 12.sp, modifier = Modifier.padding(start = 4.dp)
-                                )
-                            }
-
-                        }
-
-
+                       }
                     }
 
                 }
@@ -516,15 +329,6 @@ fun ScaffoldTopAppBar() {
         title = {
             Column(
                 modifier = Modifier
-                    .background(
-                        brush = Brush.radialGradient(
-                            //we need to modify this
-                            listOf(
-                                lightOrange,
-                                Color.Transparent
-                            ), radius = 500f
-                        )
-                    )
                     .padding(20.dp)
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -605,6 +409,74 @@ fun BottomNavBar(
                 }
             )
         }
+    }
+}
+
+//here we will make lazy row for courses
+//here we make it clickable and send a list of courses to the next screen
+@Composable
+fun CourseRaw(course: Course, onCLickListener: (Course) -> Unit) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    Column(
+        modifier = Modifier
+
+            .width(screenWidth*47/100)
+            .height(screenHeight*3/10)
+            .padding(2.dp)
+            .clip(RoundedCornerShape(15.dp))
+            .clickable {
+                onCLickListener(course)
+            }
+
+
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.second_sourse_image),
+            contentDescription = null,
+            modifier = Modifier
+                .width(screenWidth*47/100)
+                .height(screenHeight*14/100)
+                .padding(5.dp)
+        )
+        Text(
+            text = course.title,
+            style = MaterialTheme.typography.headlineLarge,
+            fontSize = 13.sp,
+            modifier = Modifier
+                .padding(start = 7.dp)
+        )
+        Text(
+            modifier = Modifier.padding(start = 7.dp, top = 5.dp, bottom = 5.dp),
+            text = course.mentorName,
+            style = MaterialTheme.typography.titleMedium,
+            color = Color(0xFF334155)
+        )
+        Divider()
+        Row(modifier = Modifier.padding(top = 5.dp)) {
+
+            Text(modifier =Modifier.padding(top = 5.dp) ,
+                text = "$" + course.price.toString(),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(
+                modifier = Modifier
+                    .width(60.dp)
+            )
+
+            Icon(
+                imageVector = Icons.Filled.Star,
+                tint = starFillingColor,
+                contentDescription = null
+            )
+
+            Text(
+                text = course.rating.toString(),
+                fontSize = 12.sp, modifier = Modifier.padding(start = 4.dp, top = 1.dp)
+            )
+        }
+
     }
 
 }

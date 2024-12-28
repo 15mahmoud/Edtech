@@ -12,14 +12,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
-import com.example.student_project.screen.Screens
+import com.example.student_project.navigation.Screens
 import com.example.student_project.screen.uiconstant.PopBackStackEntry
 import com.example.student_project.ui.theme.borderButton
 import com.example.student_project.ui.theme.buttonColor
@@ -70,7 +69,7 @@ fun SignUpScreen(navController: NavController) {
                 fontSize = 30.sp,
                 color = headLineColor,
                 modifier = Modifier
-                    .padding(top = 100.dp, start = 10.dp)
+                    .padding(top = 100.dp)
                     .align(alignment = Alignment.TopCenter)
             )
             Column(
@@ -85,6 +84,7 @@ fun SignUpScreen(navController: NavController) {
                         emailError = it.isEmpty()
                     },
                     modifier = Modifier
+                        .padding(10.dp)
                         .width(screenWidth * 90 / 100)
                         .align(alignment = Alignment.CenterHorizontally)
                         .shadow(
@@ -96,7 +96,15 @@ fun SignUpScreen(navController: NavController) {
 
                     //  .shadow(elevation = 2.dp, ambientColor = Color.Gray),
                     ,
-                    label = { Text(text = "Email") },
+                    label = {
+                        Text(
+                            text = "Email",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = colorResource(
+                                id = R.color.icon_gray
+                            )
+                        )
+                    },
                     leadingIcon = {
                         Image(
                             painter = painterResource(id = R.drawable.baseline_email_24),
@@ -126,7 +134,15 @@ fun SignUpScreen(navController: NavController) {
                         password = it
                         passwordError = it.isEmpty()
                     },
-                    label = { Text("Password") },
+                    label = {
+                        Text(
+                            "Password",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = colorResource(
+                                id = R.color.icon_gray
+                            )
+                        )
+                    },
                     leadingIcon = {
                         Image(
                             painter = painterResource(id = R.drawable.baseline_lock_24),
@@ -159,6 +175,7 @@ fun SignUpScreen(navController: NavController) {
 //                            }
 //                        },
                     modifier = Modifier
+                        .padding(10.dp)
                         .width(screenWidth * 90 / 100)
                         .align(alignment = Alignment.CenterHorizontally)
                         .shadow(
@@ -181,7 +198,15 @@ fun SignUpScreen(navController: NavController) {
                         confirmPassword = it
                         confirmPasswordError = it.isEmpty() || it != password
                     },
-                    label = { Text("Confirm Password") },
+                    label = {
+                        Text(
+                            "Confirm Password",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = colorResource(
+                                id = R.color.icon_gray
+                            )
+                        )
+                    },
                     isError = confirmPasswordError,
 //                        supportingText = {
 //                            if (confirmPasswordError) {
@@ -214,6 +239,7 @@ fun SignUpScreen(navController: NavController) {
                     },
                     visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier
+                        .padding(10.dp)
                         .width(screenWidth * 90 / 100)
                         .align(alignment = Alignment.CenterHorizontally)
                         .shadow(
@@ -253,6 +279,7 @@ fun SignUpScreen(navController: NavController) {
                     },
                     shape = RoundedCornerShape(100.dp),
                     modifier = Modifier
+                        .padding(10.dp)
                         .align(alignment = Alignment.CenterHorizontally)
                         .width(screenWidth * 90 / 100)
                         .height(screenHeight * 6 / 100),

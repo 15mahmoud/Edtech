@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.student_project"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.student_project"
@@ -62,10 +62,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.auth)
-    //new
+
     implementation(libs.androidx.window)
     implementation(libs.androidx.window.v110)
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,7 +73,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.compose.material:material:1.7.5")
-
+//viewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    //life cycle
+    implementation(libs.androidx.lifecycle.runtime.compose)
     //navigation
     implementation("androidx.navigation:navigation-compose:2.8.4")
     //coroutine

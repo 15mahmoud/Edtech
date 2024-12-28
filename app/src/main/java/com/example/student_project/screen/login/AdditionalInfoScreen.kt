@@ -2,12 +2,10 @@ package com.example.student_project.screen.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +19,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
-import com.example.student_project.screen.Screens
+import com.example.student_project.navigation.Screens
 import com.example.student_project.screen.uiconstant.PopBackStackEntry
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.textFieldColor
@@ -88,7 +85,7 @@ fun AdditionalInfoScreen(
     }
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        Row(modifier = Modifier.padding(top = 50.dp, start = 20.dp)) {
+        Row(modifier = Modifier.padding(top = 50.dp)) {
             PopBackStackEntry(navController)
             Text(
                 text = "Fill Your Profile",
@@ -136,7 +133,15 @@ fun AdditionalInfoScreen(
                     ambientColor = Color.Gray,
                     spotColor = Color.LightGray
                 ),
-            label = { Text(text = "Full Name") },
+            label = {
+                Text(
+                    text = "Full Name",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(
+                        id = R.color.icon_gray
+                    )
+                )
+            },
             isError = nameError,
             singleLine = true,
             //supporting text
@@ -162,7 +167,15 @@ fun AdditionalInfoScreen(
                     ambientColor = Color.Gray,
                     spotColor = Color.LightGray
                 ),
-            label = { Text(text = "Nickname") },
+            label = {
+                Text(
+                    text = "Nickname",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(
+                        id = R.color.icon_gray
+                    )
+                )
+            },
             singleLine = true,
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = textFieldColor,
@@ -187,7 +200,15 @@ fun AdditionalInfoScreen(
                     ambientColor = Color.Gray,
                     spotColor = Color.LightGray
                 ),
-            label = { Text(text = "Date of Birth") },
+            label = {
+                Text(
+                    text = "Date of Birth",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(
+                        id = R.color.icon_gray
+                    )
+                )
+            },
             singleLine = true,
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = textFieldColor,
@@ -212,7 +233,15 @@ fun AdditionalInfoScreen(
                     ambientColor = Color.Gray,
                     spotColor = Color.LightGray
                 ),
-            label = { Text(text = "Email") },
+            label = {
+                Text(
+                    text = "Email",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(
+                        id = R.color.icon_gray
+                    )
+                )
+            },
             singleLine = true,
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = textFieldColor,
@@ -239,7 +268,15 @@ fun AdditionalInfoScreen(
                     ambientColor = Color.Gray,
                     spotColor = Color.LightGray
                 ),
-            label = { Text(text = "Phone Number") },
+            label = {
+                Text(
+                    text = "Phone Number",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = colorResource(
+                        id = R.color.icon_gray
+                    )
+                )
+            },
             isError = if (phoneEmptyError || (phoneState.length != 11 && phoneState.all { it.isLetter() })) true else phoneState.isEmpty(),
             singleLine = true,
 //            supportingText = {
