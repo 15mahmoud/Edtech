@@ -1,4 +1,4 @@
-package com.example.student_project.screen.home.filtering.constant
+package com.example.student_project.screen.home.filtering.widgets
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
@@ -31,7 +31,7 @@ import com.example.student_project.ui.theme.darkerGrayColor
 // we will change this to lambda fun that will take string and will return -> string
 // then take the returning string and put it in a a list
 @Composable
-fun DayBickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
+fun BickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
     var selected by remember { mutableStateOf(false) }
     val color = if (selected) buttonColor else Color.White
     Button(
@@ -56,7 +56,7 @@ fun DayBickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
 // after modify it
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldFilterScreenTopBar(navController: NavController) {
+fun ScaffoldFilterScreenTopBar(navController: NavController,text:String) {
     TopAppBar(
         title = {
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -67,7 +67,7 @@ fun ScaffoldFilterScreenTopBar(navController: NavController) {
                     )
                 }
                 Text(
-                    text = "Filters",
+                    text = text,
                     modifier = Modifier.padding(top = 12.dp),
                     style = MaterialTheme.typography.headlineLarge,
                     fontSize = 24.sp,
@@ -76,4 +76,13 @@ fun ScaffoldFilterScreenTopBar(navController: NavController) {
             }
         }
     )
+}
+
+@Composable
+fun CourseFilterScreenText(text: String){
+    Text(
+        text = text,
+        Modifier.padding(10.dp),
+        fontSize = 14.sp,
+        style = MaterialTheme.typography.headlineLarge)
 }

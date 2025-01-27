@@ -1,4 +1,4 @@
-package com.example.student_project.screen.home.filtering.ui
+package com.example.student_project.screen.home.filtering.ui.filteration
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -46,7 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.navigation.Screens
-import com.example.student_project.screen.home.filtering.constant.ScaffoldFilterScreenTopBar
+import com.example.student_project.screen.home.filtering.widgets.BickerButton
+import com.example.student_project.screen.home.filtering.widgets.ScaffoldFilterScreenTopBar
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.darkerGrayColor
 
@@ -75,7 +76,7 @@ fun MentorFilterScreen(navController: NavController) {
 
     Scaffold(
         modifier = Modifier.padding(16.dp),
-        topBar = { ScaffoldFilterScreenTopBar(navController = navController) },
+        topBar = { ScaffoldFilterScreenTopBar(navController = navController,"Filters") },
         bottomBar = {
             NavigationBar {
                 Row(
@@ -235,19 +236,19 @@ fun MentorFilterScreen(navController: NavController) {
             )
             // implement lazy row for days ass button
             Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
-                DayBickerButton(timeSlot = "Saturday", onClick = { s -> daySelected.add(s) })
+                BickerButton(timeSlot = "Saturday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Sunday", onClick = { s -> daySelected.add(s) })
+                BickerButton(timeSlot = "Sunday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Monday", onClick = { s -> daySelected.add(s) })
+                BickerButton(timeSlot = "Monday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Tuesday", onClick = { s -> daySelected.add(s) })
+                BickerButton(timeSlot = "Tuesday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Wednesday", onClick = { s -> daySelected.add(s) })
+                BickerButton(timeSlot = "Wednesday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Thursday", onClick = { s -> daySelected.add(s) })
+                BickerButton(timeSlot = "Thursday", onClick = { s -> daySelected.add(s) })
 
-                DayBickerButton(timeSlot = "Friday", onClick = { s -> daySelected.add(s) })
+                BickerButton(timeSlot = "Friday", onClick = { s -> daySelected.add(s) })
             }
             Text(
                 text = "Time slot",
@@ -258,11 +259,11 @@ fun MentorFilterScreen(navController: NavController) {
             )
             // same as the top one
             Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
-                DayBickerButton(timeSlot = "Morning", onClick = { s -> timeSlotSelected.add(s) })
+                BickerButton(timeSlot = "Morning", onClick = { s -> timeSlotSelected.add(s) })
 
-                DayBickerButton(timeSlot = "Afternoon", onClick = { s -> timeSlotSelected.add(s) })
+                BickerButton(timeSlot = "Afternoon", onClick = { s -> timeSlotSelected.add(s) })
 
-                DayBickerButton(timeSlot = "Evening", onClick = { s -> timeSlotSelected.add(s) })
+                BickerButton(timeSlot = "Evening", onClick = { s -> timeSlotSelected.add(s) })
             }
 
             Text(
@@ -432,24 +433,4 @@ fun MentorFilterScreen(navController: NavController) {
 
 // we will change this to lambda fun that will take string and will return -> string
 // then take the returning string and put it in a a list
-@Composable
-fun DayBickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
-    var selected by remember { mutableStateOf(false) }
-    val color = if (selected) buttonColor else Color.White
-    Button(
-        onClick = {
-            selected = !selected
-            onClick(timeSlot)
-        },
-        shape = RoundedCornerShape(10.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = color),
-        modifier = Modifier.padding(5.dp),
-    ) {
-        Text(
-            text = timeSlot.toString(),
-            style = MaterialTheme.typography.titleMedium,
-            color = darkerGrayColor,
-            fontSize = 12.sp,
-        )
-    }
-}
+

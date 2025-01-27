@@ -10,9 +10,10 @@ import com.example.student_project.screen.LearningScreen
 import com.example.student_project.screen.ProfileScreen
 import com.example.student_project.screen.home.CourseDetailsScreen
 import com.example.student_project.screen.home.HomeScreen
-import com.example.student_project.screen.home.filtering.ui.CourseFilterScreen
-import com.example.student_project.screen.home.filtering.ui.MentorFilterResultScreen
-import com.example.student_project.screen.home.filtering.ui.MentorFilterScreen
+import com.example.student_project.screen.home.filtering.ui.filteration.CourseFilterScreen
+import com.example.student_project.screen.home.filtering.ui.filterationresult.MentorFilterResultScreen
+import com.example.student_project.screen.home.filtering.ui.filteration.MentorFilterScreen
+import com.example.student_project.screen.home.filtering.ui.filterationresult.CourseFilterResultScreen
 import com.example.student_project.screen.login.AdditionalInfoScreen
 import com.example.student_project.screen.login.LoginScreen
 import com.example.student_project.screen.login.SignUpScreen
@@ -50,15 +51,15 @@ fun Navigation() {
         }
         composable(
             Screens.MentorFilterResultScreen.route +
-                "/{jop_title}" +
-                "/{rating}" +
-                "/{hourly_rate}",
+                    "/{jop_title}" +
+                    "/{rating}" +
+                    "/{hourly_rate}",
             arguments =
-                (listOf(
-                    navArgument(name = "jop_title") { type = NavType.StringType },
-                    navArgument(name = "rating") { type = NavType.FloatType },
-                    navArgument(name = "hourly_rate") { type = NavType.FloatType },
-                )),
+            (listOf(
+                navArgument(name = "jop_title") { type = NavType.StringType },
+                navArgument(name = "rating") { type = NavType.FloatType },
+                navArgument(name = "hourly_rate") { type = NavType.FloatType },
+            )),
         ) { backStackEntry ->
             MentorFilterResultScreen(
                 navController = navController,
@@ -74,6 +75,29 @@ fun Navigation() {
         composable(Screens.CourseFilterScreen.route) {
             // filled parcel object "FiltrationResult" and send it to search result screen
             CourseFilterScreen(navController)
+        }
+//
+        composable(Screens.CourseFilterResultScreen.route + "/{course_category}" +
+                "/{difficulty_level}" +
+                "/{released_date}" +
+                "/{rating}" +
+                "/{hourly_rate}",
+            arguments = (listOf(
+                navArgument(name = "course_category") { type = NavType.StringType },
+                navArgument(name = "difficulty_level") { type = NavType.StringType },
+                navArgument(name = "released_date") { type = NavType.StringType },
+                navArgument(name = "rating") { type = NavType.FloatType },
+                navArgument(name = "hourly_rate") { type = NavType.FloatType }
+            ))) { backStackEntry ->
+            CourseFilterResultScreen(
+                navController,
+                backStackEntry.arguments?.getString("course_category"),
+                backStackEntry.arguments?.getString("difficulty_level"),
+                backStackEntry.arguments?.getString("released_date"),
+                backStackEntry.arguments?.getFloat("rating"),
+                backStackEntry.arguments?.getFloat("hourly_rate")
+            )
+
         }
         // here we will send this info to course result screen
         // and then we will send this info to course details screen

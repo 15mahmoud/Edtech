@@ -60,18 +60,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil3.compose.rememberAsyncImagePainter
 import com.example.student_project.R
 import com.example.student_project.data.CourseRepo
+import com.example.student_project.data.MentorRepo
 import com.example.student_project.data.component.Course
-import com.example.student_project.data.component.TopLiveTutorItem
+import com.example.student_project.data.component.Mentor
 import com.example.student_project.navigation.Screens
-import com.example.student_project.screen.home.data.BottomNavItem
+import com.example.student_project.screen.home.uidata.BottomNavItem
 import com.example.student_project.ui.theme.lightGray
 import com.example.student_project.ui.theme.starFillingColor
 
 val courseRepo = CourseRepo()
-
-data class HomeScreenState(val courses: List<Course>, val trendingCourses: List<Course>)
+val mentorRepo = MentorRepo()
+data class HomeScreenState(val courses: List<Course>, val trendingCourses: List<Course>,val mentor:List<Mentor>)
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -84,24 +86,30 @@ fun HomeScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
 
-    val state = remember { mutableStateOf(HomeScreenState(emptyList(), emptyList())) }
+    val state = remember { mutableStateOf(HomeScreenState(emptyList(), emptyList(),emptyList()
+    )) }
     LaunchedEffect(scope) {
         val courseList = courseRepo.getCourseList()
         val trendingCoursesList = courseRepo.getTrendingCourse()
-        state.value = HomeScreenState(courseList, trendingCoursesList)
+        val mentorList = mentorRepo.getMentorList()
+        state.value = HomeScreenState(courseList, trendingCoursesList,mentorList)
     }
-    val topLiveMentorList =
-        listOf(
-            TopLiveTutorItem("Albert Flores", "Math 116", R.drawable.mentor_img),
-            TopLiveTutorItem("Darrell Steward", "Bio 120", R.drawable.second_mentor_img),
-        )
     Scaffold(
-        Modifier.fillMaxSize().background(Color.White),
+        Modifier
+            .fillMaxSize()
+            .background(Color.White),
         topBar = { ScaffoldTopAppBar() },
         bottomBar = { BottomNavBar(selectedItemIndex, navController) },
     ) { innerPadding ->
-        Box(Modifier.fillMaxSize().padding(19.dp)) {
-            Column(Modifier.padding(innerPadding).fillMaxSize().verticalScroll(scrollState)) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(19.dp)) {
+            Column(
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     TextField(
                         modifier =
@@ -145,25 +153,32 @@ fun HomeScreen(navController: NavController) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp))
 
                 // we will make pager(slider)
                 Box(
                     modifier =
-                        Modifier.clip(shape = RoundedCornerShape(32.dp))
-                            // we will make black shadow with opacity 0.25
-                            // .shadow(elevation = 15.dp, ambientColor = Color.Black)
-                            .width(screenWidth * 91 / 100)
-                            .height(screenHeight * 21 / 100)
-                            .background(Color.Black)
+                    Modifier
+                        .clip(shape = RoundedCornerShape(32.dp))
+                        // we will make black shadow with opacity 0.25
+                        // .shadow(elevation = 15.dp, ambientColor = Color.Black)
+                        .width(screenWidth * 91 / 100)
+                        .height(screenHeight * 21 / 100)
+                        .background(Color.Black)
                 ) {
                     Image(
                         modifier =
-                            Modifier.width(screenWidth * 91 / 100).height(screenHeight * 21 / 100),
+                        Modifier
+                            .width(screenWidth * 91 / 100)
+                            .height(screenHeight * 21 / 100),
                         painter = painterResource(id = R.drawable.pager_background),
                         contentDescription = null,
                     )
-                    Row(modifier = Modifier.fillMaxSize().padding(20.dp)) {
+                    Row(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp)) {
                         Column(modifier = Modifier.fillMaxHeight()) {
                             Text(
                                 text = "40% OFF",
@@ -192,8 +207,9 @@ fun HomeScreen(navController: NavController) {
 
                         Image(
                             modifier =
-                                Modifier.width(screenWidth * 36 / 100)
-                                    .height(screenHeight * 16 / 100),
+                            Modifier
+                                .width(screenWidth * 36 / 100)
+                                .height(screenHeight * 16 / 100),
                             alignment = Alignment.Center,
                             painter = painterResource(id = R.drawable.pager_image),
                             contentDescription = null,
@@ -222,7 +238,9 @@ fun HomeScreen(navController: NavController) {
                         }
                     }
                 }
-                LazyRow(modifier = Modifier.fillMaxWidth().padding(top = 5.dp, bottom = 5.dp)) {
+                LazyRow(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp, bottom = 5.dp)) {
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
                     itemsIndexed(state.value.trendingCourses) { index, course ->
@@ -240,47 +258,55 @@ fun HomeScreen(navController: NavController) {
                     fontSize = 15.sp,
                     style = MaterialTheme.typography.titleMedium,
                 )
-                LazyRow(modifier = Modifier.fillMaxWidth().padding(top = 5.dp, bottom = 5.dp)) {
+                LazyRow(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp, bottom = 5.dp)) {
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
-                    itemsIndexed(topLiveMentorList) { index, mentor ->
+                    itemsIndexed(state.value.mentor) { index, mentor ->
                         Box(
                             modifier =
-                                Modifier.width(140.dp)
-                                    .height(136.dp)
-                                    .padding(top = 5.dp, bottom = 5.dp)
-                                    .clip(RoundedCornerShape(15.dp))
-                                    .border(
-                                        width = 2.dp,
-                                        color = lightGray,
-                                        shape = RoundedCornerShape(14.dp),
-                                    )
-                                    .background(Color.White)
-                                    .clickable {
-                                        // here i will put code to navigate to the disired course
-                                    }
+                            Modifier
+                                .width(140.dp)
+                                .height(136.dp)
+                                .padding(top = 5.dp, bottom = 5.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .border(
+                                    width = 2.dp,
+                                    color = lightGray,
+                                    shape = RoundedCornerShape(14.dp),
+                                )
+                                .background(Color.White)
+                                .clickable {
+                                    // here i will put code to navigate to the disired course
+                                }
                         ) {
                             Image(
-                                painter = painterResource(id = mentor.tutorImage),
+                                painter = rememberAsyncImagePainter(model = mentor.image),
                                 contentDescription = null,
                                 modifier =
-                                    Modifier.width(60.dp)
-                                        .height(60.dp)
-                                        .padding(top = 10.dp, bottom = 10.dp)
-                                        .align(alignment = Alignment.TopCenter),
+                                Modifier
+                                    .width(60.dp)
+                                    .height(60.dp)
+                                    .padding(top = 10.dp, bottom = 10.dp)
+                                    .align(alignment = Alignment.TopCenter),
                             )
                             Text(
-                                text = mentor.nameOfTutor,
+                                text = mentor.mentorName,
                                 style = MaterialTheme.typography.headlineLarge,
                                 fontSize = 15.sp,
                                 modifier =
-                                    Modifier.padding(top = 25.dp)
-                                        .align(alignment = Alignment.Center),
+                                Modifier
+                                    .padding(top = 25.dp)
+                                    .align(alignment = Alignment.Center),
                             )
                             Text(
                                 modifier =
-                                    Modifier.align(Alignment.BottomCenter).padding(bottom = 25.dp),
-                                text = mentor.theCourseName,
+                                Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(bottom = 25.dp),
+
+                                text = mentor.jopTitle,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.Gray,
                             )
@@ -308,7 +334,9 @@ fun HomeScreen(navController: NavController) {
                         }
                     }
                 }
-                LazyRow(modifier = Modifier.fillMaxWidth().padding(top = 5.dp, bottom = 5.dp)) {
+                LazyRow(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp, bottom = 5.dp)) {
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
                     itemsIndexed(state.value.courses) { index, course ->
@@ -336,12 +364,15 @@ fun ScaffoldTopAppBar() {
                     Image(
                         painter = painterResource(id = R.drawable.profile),
                         contentDescription = null,
-                        Modifier.padding(10.dp)
+                        Modifier
+                            .padding(10.dp)
                             .size(40.dp)
                             .border(2.dp, color = Color.White, shape = CircleShape),
                     )
                     Column {
-                        Spacer(modifier = Modifier.fillMaxWidth().height(15.dp))
+                        Spacer(modifier = Modifier
+                            .fillMaxWidth()
+                            .height(15.dp))
                         Text(
                             text = "Hello",
                             style = MaterialTheme.typography.headlineSmall,
@@ -413,17 +444,21 @@ fun CourseRaw(course: Course, onCLickListener: (Course) -> Unit) {
     val screenWidth = configuration.screenWidthDp.dp
     Column(
         modifier =
-            Modifier.width(screenWidth * 47 / 100)
-                .height(screenHeight * 3 / 10)
-                .padding(2.dp)
-                .clip(RoundedCornerShape(15.dp))
-                .clickable { onCLickListener(course) }
+        Modifier
+            .width(screenWidth * 47 / 100)
+            .height(screenHeight * 3 / 10)
+            .padding(2.dp)
+            .clip(RoundedCornerShape(15.dp))
+            .clickable { onCLickListener(course) }
     ) {
         Image(
-            painter = painterResource(id = R.drawable.second_sourse_image),
-            contentDescription = null,
+            painter = rememberAsyncImagePainter(model = course.imgPath),
+            contentDescription = "course image",
             modifier =
-                Modifier.width(screenWidth * 47 / 100).height(screenHeight * 14 / 100).padding(5.dp),
+            Modifier
+                .width(screenWidth * 47 / 100)
+                .height(screenHeight * 14 / 100)
+                .padding(5.dp),
         )
         Text(
             text = course.title,
@@ -441,7 +476,7 @@ fun CourseRaw(course: Course, onCLickListener: (Course) -> Unit) {
         Row(modifier = Modifier.padding(top = 5.dp)) {
             Text(
                 modifier = Modifier.padding(top = 5.dp),
-                text = "$" + course.price.toString(),
+                text = "$" + course.hourlyRate.toString(),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.width(60.dp))
