@@ -17,6 +17,8 @@ sealed class Screens(val route: String) {
 
     data object HomeScreen : Screens("home_screen")
 
+    data object CourseFilterResultScreen : Screens("course_filter_result_screen")
+
     data object CourseDetailScreen : Screens("course_detail_screen")
 
     data object MentorFilterResultScreen : Screens("mentor_filter_result_screen")

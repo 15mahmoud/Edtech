@@ -1,5 +1,6 @@
-package com.example.student_project.screen.home.filtering.ui
+package com.example.student_project.screen.home.filtering.ui.filterationresult
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
@@ -23,9 +25,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,11 +40,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.student_project.R
-import com.example.student_project.data.SearchResult
+import coil3.compose.rememberAsyncImagePainter
+import com.example.student_project.data.component.Mentor
+import com.example.student_project.screen.home.mentorRepo
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.jopTitleColor
 
+
+data class MentorFilterResultScreenState(val mentor: List<Mentor>)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MentorFilterResultScreen(
@@ -49,59 +56,24 @@ fun MentorFilterResultScreen(
     rating: Float?,
     hourlyRate: Float?,
 ) {
-    val searchList =
-        listOf(
-            SearchResult(
-                imgId = R.drawable.search_result_img1,
-                mentorName = "Eleanor Pena",
-                jopTitle = "MATH 116",
-                university = "Kobenhavens",
-                rating = 5.0,
-                availability = listOf("Saturday", "Sunday", "Friday"),
-                degreeAndCertificate = "Master's in Applied Mathematics",
-                timeSlots = listOf("Morning"),
-                experience = "1-3 Years",
-                hourlyRate = 30.0,
-            ),
-            SearchResult(
-                imgId = R.drawable.search_result_img2,
-                mentorName = "Robert Fox",
-                jopTitle = "MATH 116",
-                university = "Oxford",
-                rating = 4.5,
-                availability = listOf("Saturday", "Wednesday", "Friday"),
-                degreeAndCertificate = "Bachelor's in Applied Mathematics",
-                timeSlots = listOf("Evening"),
-                experience = "3-6 Years",
-                hourlyRate = 30.0,
-            ),
-            SearchResult(
-                imgId = R.drawable.profile_pics,
-                mentorName = "Ihab",
-                jopTitle = "ARCH 117",
-                university = "Oxford",
-                rating = 4.5,
-                availability = listOf("Saturday", "Wednesday", "Friday"),
-                degreeAndCertificate = "Bachelor's in Applied Mathematics",
-                timeSlots = listOf("Evening"),
-                experience = "3-6 Years",
-                hourlyRate = 10.0,
-            ),
-            SearchResult(
-                imgId = R.drawable.profile,
-                mentorName = "Ramadan",
-                jopTitle = "ARCH 117",
-                university = "Oxford",
-                rating = 4.5,
-                availability = listOf("Saturday", "Wednesday", "Friday"),
-                degreeAndCertificate = "Bachelor's in Applied Mathematics",
-                timeSlots = listOf("Evening"),
-                experience = "3-6 Years",
-                hourlyRate = 20.0,
-            ),
-        )
+    val scope = rememberCoroutineScope()
+
+    val state = remember { mutableStateOf(
+        MentorFilterResultScreenState(emptyList())
+    ) }
+    LaunchedEffect(scope) {
+        val mentorList = mentorRepo.getMentorList()
+        state.value = MentorFilterResultScreenState(mentorList)
+    }
     // for showing search Text field
     var togel by remember { mutableStateOf(false) }
+    val newMentorList = state.value.mentor.filter { mentor ->
+
+            mentor.jopTitle == jopTitle &&
+            mentor.rating >= rating!! &&
+            mentor.hourlyRate <= hourlyRate!!
+
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -114,7 +86,7 @@ fun MentorFilterResultScreen(
                             )
                         }
                         Text(
-                            text = "Filters",
+                            text = "Top Mentors",
                             modifier = Modifier.padding(top = 10.dp),
                             style = MaterialTheme.typography.headlineLarge,
                             fontSize = 24.sp,
@@ -133,62 +105,56 @@ fun MentorFilterResultScreen(
         }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            if (togel) {
+            AnimatedVisibility (togel) {
                 Text(text = "this will be search")
             }
             LazyColumn() {
-                itemsIndexed(searchList) { index, item ->
-                    if (
-                        item.jopTitle == jopTitle &&
-                            item.rating >= rating!! &&
-                            item.hourlyRate <= hourlyRate!!
-                    ) {
+                items(newMentorList) {
                         MentorResult(
-                            name = item.mentorName,
-                            title = item.jopTitle,
-                            imgId = item.imgId,
+                            mentor = it,
                             onClickListener = { string ->
-                                // here we will navigate to details screen
+                                // here we will navigate to details screen based on id
                             },
                         )
-                    }
+
                 }
             }
         }
 
-        //            //take object from MentorFilter and show it here
+
     }
 }
-
 // this string may change to list of strings
 // may be we modify this and make it for course and mentor result
 @Composable
-fun MentorResult(name: String, title: String, imgId: Int, onClickListener: (String) -> Unit) {
+fun MentorResult(mentor:Mentor, onClickListener: (String) -> Unit) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Card(
-        modifier = Modifier.fillMaxWidth().clickable { onClickListener(name) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClickListener(mentor.mentorName) },
         contentColor = Color.White,
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Image(
-                painter = painterResource(id = imgId),
-                contentDescription = null,
-                modifier =
-                    Modifier.padding(10.dp)
-                        .height(screenHeight * 6 / 100)
-                        .width(screenWidth * 16 / 100),
+                painter = rememberAsyncImagePainter(model = mentor.image),
+                contentDescription = "mentor image",
+                modifier = Modifier
+                    .padding(10.dp)
+                    .height(screenHeight * 6 / 100)
+                    .width(screenWidth * 16 / 100),
             )
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
-                    text = name,
+                    text = mentor.mentorName,
                     style = MaterialTheme.typography.headlineLarge,
                     fontSize = 18.sp,
                     color = buttonColor,
                 )
                 Text(
-                    text = title,
+                    text = mentor.jopTitle,
                     style = MaterialTheme.typography.headlineMedium,
                     fontSize = 14.sp,
                     color = jopTitleColor,
