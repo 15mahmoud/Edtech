@@ -1,4 +1,4 @@
-package com.example.student_project.screen.login
+package com.example.student_project.screen.log
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

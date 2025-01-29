@@ -11,27 +11,38 @@ import com.example.student_project.screen.ProfileScreen
 import com.example.student_project.screen.home.CourseDetailsScreen
 import com.example.student_project.screen.home.HomeScreen
 import com.example.student_project.screen.home.filtering.ui.filteration.CourseFilterScreen
-import com.example.student_project.screen.home.filtering.ui.filterationresult.MentorFilterResultScreen
 import com.example.student_project.screen.home.filtering.ui.filteration.MentorFilterScreen
 import com.example.student_project.screen.home.filtering.ui.filterationresult.CourseFilterResultScreen
-import com.example.student_project.screen.login.AdditionalInfoScreen
-import com.example.student_project.screen.login.LoginScreen
-import com.example.student_project.screen.login.SignUpScreen
-import com.example.student_project.screen.login.SplashScreen
-import com.example.student_project.screen.login.forgetpassword.EmailAndPhoneScreen
-import com.example.student_project.screen.login.forgetpassword.NewPasswordScreen
-import com.example.student_project.screen.login.forgetpassword.OtpScreen
+import com.example.student_project.screen.home.filtering.ui.filterationresult.MentorFilterResultScreen
+import com.example.student_project.screen.log.SplashScreen
+import com.example.student_project.screen.log.forgetpassword.EmailAndPhoneScreen
+import com.example.student_project.screen.log.forgetpassword.NewPasswordScreen
+import com.example.student_project.screen.log.forgetpassword.OtpScreen
+import com.example.student_project.screen.log.login.LoginScreen
+import com.example.student_project.screen.log.signup.AdditionalInfoScreen
+import com.example.student_project.screen.log.signup.SignUpScreen
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.HomeScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.SignupScreen.route) {
         composable(Screens.SplashScreen.route) { SplashScreen(navController) }
         composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
         composable(Screens.LoginScreen.route) { LoginScreen(navController) }
-        composable(Screens.AdditionalInfoScreen.route) {
-            AdditionalInfoScreen(navController = navController)
+        composable(
+            Screens.AdditionalInfoScreen.route + "/{email}" + "/{password}",
+            arguments =
+                listOf(
+                    navArgument(name = "email") { type = NavType.StringType },
+                    navArgument(name = "password") { type = NavType.StringType },
+                ),
+        ) { backStackEntry ->
+            AdditionalInfoScreen(
+                navController = navController,
+                backStackEntry.arguments?.getString("email"),
+                backStackEntry.arguments?.getString("password"),
+            )
         }
         composable(Screens.HomeScreen.route) { HomeScreen(navController = navController) }
         composable(
@@ -51,15 +62,15 @@ fun Navigation() {
         }
         composable(
             Screens.MentorFilterResultScreen.route +
-                    "/{jop_title}" +
-                    "/{rating}" +
-                    "/{hourly_rate}",
+                "/{jop_title}" +
+                "/{rating}" +
+                "/{hourly_rate}",
             arguments =
-            (listOf(
-                navArgument(name = "jop_title") { type = NavType.StringType },
-                navArgument(name = "rating") { type = NavType.FloatType },
-                navArgument(name = "hourly_rate") { type = NavType.FloatType },
-            )),
+                (listOf(
+                    navArgument(name = "jop_title") { type = NavType.StringType },
+                    navArgument(name = "rating") { type = NavType.FloatType },
+                    navArgument(name = "hourly_rate") { type = NavType.FloatType },
+                )),
         ) { backStackEntry ->
             MentorFilterResultScreen(
                 navController = navController,
@@ -76,28 +87,31 @@ fun Navigation() {
             // filled parcel object "FiltrationResult" and send it to search result screen
             CourseFilterScreen(navController)
         }
-//
-        composable(Screens.CourseFilterResultScreen.route + "/{course_category}" +
+        //
+        composable(
+            Screens.CourseFilterResultScreen.route +
+                "/{course_category}" +
                 "/{difficulty_level}" +
                 "/{released_date}" +
                 "/{rating}" +
                 "/{hourly_rate}",
-            arguments = (listOf(
-                navArgument(name = "course_category") { type = NavType.StringType },
-                navArgument(name = "difficulty_level") { type = NavType.StringType },
-                navArgument(name = "released_date") { type = NavType.StringType },
-                navArgument(name = "rating") { type = NavType.FloatType },
-                navArgument(name = "hourly_rate") { type = NavType.FloatType }
-            ))) { backStackEntry ->
+            arguments =
+                (listOf(
+                    navArgument(name = "course_category") { type = NavType.StringType },
+                    navArgument(name = "difficulty_level") { type = NavType.StringType },
+                    navArgument(name = "released_date") { type = NavType.StringType },
+                    navArgument(name = "rating") { type = NavType.FloatType },
+                    navArgument(name = "hourly_rate") { type = NavType.FloatType },
+                )),
+        ) { backStackEntry ->
             CourseFilterResultScreen(
                 navController,
                 backStackEntry.arguments?.getString("course_category"),
                 backStackEntry.arguments?.getString("difficulty_level"),
                 backStackEntry.arguments?.getString("released_date"),
                 backStackEntry.arguments?.getFloat("rating"),
-                backStackEntry.arguments?.getFloat("hourly_rate")
+                backStackEntry.arguments?.getFloat("hourly_rate"),
             )
-
         }
         // here we will send this info to course result screen
         // and then we will send this info to course details screen

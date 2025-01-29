@@ -76,7 +76,7 @@ fun MentorFilterScreen(navController: NavController) {
 
     Scaffold(
         modifier = Modifier.padding(16.dp),
-        topBar = { ScaffoldFilterScreenTopBar(navController = navController,"Filters") },
+        topBar = { ScaffoldFilterScreenTopBar(navController = navController, "Filters") },
         bottomBar = {
             NavigationBar {
                 Row(
@@ -433,4 +433,3 @@ fun MentorFilterScreen(navController: NavController) {
 
 // we will change this to lambda fun that will take string and will return -> string
 // then take the returning string and put it in a a list
-

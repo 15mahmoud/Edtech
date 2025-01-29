@@ -1,4 +1,4 @@
-package com.example.student_project.screen.login.forgetpassword
+package com.example.student_project.screen.log.forgetpassword
 
 import android.widget.Toast
 import androidx.compose.foundation.Image

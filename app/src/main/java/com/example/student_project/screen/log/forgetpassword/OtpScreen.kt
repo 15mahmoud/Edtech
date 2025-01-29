@@ -1,4 +1,4 @@
-package com.example.student_project.screen.login.forgetpassword
+package com.example.student_project.screen.log.forgetpassword
 
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize

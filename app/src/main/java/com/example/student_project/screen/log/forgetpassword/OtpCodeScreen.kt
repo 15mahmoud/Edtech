@@ -1,4 +1,4 @@
-package com.example.student_project.screen.login.forgetpassword
+package com.example.student_project.screen.log.forgetpassword
 
 import android.view.KeyEvent
 import androidx.compose.foundation.background

@@ -1,4 +1,4 @@
-package com.example.student_project.data
+package com.example.student_project.data.repository
 
 import com.example.student_project.data.component.Course
 
@@ -6,7 +6,8 @@ class CourseRepo {
     companion object {
         val courseList =
             listOf(
-                Course("1",
+                Course(
+                    "1",
                     "Math 116",
                     "beginner",
                     "programming",
@@ -14,8 +15,10 @@ class CourseRepo {
                     4.5,
                     "mezo",
                     12.0,
-                    "inLessThan3Months"),
-                Course("2",
+                    "inLessThan3Months",
+                ),
+                Course(
+                    "2",
                     "Arch 116",
                     "advanced",
                     "programming",
@@ -23,7 +26,8 @@ class CourseRepo {
                     4.5,
                     "mezo",
                     12.0,
-                    "inLessThan6Months")
+                    "inLessThan6Months",
+                ),
             )
         val trendingCourse =
             listOf(
@@ -36,7 +40,7 @@ class CourseRepo {
                     4.5,
                     "mezo",
                     12.99,
-                    "inLessThan1year"
+                    "inLessThan1year",
                 ),
                 Course(
                     "2",
@@ -47,9 +51,10 @@ class CourseRepo {
                     4.7,
                     "mezo",
                     12.99,
-                    "inLessThan1year"
+                    "inLessThan1year",
                 ),
-                Course("3",
+                Course(
+                    "3",
                     "Intro to PhotoGraphy and Editing",
                     "advanced",
                     "programming",
@@ -57,7 +62,8 @@ class CourseRepo {
                     4.5,
                     "mezo",
                     12.99,
-                    "inLessThan1year"),
+                    "inLessThan1year",
+                ),
             )
     }
 

@@ -56,7 +56,7 @@ fun BickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
 // after modify it
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldFilterScreenTopBar(navController: NavController,text:String) {
+fun ScaffoldFilterScreenTopBar(navController: NavController, text: String) {
     TopAppBar(
         title = {
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -79,10 +79,11 @@ fun ScaffoldFilterScreenTopBar(navController: NavController,text:String) {
 }
 
 @Composable
-fun CourseFilterScreenText(text: String){
+fun CourseFilterScreenText(text: String) {
     Text(
         text = text,
         Modifier.padding(10.dp),
         fontSize = 14.sp,
-        style = MaterialTheme.typography.headlineLarge)
+        style = MaterialTheme.typography.headlineLarge,
+    )
 }

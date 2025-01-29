@@ -1,4 +1,4 @@
-package com.example.student_project.screen.login.forgetpassword
+package com.example.student_project.screen.log.forgetpassword
 
 sealed interface OtpAction {
     // we use data class if we need to take value

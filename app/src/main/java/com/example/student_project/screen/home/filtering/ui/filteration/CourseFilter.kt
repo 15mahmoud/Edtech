@@ -66,16 +66,13 @@ fun CourseFilterScreen(navController: NavController) {
     var hourlyRate by remember { mutableStateOf(20.0) }
     Scaffold(
         modifier = Modifier.padding(16.dp),
-
-        topBar = { ScaffoldFilterScreenTopBar(navController = navController,"Filters") },
+        topBar = { ScaffoldFilterScreenTopBar(navController = navController, "Filters") },
         bottomBar = {
             NavigationBar {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
+                    modifier = Modifier.fillMaxWidth().padding(10.dp),
                     horizontalArrangement =
-                    Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
+                        Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
                 ) {
                     Button(
                         modifier = Modifier.weight(0.4f),
@@ -97,12 +94,14 @@ fun CourseFilterScreen(navController: NavController) {
                         onClick = {
                             // filled object first then we will send it to TopCourse screen
                             // var filterationRequest = FilterationRequest()
-                            navController.navigate(Screens.CourseFilterResultScreen.route +
+                            navController.navigate(
+                                Screens.CourseFilterResultScreen.route +
                                     "/$courseCategoryChoiceState" +
                                     "/$difficultyLevelChoiceState" +
                                     "/$releasedDateChoiceState" +
                                     "/$selectedRating" +
-                                    "/$hourlyRate")
+                                    "/$hourlyRate"
+                            )
                             // navigate with arguments "filteration object" to search result
                         },
                     ) {
@@ -112,11 +111,7 @@ fun CourseFilterScreen(navController: NavController) {
             }
         },
     ) { innerPadding ->
-        Column(
-            Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-        ) {
+        Column(Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
             Text(
                 text = "I'm looking for",
                 Modifier.padding(10.dp),
@@ -127,7 +122,7 @@ fun CourseFilterScreen(navController: NavController) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement =
-                Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
+                    Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
             ) {
                 Button(
                     modifier = Modifier.weight(0.4f),
@@ -164,7 +159,7 @@ fun CourseFilterScreen(navController: NavController) {
 
             ExposedDropdownMenuBox(
                 modifier =
-                Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
+                    Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
                 expanded = isExpandedForCourseCategory,
                 onExpandedChange = { isExpandedForCourseCategory = !isExpandedForCourseCategory },
             ) {
@@ -173,26 +168,27 @@ fun CourseFilterScreen(navController: NavController) {
                     onValueChange = { courseCategoryChoiceState = it },
                     readOnly = true,
                     trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForCourseCategory)
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = isExpandedForCourseCategory
+                        )
                     },
                     colors =
-                    ExposedDropdownMenuDefaults.textFieldColors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent,
-                    ),
+                        ExposedDropdownMenuDefaults.textFieldColors(
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                        ),
                     modifier =
-                    Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                        Modifier.menuAnchor()
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     modifier =
-                    Modifier.border(
-                        width = 1.dp,
-                        color = Color.Gray,
-                        RoundedCornerShape(10.dp),
-                    ),
+                        Modifier.border(
+                            width = 1.dp,
+                            color = Color.Gray,
+                            RoundedCornerShape(10.dp),
+                        ),
                     expanded = isExpandedForCourseCategory,
                     onDismissRequest = { isExpandedForCourseCategory = false },
                 ) {
@@ -211,7 +207,7 @@ fun CourseFilterScreen(navController: NavController) {
 
             ExposedDropdownMenuBox(
                 modifier =
-                Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
+                    Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
                 expanded = isExpandedForDifficultyLevel,
                 onExpandedChange = { isExpandedForDifficultyLevel = !isExpandedForDifficultyLevel },
             ) {
@@ -220,26 +216,27 @@ fun CourseFilterScreen(navController: NavController) {
                     onValueChange = { difficultyLevelChoiceState = it },
                     readOnly = true,
                     trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForDifficultyLevel)
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = isExpandedForDifficultyLevel
+                        )
                     },
                     colors =
-                    ExposedDropdownMenuDefaults.textFieldColors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent,
-                    ),
+                        ExposedDropdownMenuDefaults.textFieldColors(
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                        ),
                     modifier =
-                    Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                        Modifier.menuAnchor()
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     modifier =
-                    Modifier.border(
-                        width = 1.dp,
-                        color = Color.Gray,
-                        RoundedCornerShape(10.dp),
-                    ),
+                        Modifier.border(
+                            width = 1.dp,
+                            color = Color.Gray,
+                            RoundedCornerShape(10.dp),
+                        ),
                     expanded = isExpandedForDifficultyLevel,
                     onDismissRequest = { isExpandedForDifficultyLevel = false },
                 ) {
@@ -256,12 +253,10 @@ fun CourseFilterScreen(navController: NavController) {
             }
             CourseFilterScreenText(text = "Rating")
 
-
             Row(
-                Modifier
-                    .padding(top = 8.dp)
+                Modifier.padding(top = 8.dp)
                     .border(width = 1.dp, color = borderRating, shape = RoundedCornerShape(10.dp)),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 (1..5).forEach { number ->
                     IconButton(onClick = { selectedRating = number.toDouble() }) {
@@ -269,8 +264,8 @@ fun CourseFilterScreen(navController: NavController) {
                             imageVector = Icons.Filled.Star,
                             contentDescription = "Rating Star",
                             tint =
-                            if (number.toDouble() <= selectedRating) Color.Yellow
-                            else Color.Gray,
+                                if (number.toDouble() <= selectedRating) Color.Yellow
+                                else Color.Gray,
                         )
                     }
                 }
@@ -289,10 +284,9 @@ fun CourseFilterScreen(navController: NavController) {
                     thumb = {
                         Spacer(
                             modifier =
-                            Modifier
-                                .size(20.dp)
-                                .background(Color.White, CircleShape)
-                                .border(width = 2.dp, color = buttonColor, shape = CircleShape)
+                                Modifier.size(20.dp)
+                                    .background(Color.White, CircleShape)
+                                    .border(width = 2.dp, color = buttonColor, shape = CircleShape)
                         )
                     },
                     modifier = Modifier.padding(start = 10.dp),
@@ -300,10 +294,10 @@ fun CourseFilterScreen(navController: NavController) {
                     onValueChange = { hourlyRate = it.toDouble() },
                     valueRange = 0f..100f,
                     colors =
-                    SliderDefaults.colors(
-                        thumbColor = buttonColor,
-                        activeTrackColor = buttonColor,
-                    ),
+                        SliderDefaults.colors(
+                            thumbColor = buttonColor,
+                            activeTrackColor = buttonColor,
+                        ),
                 )
                 Text(text = "${hourlyRate} USD/hour", fontSize = 14.sp, color = Color.Gray)
             }
@@ -312,7 +306,7 @@ fun CourseFilterScreen(navController: NavController) {
 
             ExposedDropdownMenuBox(
                 modifier =
-                Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
+                    Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
                 expanded = isExpandedForReleasedDate,
                 onExpandedChange = { isExpandedForReleasedDate = !isExpandedForReleasedDate },
             ) {
@@ -321,26 +315,27 @@ fun CourseFilterScreen(navController: NavController) {
                     onValueChange = { releasedDateChoiceState = it },
                     readOnly = true,
                     trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForReleasedDate)
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = isExpandedForReleasedDate
+                        )
                     },
                     colors =
-                    ExposedDropdownMenuDefaults.textFieldColors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent,
-                    ),
+                        ExposedDropdownMenuDefaults.textFieldColors(
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                        ),
                     modifier =
-                    Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                        Modifier.menuAnchor()
+                            .fillMaxWidth()
+                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     modifier =
-                    Modifier.border(
-                        width = 1.dp,
-                        color = Color.Gray,
-                        RoundedCornerShape(10.dp),
-                    ),
+                        Modifier.border(
+                            width = 1.dp,
+                            color = Color.Gray,
+                            RoundedCornerShape(10.dp),
+                        ),
                     expanded = isExpandedForReleasedDate,
                     onDismissRequest = { isExpandedForReleasedDate = false },
                 ) {
@@ -355,7 +350,6 @@ fun CourseFilterScreen(navController: NavController) {
                     }
                 }
             }
-
         }
     }
 }

@@ -1,5 +1,6 @@
-package com.example.student_project.screen.login
+package com.example.student_project.screen.log.signup
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -41,25 +40,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.student_project.R
+import com.example.student_project.data.component.Student
 import com.example.student_project.navigation.Screens
 import com.example.student_project.screen.uiconstant.PopBackStackEntry
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.textFieldColor
-import kotlinx.coroutines.launch
 
 @Composable
-fun AdditionalInfoScreen(navController: NavController) {
+fun AdditionalInfoScreen(navController: NavController, email: String?, password: String?) {
+    var signupViewModel: SignupViewModel = viewModel()
+
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     val scope = rememberCoroutineScope()
-
+    val context = LocalContext.current
     var nameState by remember { mutableStateOf("") }
     var nameError by remember { mutableStateOf(false) }
     var nicknameState by remember { mutableStateOf("") }
@@ -281,17 +284,28 @@ fun AdditionalInfoScreen(navController: NavController) {
                         phoneState.length == 11 &&
                         phoneState.all { it.isDigit() }
                 ) {
+                    val student =
+                        Student(
+                            nameState,
+                            nicknameState,
+                            email.toString(),
+                            password.toString(),
+                            password.toString(),
+                            "Student",
+                        )
+                    signupViewModel.addStudent(student)
+                    navController.navigate(Screens.LoginScreen.route)
                     // Proceed to next screen or perform sign-up actions
                     // this one will change
-                    navController.navigate(Screens.HomeScreen.route)
                 } else {
-                    scope.launch {
-                        SnackbarHostState()
-                            .showSnackbar(
-                                message = "You invalid info",
-                                duration = SnackbarDuration.Short,
-                            )
-                    }
+                    Toast.makeText(context, "Please enter valid info", Toast.LENGTH_SHORT).show()
+                    //                    scope.launch {
+                    //                        SnackbarHostState()
+                    //                            .showSnackbar(
+                    //                                message = "You invalid info",
+                    //                                duration = SnackbarDuration.Short,
+                    //                            )
+                    //                    }
                 }
             },
             shape = RoundedCornerShape(100.dp),

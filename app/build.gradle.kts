@@ -84,23 +84,28 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.compose.material:material:1.7.5")
-//viewModel
+    implementation("androidx.compose.material:material:1.7.6")
+    //viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     //life cycle
     implementation(libs.androidx.lifecycle.runtime.compose)
     //navigation
-    implementation("androidx.navigation:navigation-compose:2.8.4")
+    implementation("androidx.navigation:navigation-compose:2.8.5")
     //coroutine
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
-//splash screen
-    implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    //splash screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
     //retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
     //viewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     //coil
-    implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation ("io.coil-kt:coil-compose:2.4.0")
     implementation("com.google.accompanist:accompanist-coil:0.10.0")
+    //
+    implementation("androidx.concurrent:concurrent-futures:1.2.0")
+
+    // Kotlin
+    implementation("androidx.concurrent:concurrent-futures-ktx:1.2.0")
 }
