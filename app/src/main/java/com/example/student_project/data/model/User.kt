@@ -1,12 +1,5 @@
 package com.example.student_project.data.model
 
-data class LoginResponse(
-    val message: String,
-    val success: Boolean,
-    val token: String,
-    val user: User,
-)
-
 data class User(
     val accountType: String,
     val active: Boolean,

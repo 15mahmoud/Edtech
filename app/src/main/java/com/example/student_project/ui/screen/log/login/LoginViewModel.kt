@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.student_project.data.model.LoginResponse
-import com.example.student_project.data.model.StudentLogin
+import com.example.student_project.data.network.request.StudentLogin
+import com.example.student_project.data.network.response.LoginResponse
 import com.example.student_project.data.repo.StudentRepo
 import kotlinx.coroutines.launch
 import retrofit2.Response
