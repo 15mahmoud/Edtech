@@ -48,7 +48,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
 import com.example.student_project.R
 import com.example.student_project.ui.navigation.Screens
-import com.example.student_project.screen.uiconstant.PopBackStackEntry
+import com.example.student_project.ui.screen.uiconstant.PopBackStackEntry
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.textFieldColor

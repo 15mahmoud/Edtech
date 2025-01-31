@@ -1,5 +1,6 @@
 package com.example.student_project.ui.screen.log.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -46,17 +49,33 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.student_project.R
+import com.example.student_project.data.model.User
 import com.example.student_project.data.network.request.StudentLogin
+import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.theme.borderButton
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.textFieldColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+
+val studentRepo = StudentRepo()
 
 @Composable
 fun LoginScreen(navController: NavController) {
-    val loginViewModel: LoginViewModel = viewModel()
+    // val loginViewModel: LoginViewModel = viewModel()
+    val context = LocalContext.current
+
+    var resultState by remember {
+        mutableStateOf<Result<User?>?>(null)
+    }
+    val errorState by remember {
+        mutableStateOf<String?>(null)
+    }
+
 
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -70,9 +89,11 @@ fun LoginScreen(navController: NavController) {
 
     // we will make api call
 
-    Scaffold(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)) { innerPadding ->
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) { innerPadding ->
         Box(
             modifier =
             Modifier
@@ -90,9 +111,11 @@ fun LoginScreen(navController: NavController) {
                     .padding(top = 100.dp, start = 10.dp)
                     .align(alignment = Alignment.TopCenter),
             )
-            Column(modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth()) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth()
+            ) {
 
                 // we need to make shadow
                 TextField(
@@ -211,9 +234,11 @@ fun LoginScreen(navController: NavController) {
                 )
                 // we will remove this after we make local storage
                 // it remember me feature
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp))
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                )
                 Button(
                     onClick = {
                         if (
@@ -225,35 +250,27 @@ fun LoginScreen(navController: NavController) {
                             // StudentLogin(emailState, passwordState)
                             //                            // we check on user data
                             val user = StudentLogin(emailState, passwordState)
-                            loginViewModel.checkUser(user)
-                            try {
-                                if (
-                                    loginViewModel.loginResponseState.loginResponse?.isSuccessful ==
-                                    true
-                                ) {
-                                    if (
-                                        loginViewModel.loginResponseState.loginResponse
-                                            ?.body()
-                                            ?.success == true
-                                    ) {
-                                        navController.navigate(Screens.HomeScreen.route)
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                throw e
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val result = studentRepo.checkUser(user)
+                                resultState = result
+                            }
+                            resultState?.onSuccess {
+
+                                navController.navigate(Screens.HomeScreen.route)
+                            }?.onFailure {
+                                Toast.makeText(
+                                    context,
+                                    "your email or password is mismatched",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                             // we will send data to back to check if true the move to next false
                             // make error
 
                             // will navigate to Home screen
                         } else {
-                            scope.launch {
-                                SnackbarHostState()
-                                    .showSnackbar(
-                                        message = "You invalid info",
-                                        duration = SnackbarDuration.Short,
-                                    )
-                            }
+                            Toast.makeText(context, "you entered wrong info", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     },
                     shape = RoundedCornerShape(100.dp),

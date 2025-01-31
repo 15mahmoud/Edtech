@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.student_project.data.model.Course
-import com.example.student_project.screen.home.courseRepo
+import com.example.student_project.ui.screen.home.content.courseRepo
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.jopTitleColor
 import com.example.student_project.ui.theme.starFillingColor

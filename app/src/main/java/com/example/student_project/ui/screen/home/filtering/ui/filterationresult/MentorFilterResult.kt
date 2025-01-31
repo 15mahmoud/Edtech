@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.student_project.data.model.Mentor
-import com.example.student_project.screen.home.mentorRepo
+import com.example.student_project.ui.screen.home.content.mentorRepo
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.jopTitleColor
 

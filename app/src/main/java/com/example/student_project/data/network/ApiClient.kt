@@ -8,7 +8,10 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface ApiClient {
-    @POST("login") suspend fun checkUser(@Body studentLogin: StudentLogin): Response<LoginResponse>
+    //we will this response to make default attribute for user
+    //user can change it later
+    //by using put Request
+    @POST("login") suspend fun checkUser(@Body studentLogin: StudentLogin): LoginResponse
 
     @POST("signup") suspend fun addStudent(@Body student: Student)
 }

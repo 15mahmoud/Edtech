@@ -84,13 +84,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.compose.material:material:1.7.6")
+    implementation("androidx.compose.material:material:1.7.7")
     //viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     //life cycle
     implementation(libs.androidx.lifecycle.runtime.compose)
     //navigation
-    implementation("androidx.navigation:navigation-compose:2.8.5")
+    implementation("androidx.navigation:navigation-compose:2.8.6")
     //coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     //splash screen

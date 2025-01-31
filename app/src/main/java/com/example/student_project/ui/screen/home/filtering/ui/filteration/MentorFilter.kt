@@ -46,8 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.ui.navigation.Screens
-import com.example.student_project.screen.home.filtering.widgets.BickerButton
-import com.example.student_project.screen.home.filtering.widgets.ScaffoldFilterScreenTopBar
+import com.example.student_project.ui.screen.home.filtering.widgets.BickerButton
+import com.example.student_project.ui.screen.home.filtering.widgets.ScaffoldFilterScreenTopBar
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.darkerGrayColor
 
