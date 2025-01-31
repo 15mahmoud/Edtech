@@ -1,4 +1,4 @@
-package com.example.student_project.ui.screen.home
+package com.example.student_project.ui.screen
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

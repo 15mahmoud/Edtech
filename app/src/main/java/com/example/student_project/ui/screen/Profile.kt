@@ -12,7 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import com.example.student_project.screen.home.BottomNavBar
+import com.example.student_project.ui.screen.home.content.BottomNavBar
 
 @Composable
 fun ProfileScreen(navController: NavController) {

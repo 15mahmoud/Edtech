@@ -6,27 +6,27 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.student_project.screen.LearningScreen
-import com.example.student_project.screen.ProfileScreen
-import com.example.student_project.screen.home.CourseDetailsScreen
-import com.example.student_project.screen.home.HomeScreen
-import com.example.student_project.screen.home.filtering.ui.filteration.CourseFilterScreen
-import com.example.student_project.screen.home.filtering.ui.filteration.MentorFilterScreen
-import com.example.student_project.screen.home.filtering.ui.filterationresult.CourseFilterResultScreen
-import com.example.student_project.screen.home.filtering.ui.filterationresult.MentorFilterResultScreen
-import com.example.student_project.screen.log.SplashScreen
-import com.example.student_project.screen.log.forgetpassword.EmailAndPhoneScreen
-import com.example.student_project.screen.log.forgetpassword.NewPasswordScreen
-import com.example.student_project.screen.log.forgetpassword.OtpScreen
-import com.example.student_project.screen.log.login.LoginScreen
-import com.example.student_project.screen.log.signup.AdditionalInfoScreen
-import com.example.student_project.screen.log.signup.SignUpScreen
+import com.example.student_project.ui.screen.LearningScreen
+import com.example.student_project.ui.screen.ProfileScreen
+import com.example.student_project.ui.screen.CourseDetailsScreen
+import com.example.student_project.ui.screen.home.content.HomeScreen
+import com.example.student_project.ui.screen.home.filtering.ui.filteration.CourseFilterScreen
+import com.example.student_project.ui.screen.home.filtering.ui.filteration.MentorFilterScreen
+import com.example.student_project.ui.screen.home.filtering.ui.filterationresult.CourseFilterResultScreen
+import com.example.student_project.ui.screen.home.filtering.ui.filterationresult.MentorFilterResultScreen
+import com.example.student_project.ui.screen.log.SplashScreen
+import com.example.student_project.ui.screen.log.forgetpassword.EmailAndPhoneScreen
+import com.example.student_project.ui.screen.log.forgetpassword.NewPasswordScreen
+import com.example.student_project.ui.screen.log.forgetpassword.OtpScreen
+import com.example.student_project.ui.screen.log.login.LoginScreen
+import com.example.student_project.ui.screen.log.signup.AdditionalInfoScreen
+import com.example.student_project.ui.screen.log.signup.SignUpScreen
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.SignupScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.LoginScreen.route) {
         composable(Screens.SplashScreen.route) { SplashScreen(navController) }
         composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
         composable(Screens.LoginScreen.route) { LoginScreen(navController) }
