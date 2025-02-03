@@ -1,20 +1,30 @@
 package com.example.student_project.data.repo
 
+import coil.network.HttpException
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
-import com.example.student_project.data.network.ApiClientFactory.apiClient
+import com.example.student_project.data.network.ApiClientFactory.apiClientForAuth
 import com.example.student_project.data.network.request.StudentLogin
-import com.example.student_project.data.network.response.LoginResponse
-import retrofit2.Response
 
 class StudentRepo {
 
     suspend fun checkUser(studentLogin: StudentLogin): Result<User?> {
         //wraper class to handle error
-        return Result.runCatching { apiClient.checkUser(studentLogin).user }
+        val result = Result.runCatching {apiClientForAuth.login(studentLogin).data }
+        return if (result.isSuccess){
+            result
+        }else{
+            Result.failure(
+                if (result.exceptionOrNull() is HttpException){
+                    HttpException((result.exceptionOrNull() as HttpException).response)
+                }else{
+                    result.exceptionOrNull() ?: Exception("Unknown error")
+                }
+            )
+        }
     }
 
     suspend fun addStudent(student: Student) {
-        apiClient.addStudent(student)
+        apiClientForAuth.addStudent(student)
     }
 }

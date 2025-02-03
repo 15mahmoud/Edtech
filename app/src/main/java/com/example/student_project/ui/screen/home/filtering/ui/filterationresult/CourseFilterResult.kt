@@ -44,8 +44,6 @@ import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.jopTitleColor
 import com.example.student_project.ui.theme.starFillingColor
 
-data class CourseFilterResultScreenState(val course: List<Course>)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CourseFilterResultScreen(
@@ -57,19 +55,23 @@ fun CourseFilterResultScreen(
     hourlyRate: Float?,
 ) {
     val scope = rememberCoroutineScope()
-    val state = remember { mutableStateOf(CourseFilterResultScreenState(emptyList())) }
+    var state by remember { mutableStateOf<Result<List<Course>?>?>(null) }
     LaunchedEffect(key1 = scope) {
-        val courseList = courseRepo.getCourseList()
-        state.value = CourseFilterResultScreenState(courseList)
+        val courseList = courseRepo.getAllCourses()
+        state = courseList
     }
     var togel by remember { mutableStateOf(false) }
     val newCourseList =
-        state.value.course.filter { course ->
-            course.category == courseCategory &&
-                course.difficulty == difficultyLevel &&
-                course.releasedDate == releasedDate &&
-                course.rating.toFloat() >= rating!! &&
-                course.hourlyRate.toFloat() <= hourlyRate!!
+        state?.onSuccess {
+           it?.filter { course->
+               course.category.name == courseCategory &&
+                       //he didnt use diff
+                   //course.difficulty == difficultyLevel &&
+                       //he didnt use released date
+                   //course.releasedDate == releasedDate &&
+                       //he didnt use rating
+                  // course.rating.toFloat() >= rating!! &&
+                   course.price.toFloat() <= hourlyRate!! }
         }
 
     Scaffold(
@@ -111,14 +113,20 @@ fun CourseFilterResultScreen(
                 modifier = Modifier.padding(start = 15.dp, bottom = 5.dp, top = 5.dp),
             )
             LazyColumn(modifier = Modifier.padding(start = 15.dp)) {
-                items(newCourseList) {
-                    CourseColumn(
-                        course = it,
-                        onClickListener = { string ->
-                            // here we will navigate to details screen based on id
-                        },
-                    )
+                newCourseList?.onSuccess {
+                    it?.let {
+                        items(it) {course->
+                            CourseColumn(
+                                course = course,
+                                //here we will send id to details screen
+                                onClickListener = { string ->
+                                    // here we will navigate to details screen based on id
+                                },
+                            )
+                        }
+                    }
                 }
+
             }
         }
     }
@@ -138,18 +146,18 @@ fun CourseColumn(course: Course, onClickListener: (String) -> Unit) {
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Image(
-                painter = rememberAsyncImagePainter(model = course.imgPath),
+                painter = rememberAsyncImagePainter(model = course.thumbnail),
                 contentDescription = "course image",
             )
             Column {
                 Text(
-                    text = course.title,
+                    text = course.courseName,
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(5.dp),
                 )
                 Text(
-                    text = course.mentorName,
+                    text = course.instructor.firstName + " " + course.instructor.lastName,
                     style = MaterialTheme.typography.headlineSmall,
                     fontSize = 15.sp,
                     modifier = Modifier.padding(5.dp),
@@ -158,7 +166,7 @@ fun CourseColumn(course: Course, onClickListener: (String) -> Unit) {
                 HorizontalDivider()
                 Row {
                     Text(
-                        text = "${course.hourlyRate}$",
+                        text = "${course.price}$",
                         style = MaterialTheme.typography.titleMedium,
                         fontSize = 15.sp,
                         modifier = Modifier.padding(5.dp),
@@ -171,7 +179,8 @@ fun CourseColumn(course: Course, onClickListener: (String) -> Unit) {
                         tint = starFillingColor,
                     )
                     Text(
-                        text = "${course.rating}",
+                        //he didn't use rating
+                        text = "4.5",
                         style = MaterialTheme.typography.titleMedium,
                         fontSize = 15.sp,
                         modifier = Modifier.padding(5.dp),
