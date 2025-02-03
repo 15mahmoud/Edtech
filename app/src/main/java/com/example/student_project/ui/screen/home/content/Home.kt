@@ -1,5 +1,6 @@
 package com.example.student_project.ui.screen.home.content
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,7 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,11 +25,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -56,14 +55,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
@@ -76,37 +75,49 @@ import com.example.student_project.data.repo.CourseRepo
 import com.example.student_project.data.repo.MentorRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.home.uidata.BottomNavItem
-import com.example.student_project.ui.screen.log.login.LoginViewModel
 import com.example.student_project.ui.theme.lightGray
 import com.example.student_project.ui.theme.starFillingColor
 
 val courseRepo = CourseRepo()
 val mentorRepo = MentorRepo()
 
-data class HomeScreenState(
-    val courses: List<Course>,
-    val trendingCourses: List<Course>,
+//data class HomeScreenState(
+//    val courses: Result<List<Data>?>?,
+////    val trendingCourses: List<Course>,
+//
+//    )
+
+data class HomeScreenMentorState(
     val mentor: List<Mentor>,
 )
 
 @Composable
 fun HomeScreen(navController: NavController) {
+    val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
+
     // it will be remembered if user rotate the screen
     val selectedItemIndex by rememberSaveable { mutableStateOf(0) }
     var searchState by rememberSaveable { mutableStateOf("") }
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
+    val mentorState = remember { mutableStateOf(HomeScreenMentorState(emptyList())) }
 
-    val state = remember { mutableStateOf(HomeScreenState(emptyList(), emptyList(), emptyList())) }
+    var topNewCourseState by remember { mutableStateOf<Result<List<Course>?>?>(null) }
+
+
     LaunchedEffect(scope) {
-        val courseList = courseRepo.getCourseList()
-        val trendingCoursesList = courseRepo.getTrendingCourse()
+        val courseList = courseRepo.getAllCourses()
+        topNewCourseState = courseList
+        //  val trendingCoursesList = courseRepo.getTrendingCourse()
         val mentorList = mentorRepo.getMentorList()
-        state.value = HomeScreenState(courseList, trendingCoursesList, mentorList)
+        mentorState.value = HomeScreenMentorState(mentorList)
     }
+
+    //we will make var that be true to show api
+    // if it false it will show failed to loading
     Scaffold(
         Modifier
             .fillMaxSize()
@@ -257,6 +268,7 @@ fun HomeScreen(navController: NavController) {
                         }
                     }
                 }
+
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -264,15 +276,23 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
-                    itemsIndexed(state.value.trendingCourses) { index, course ->
-                        CourseRaw(course) {
-                            // navigate
-                            navController.navigate(
-                                Screens.CourseDetailScreen.route + "/${it.title}"
-                            )
+                    topNewCourseState?.onSuccess {
+                        it?.let {
+                            items(it) { course ->
+                                CourseRaw(course) {
+                                    // navigate
+                                    navController.navigate(
+                                        Screens.CourseDetailScreen.route + "/${it.id}"
+                                    )
+                                }
+                            }
                         }
+
+                    }?.onFailure {
+                        Toast.makeText(context, "Failed to load data", Toast.LENGTH_SHORT).show()
                     }
                 }
+
                 Text(
                     modifier = Modifier.padding(bottom = 5.dp),
                     text = "Weekly TopLive Tutors ",
@@ -286,7 +306,7 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
-                    itemsIndexed(state.value.mentor) { index, mentor ->
+                    items(mentorState.value.mentor) { mentor ->
                         Box(
                             modifier =
                             Modifier
@@ -301,7 +321,7 @@ fun HomeScreen(navController: NavController) {
                                 )
                                 .background(Color.White)
                                 .clickable {
-                                    // here i will put code to navigate to the disired course
+                                    // here i will put code to navigate to the desired course
                                 }
                         ) {
                             AsyncImage(
@@ -311,7 +331,7 @@ fun HomeScreen(navController: NavController) {
                                     .crossfade(true)
                                     .transformations(CircleCropTransformation())
                                     .build(),
-                                contentDescription = null,
+                                contentDescription = "mentor image",
                                 modifier =
                                 Modifier
                                     .width(60.dp)
@@ -368,14 +388,32 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
-                    itemsIndexed(state.value.courses) { index, course ->
-                        CourseRaw(course) {
-                            navController.navigate(
-                                Screens.CourseDetailScreen.route + "/${it.title}"
-                            )
+//                    itemsIndexed(state.value.courses) { index, course ->
+//                        CourseRaw(course) {
+//                            navController.navigate(
+//                                Screens.CourseDetailScreen.route + "/${it._id}"
+//                            )
+//                        }
+//                    }
+
+                    topNewCourseState?.onSuccess {
+                        it?.let {
+                            items(it) { course ->
+                                CourseRaw(course) {
+                                    // navigate
+                                    navController.navigate(
+                                        Screens.CourseDetailScreen.route + "/${it.id}"
+                                    )
+                                }
+                            }
                         }
+                    }?.onFailure {
+                        Toast.makeText(context, "Failed to load data", Toast.LENGTH_SHORT).show()
                     }
+
+
                 }
+
             }
         }
     }
@@ -384,12 +422,12 @@ fun HomeScreen(navController: NavController) {
 // i should move those 2 function from here may be i make another file for them
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldTopAppBar(loginViewModel: LoginViewModel = viewModel()) {
+fun ScaffoldTopAppBar() {
     //in this one we need to put response in room db
     //then go to it and get all data we need
     //so this need to be change
-    val imageUrl: String = "https://i.redd.it/spgt1hclj2cd1.jpeg"
-    val firstName: String = "tarek"
+    val imageUrl = "https://i.redd.it/spgt1hclj2cd1.jpeg"
+    val firstName = "tarek"
     val context = LocalContext.current
     TopAppBar(
         title = {
@@ -446,6 +484,7 @@ fun ScaffoldTopAppBar(loginViewModel: LoginViewModel = viewModel()) {
 
 @Composable
 fun BottomNavBar(selectedState: Int, navController: NavController) {
+    val imageVector = ImageVector.vectorResource(id = R.drawable.selected_courses_nav)
     val items =
         listOf(
             BottomNavItem(
@@ -456,8 +495,8 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
             ),
             BottomNavItem(
                 route = "learning_screen",
-                selectedIcon = Icons.Filled.Search,
-                unselectedIcon = Icons.Outlined.Search,
+                selectedIcon = imageVector,
+                unselectedIcon = ImageVector.vectorResource(id = R.drawable.courses_nav),
                 label = "Learning",
             ),
             BottomNavItem(
@@ -484,7 +523,7 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
                         if (index == selectedItemIndex) {
                             bottomNavItem.selectedIcon
                         } else bottomNavItem.unselectedIcon,
-                        contentDescription = null,
+                        contentDescription = "bottom nav icon",
                     )
                 },
             )
@@ -517,7 +556,8 @@ fun CourseRaw(course: Course, onCLickListener: (Course) -> Unit) {
         //                .padding(5.dp),
         //        )
         Image(
-            painter = rememberAsyncImagePainter(model = course.imgPath),
+            //we will change it after we get one
+            painter = rememberAsyncImagePainter("https://i.redd.it/spgt1hclj2cd1.jpeg"),
             contentDescription = "course image",
             modifier =
             Modifier
@@ -526,14 +566,14 @@ fun CourseRaw(course: Course, onCLickListener: (Course) -> Unit) {
                 .padding(5.dp),
         )
         Text(
-            text = course.title,
+            text = course.courseName,
             style = MaterialTheme.typography.headlineLarge,
             fontSize = 13.sp,
             modifier = Modifier.padding(start = 7.dp),
         )
         Text(
             modifier = Modifier.padding(start = 7.dp, top = 5.dp, bottom = 5.dp),
-            text = course.mentorName,
+            text = course.instructor.firstName + " ${course.instructor.lastName}",
             style = MaterialTheme.typography.titleMedium,
             color = Color(0xFF334155),
         )
@@ -541,7 +581,7 @@ fun CourseRaw(course: Course, onCLickListener: (Course) -> Unit) {
         Row(modifier = Modifier.padding(top = 5.dp)) {
             Text(
                 modifier = Modifier.padding(top = 5.dp),
-                text = "$" + course.hourlyRate.toString(),
+                text = "$" + course.price.toString(),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.width(60.dp))
@@ -553,7 +593,8 @@ fun CourseRaw(course: Course, onCLickListener: (Course) -> Unit) {
             )
 
             Text(
-                text = course.rating.toString(),
+                //we need to change this
+                text = 4.5.toString(),
                 fontSize = 12.sp,
                 modifier = Modifier.padding(start = 4.dp, top = 1.dp),
             )

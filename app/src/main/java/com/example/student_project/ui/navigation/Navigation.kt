@@ -7,8 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.student_project.ui.screen.LearningScreen
-import com.example.student_project.ui.screen.ProfileScreen
-import com.example.student_project.ui.screen.CourseDetailsScreen
+import com.example.student_project.ui.screen.profile.ProfileScreen
+import com.example.student_project.ui.screen.details.CourseDetailsScreen
 import com.example.student_project.ui.screen.home.content.HomeScreen
 import com.example.student_project.ui.screen.home.filtering.ui.filteration.CourseFilterScreen
 import com.example.student_project.ui.screen.home.filtering.ui.filteration.MentorFilterScreen
@@ -26,7 +26,7 @@ import com.example.student_project.ui.screen.log.signup.SignUpScreen
 fun Navigation() {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.LoginScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.ProfileScreen.route) {
         composable(Screens.SplashScreen.route) { SplashScreen(navController) }
         composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
         composable(Screens.LoginScreen.route) { LoginScreen(navController) }

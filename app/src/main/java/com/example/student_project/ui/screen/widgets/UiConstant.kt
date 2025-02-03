@@ -1,4 +1,4 @@
-package com.example.student_project.ui.screen.home.filtering.widgets
+package com.example.student_project.ui.screen.widgets
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -86,4 +87,17 @@ fun CourseFilterScreenText(text: String) {
         fontSize = 14.sp,
         style = MaterialTheme.typography.headlineLarge,
     )
+}
+
+@Composable
+fun PopBackStackEntry(navController: NavController) {
+    IconButton(
+        onClick = { navController.popBackStack() },
+        modifier = Modifier.padding(top = 20.dp),
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.baseline_arrow_back_24),
+            contentDescription = null,
+        )
+    }
 }
