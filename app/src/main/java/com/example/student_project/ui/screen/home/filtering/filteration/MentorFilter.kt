@@ -1,4 +1,4 @@
-package com.example.student_project.ui.screen.home.filtering.ui.filteration
+package com.example.student_project.ui.screen.home.filtering.filteration
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

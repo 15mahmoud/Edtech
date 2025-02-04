@@ -10,10 +10,10 @@ import com.example.student_project.ui.screen.LearningScreen
 import com.example.student_project.ui.screen.profile.ProfileScreen
 import com.example.student_project.ui.screen.details.CourseDetailsScreen
 import com.example.student_project.ui.screen.home.content.HomeScreen
-import com.example.student_project.ui.screen.home.filtering.ui.filteration.CourseFilterScreen
-import com.example.student_project.ui.screen.home.filtering.ui.filteration.MentorFilterScreen
-import com.example.student_project.ui.screen.home.filtering.ui.filterationresult.CourseFilterResultScreen
-import com.example.student_project.ui.screen.home.filtering.ui.filterationresult.MentorFilterResultScreen
+import com.example.student_project.ui.screen.home.filtering.filteration.CourseFilterScreen
+import com.example.student_project.ui.screen.home.filtering.filteration.MentorFilterScreen
+import com.example.student_project.ui.screen.home.filtering.filterationresult.CourseFilterResultScreen
+import com.example.student_project.ui.screen.home.filtering.filterationresult.MentorFilterResultScreen
 import com.example.student_project.ui.screen.log.SplashScreen
 import com.example.student_project.ui.screen.log.forgetpassword.EmailAndPhoneScreen
 import com.example.student_project.ui.screen.log.forgetpassword.NewPasswordScreen
@@ -21,6 +21,13 @@ import com.example.student_project.ui.screen.log.forgetpassword.OtpScreen
 import com.example.student_project.ui.screen.log.login.LoginScreen
 import com.example.student_project.ui.screen.log.signup.AdditionalInfoScreen
 import com.example.student_project.ui.screen.log.signup.SignUpScreen
+import com.example.student_project.ui.screen.profile.editprofile.EditProfileScreen
+import com.example.student_project.ui.screen.profile.helpcenter.HelpCenterScreen
+import com.example.student_project.ui.screen.profile.invitefriends.InviteFriendsScreen
+import com.example.student_project.ui.screen.profile.notification.NotificationScreen
+import com.example.student_project.ui.screen.profile.payment.PaymentScreen
+import com.example.student_project.ui.screen.profile.privacypolicy.PrivacyPolicyScreen
+import com.example.student_project.ui.screen.profile.security.SecurityScreen
 
 @Composable
 fun Navigation() {
@@ -130,6 +137,48 @@ fun Navigation() {
             // then send it to backend and get otp code
             // then pass it if true move to next screen
             OtpScreen(navController = navController)
+        }
+        composable(Screens.EditProfileScreen.route) {
+            // we should take a phone or email from previous screen
+            // then send it to backend and get otp code
+            // then pass it if true move to next screen
+            EditProfileScreen(navController = navController)
+        }
+        composable(Screens.NotificationScreen.route) {
+            // we should take a phone or email from previous screen
+            // then send it to backend and get otp code
+            // then pass it if true move to next screen
+            NotificationScreen(navController = navController)
+        }
+        composable(Screens.PaymentScreen.route) {
+            // we should take a phone or email from previous screen
+            // then send it to backend and get otp code
+            // then pass it if true move to next screen
+            PaymentScreen(navController = navController)
+        }
+        composable(Screens.SecurityScreen.route) {
+            // we should take a phone or email from previous screen
+            // then send it to backend and get otp code
+            // then pass it if true move to next screen
+            SecurityScreen(navController = navController)
+        }
+        composable(Screens.PrivacyPolicyScreen.route) {
+            // we should take a phone or email from previous screen
+            // then send it to backend and get otp code
+            // then pass it if true move to next screen
+            PrivacyPolicyScreen(navController = navController)
+        }
+        composable(Screens.HelpCenterScreen.route) {
+            // we should take a phone or email from previous screen
+            // then send it to backend and get otp code
+            // then pass it if true move to next screen
+            HelpCenterScreen(navController = navController)
+        }
+        composable(Screens.InviteFriendsScreen.route) {
+            // we should take a phone or email from previous screen
+            // then send it to backend and get otp code
+            // then pass it if true move to next screen
+            InviteFriendsScreen(navController = navController)
         }
     }
 }
