@@ -4,27 +4,21 @@
     android:width="28dp"
     android:height="28dp">
     <path
-        android:pathData="M14.0002 3.20801C19.9595 3.20801 24.7918 8.03917 24.7918 13.9997C24.7918 19.959 19.9595 24.7913 14.0002 24.7913C8.03966 24.7913 3.2085 19.959 3.2085 13.9997C3.2085 8.04034 8.04083 3.20801 14.0002 3.20801Z"
+        android:pathData="M24.7917 13.9993C24.7917 22.0925 22.0932 24.791 14.0001 24.791C5.90691 24.791 3.20841 22.0925 3.20841 13.9993C3.20841 5.90618 5.90691 3.20768 14.0001 3.20768C22.0932 3.20768 24.7917 5.90618 24.7917 13.9993Z"
         android:strokeColor="#212121"
         android:strokeWidth="1.5"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
-        android:pathData="M18.5959 14.015H18.6064"
+        android:pathData="M14.0002 18.5439V13.9998"
         android:strokeColor="#212121"
-        android:strokeWidth="2"
+        android:strokeWidth="1.5"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
-        android:pathData="M13.9187 14.015H13.9292"
+        android:pathData="M14.0052 9.91667H13.9947"
         android:strokeColor="#212121"
-        android:strokeWidth="2"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
-    <path
-        android:pathData="M9.24166 14.015H9.25216"
-        android:strokeColor="#212121"
-        android:strokeWidth="2"
+        android:strokeWidth="1.5"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
 </vector>

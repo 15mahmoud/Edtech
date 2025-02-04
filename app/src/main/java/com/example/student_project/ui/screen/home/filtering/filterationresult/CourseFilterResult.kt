@@ -1,4 +1,4 @@
-package com.example.student_project.ui.screen.home.filtering.ui.filterationresult
+package com.example.student_project.ui.screen.home.filtering.filterationresult
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -61,18 +61,18 @@ fun CourseFilterResultScreen(
         state = courseList
     }
     var togel by remember { mutableStateOf(false) }
-    val newCourseList =
-        state?.onSuccess {
-           it?.filter { course->
-               course.category.name == courseCategory &&
-                       //he didnt use diff
-                   //course.difficulty == difficultyLevel &&
-                       //he didnt use released date
-                   //course.releasedDate == releasedDate &&
-                       //he didnt use rating
-                  // course.rating.toFloat() >= rating!! &&
-                   course.price.toFloat() <= hourlyRate!! }
-        }
+    //val newCourseList =
+//        state?.onSuccess {
+//           it?.filter { course->
+//               course.category.name == courseCategory &&
+//                       //he didnt use diff
+//                   //course.difficulty == difficultyLevel &&
+//                       //he didnt use released date
+//                   //course.releasedDate == releasedDate &&
+//                       //he didnt use rating
+//                  // course.rating.toFloat() >= rating!! &&
+//                   course.price.toFloat() <= hourlyRate!! }
+//        }
 
     Scaffold(
         topBar = {
@@ -113,7 +113,7 @@ fun CourseFilterResultScreen(
                 modifier = Modifier.padding(start = 15.dp, bottom = 5.dp, top = 5.dp),
             )
             LazyColumn(modifier = Modifier.padding(start = 15.dp)) {
-                newCourseList?.onSuccess {
+                state?.onSuccess {
                     it?.let {
                         items(it) {course->
                             CourseColumn(

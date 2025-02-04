@@ -30,4 +30,18 @@ sealed class Screens(val route: String) {
     data object LearningScreen : Screens("learning_screen")
 
     data object ProfileScreen : Screens("profile_screen")
+
+    data object EditProfileScreen : Screens("edit_profile_screen")
+
+    data object NotificationScreen : Screens("notification_screen")
+
+    data object PaymentScreen : Screens("payment_screen")
+
+    data object SecurityScreen : Screens("security_screen")
+
+    data object PrivacyPolicyScreen : Screens("privacy_policy_screen")
+
+    data object HelpCenterScreen : Screens("help_center_screen")
+
+    data object InviteFriendsScreen : Screens("invite_friends_screen")
 }

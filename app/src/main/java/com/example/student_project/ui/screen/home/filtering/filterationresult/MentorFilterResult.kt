@@ -1,4 +1,4 @@
-package com.example.student_project.ui.screen.home.filtering.ui.filterationresult
+package com.example.student_project.ui.screen.home.filtering.filterationresult
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
