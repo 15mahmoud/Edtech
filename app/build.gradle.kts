@@ -7,6 +7,8 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.ktfmt)
     alias(libs.plugins.detekt)
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -92,7 +94,20 @@ dependencies {
     //navigation
     implementation("androidx.navigation:navigation-compose:2.8.6")
     //coroutine
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+
+    //Hilt-Dagger
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+
+    //room
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-runtime:$2.6.1")
+    kapt("androidx.room:room-compiler:$2.6.1")
+
     //splash screen
     implementation("androidx.core:core-splashscreen:1.0.1")
     //retrofit
@@ -109,4 +124,10 @@ dependencies {
     // Kotlin
     implementation("androidx.concurrent:concurrent-futures-ktx:1.2.0")
 
+    //phoneNumberPicker
+//    implementation ("com.github.slaviboy:ComposeCountryPicker:1.0.0")
+//    implementation ("com.googlecode.libphonenumber:libphonenumber:8.13.5")
+//    implementation ("com.hbb20:ccp:2.7.2")
+//    implementation ("com.github.murgupluoglu:flagkit-android:1.0.3")
 }
+

@@ -1,5 +1,6 @@
 package com.example.student_project.ui.screen.log.login
 
+import android.app.Application
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,9 +50,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.student_project.R
+import com.example.student_project.data.db.StudentDatabaseDao
 import com.example.student_project.data.model.User
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.repo.StudentRepo
+import com.example.student_project.di.AppModule
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.theme.borderButton
 import com.example.student_project.ui.theme.buttonColor
@@ -62,13 +65,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-val studentRepo = StudentRepo()
+//this will change
+val studentRepo =
+    StudentRepo(AppModule.provideStudentDao(AppModule.provideAppDatabase(Application())))
 
 @Composable
 fun LoginScreen(navController: NavController) {
     // val loginViewModel: LoginViewModel = viewModel()
     val context = LocalContext.current
 
+//    var idState by remember {
+//        mutableStateOf("")
+//    }
     var resultState by remember {
         mutableStateOf<Result<User?>?>(null)
     }
@@ -250,12 +258,18 @@ fun LoginScreen(navController: NavController) {
                             // StudentLogin(emailState, passwordState)
                             //                            // we check on user data
                             val user = StudentLogin(emailState, passwordState)
+                            //i can use scope.launch
                             CoroutineScope(Dispatchers.IO).launch {
                                 val result = studentRepo.checkUser(user)
                                 resultState = result
                             }
                             resultState?.onSuccess {
-
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    it?.let {
+                                        studentRepo.addStudent(it)
+//                                        idState = it.id
+                                    }
+                                }
                                 navController.navigate(Screens.HomeScreen.route)
                             }?.onFailure {
                                 Toast.makeText(
