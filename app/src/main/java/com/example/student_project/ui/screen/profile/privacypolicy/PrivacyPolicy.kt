@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun PrivacyPolicyScreen(navController: NavController){
+fun PrivacyPolicyScreen(navController: NavController) {
     Text(text = "there is privacy policy")
-
 }

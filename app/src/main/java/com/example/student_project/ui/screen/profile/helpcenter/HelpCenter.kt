@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun HelpCenterScreen(navController: NavController){
+fun HelpCenterScreen(navController: NavController) {
     Text(text = "help center")
-
 }

@@ -3,8 +3,7 @@ package com.example.student_project.data.model
 import com.google.gson.annotations.SerializedName
 
 data class Instructor(
-    @SerializedName("_id")
-    val id: String,
+    @SerializedName("_id") val id: String,
     val accountType: String,
     val active: Boolean,
     val approved: Boolean,
@@ -15,6 +14,5 @@ data class Instructor(
     val image: String,
     val lastName: String,
     val password: String,
-    val updatedAt: String
+    val updatedAt: String,
 )
-

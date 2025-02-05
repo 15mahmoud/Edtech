@@ -1,6 +1,5 @@
 package com.example.student_project.data.model
 
-import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
 data class Student(

@@ -7,7 +7,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.student_project.ui.screen.LearningScreen
-import com.example.student_project.ui.screen.profile.ProfileScreen
 import com.example.student_project.ui.screen.details.CourseDetailsScreen
 import com.example.student_project.ui.screen.home.content.HomeScreen
 import com.example.student_project.ui.screen.home.filtering.filteration.CourseFilterScreen
@@ -21,6 +20,7 @@ import com.example.student_project.ui.screen.log.forgetpassword.OtpScreen
 import com.example.student_project.ui.screen.log.login.LoginScreen
 import com.example.student_project.ui.screen.log.signup.AdditionalInfoScreen
 import com.example.student_project.ui.screen.log.signup.SignUpScreen
+import com.example.student_project.ui.screen.profile.ProfileScreen
 import com.example.student_project.ui.screen.profile.editprofile.EditProfileScreen
 import com.example.student_project.ui.screen.profile.helpcenter.HelpCenterScreen
 import com.example.student_project.ui.screen.profile.invitefriends.InviteFriendsScreen
@@ -33,7 +33,7 @@ import com.example.student_project.ui.screen.profile.security.SecurityScreen
 fun Navigation() {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.EditProfileScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.SignupScreen.route) {
         composable(Screens.SplashScreen.route) { SplashScreen(navController) }
         composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
         composable(Screens.LoginScreen.route) { LoginScreen(navController) }

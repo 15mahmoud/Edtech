@@ -18,12 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -112,49 +110,26 @@ fun EditProfileButton(
     text: String,
     route: String,
     navController: NavController,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     Button(
-        onClick = {
-            navController.navigate(route)
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 5.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent
-        )
+        onClick = { navController.navigate(route) },
+        modifier = modifier.fillMaxWidth().padding(bottom = 5.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
     ) {
-        Row (modifier = modifier.fillMaxWidth()){
+        Row(modifier = modifier.fillMaxWidth()) {
             Icon(
                 imageVector = imgVector,
                 contentDescription = "button icon",
-                modifier = modifier.padding(start = 10.dp)
+                modifier = modifier.padding(start = 10.dp),
             )
             Text(
                 text = text,
                 modifier = Modifier.padding(start = 10.dp),
                 style = MaterialTheme.typography.titleMedium,
                 fontSize = 18.sp,
-                color = editProfileTextColor
+                color = editProfileTextColor,
             )
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

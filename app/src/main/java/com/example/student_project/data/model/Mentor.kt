@@ -1,6 +1,6 @@
 package com.example.student_project.data.model
 
-//we will remove this
+// we will remove this
 data class Mentor(
     val id: String,
     val image: String,

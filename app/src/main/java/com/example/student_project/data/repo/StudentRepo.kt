@@ -6,13 +6,12 @@ import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
 import com.example.student_project.data.network.ApiClientFactory.apiClientForAuth
 import com.example.student_project.data.network.request.StudentLogin
-import java.util.UUID
 import javax.inject.Inject
 
 class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDatabaseDao) {
 
     suspend fun checkUser(studentLogin: StudentLogin): Result<User?> {
-        //wrapper class to handle error
+        // wrapper class to handle error
         val result = Result.runCatching { apiClientForAuth.login(studentLogin).data }
         return if (result.isSuccess) {
             result
@@ -27,20 +26,23 @@ class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDat
         }
     }
 
-    suspend fun addStudent(student: User) {
-    studentDatabaseDao.addStudent(student)
+    suspend fun addUser(student: User) {
+        studentDatabaseDao.addStudent(student)
     }
-    suspend fun getAllStudents():User{
-        return  studentDatabaseDao.getAllStudents()
+
+    suspend fun getAllStudents(): User {
+        return studentDatabaseDao.getAllStudents()
     }
-    suspend fun getStudentById(id:String):User{
-      return  studentDatabaseDao.getStudent(id)
+
+    suspend fun getStudentById(id: String): User {
+        return studentDatabaseDao.getStudent(id)
     }
-    suspend fun updateStudent(student: User){
+
+    suspend fun updateStudent(student: User) {
         studentDatabaseDao.updateStudent(student)
     }
 
-    suspend fun addStudent(student: Student) {
+    suspend fun addUser(student: Student) {
         apiClientForAuth.addStudent(student)
     }
 }
