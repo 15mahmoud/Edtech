@@ -33,7 +33,7 @@ import com.example.student_project.ui.screen.profile.security.SecurityScreen
 fun Navigation() {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.ProfileScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.EditProfileScreen.route) {
         composable(Screens.SplashScreen.route) { SplashScreen(navController) }
         composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
         composable(Screens.LoginScreen.route) { LoginScreen(navController) }

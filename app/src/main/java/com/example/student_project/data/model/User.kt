@@ -1,9 +1,14 @@
 package com.example.student_project.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.util.UUID
 
 
+@Entity(tableName = "student")
 data class User(
+    @PrimaryKey
     @SerializedName("_id")
     val id: String,
     val accountType: String,
@@ -12,9 +17,9 @@ data class User(
     val courses: List<String>,
     val createdAt: String,
     val email: String,
-    val firstName: String,
+    var firstName: String,
     val image: String,
-    val lastName: String,
+    var lastName: String,
     val token: String,
     val updatedAt: String
 )
