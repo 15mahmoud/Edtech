@@ -7,5 +7,4 @@ import androidx.navigation.NavController
 @Composable
 fun SecurityScreen(navController: NavController) {
     Text(text = "there is security screen")
-
 }

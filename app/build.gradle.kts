@@ -8,7 +8,10 @@ plugins {
     alias(libs.plugins.ktfmt)
     alias(libs.plugins.detekt)
     id("com.google.dagger.hilt.android")
-    id("kotlin-kapt")
+    alias(libs.plugins.kapt)
+    id("com.google.devtools.ksp")
+    alias(libs.plugins.compose.compiler)
+
 }
 
 android {
@@ -18,7 +21,7 @@ android {
     defaultConfig {
         applicationId = "com.example.student_project"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -94,9 +97,9 @@ dependencies {
     //navigation
     implementation("androidx.navigation:navigation-compose:2.8.6")
     //coroutine
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
 
     //Hilt-Dagger
     implementation("com.google.dagger:hilt-android:2.51.1")
@@ -105,18 +108,18 @@ dependencies {
     //room
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
-    implementation("androidx.room:room-runtime:$2.6.1")
-    kapt("androidx.room:room-compiler:$2.6.1")
+    implementation("androidx.room:room-runtime:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
 
     //splash screen
     implementation("androidx.core:core-splashscreen:1.0.1")
     //retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     //viewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     //coil
-    implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("com.google.accompanist:accompanist-coil:0.10.0")
     //
     implementation("androidx.concurrent:concurrent-futures:1.2.0")

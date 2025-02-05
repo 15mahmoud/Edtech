@@ -61,18 +61,18 @@ fun CourseFilterResultScreen(
         state = courseList
     }
     var togel by remember { mutableStateOf(false) }
-    //val newCourseList =
-//        state?.onSuccess {
-//           it?.filter { course->
-//               course.category.name == courseCategory &&
-//                       //he didnt use diff
-//                   //course.difficulty == difficultyLevel &&
-//                       //he didnt use released date
-//                   //course.releasedDate == releasedDate &&
-//                       //he didnt use rating
-//                  // course.rating.toFloat() >= rating!! &&
-//                   course.price.toFloat() <= hourlyRate!! }
-//        }
+    // val newCourseList =
+    //        state?.onSuccess {
+    //           it?.filter { course->
+    //               course.category.name == courseCategory &&
+    //                       //he didnt use diff
+    //                   //course.difficulty == difficultyLevel &&
+    //                       //he didnt use released date
+    //                   //course.releasedDate == releasedDate &&
+    //                       //he didnt use rating
+    //                  // course.rating.toFloat() >= rating!! &&
+    //                   course.price.toFloat() <= hourlyRate!! }
+    //        }
 
     Scaffold(
         topBar = {
@@ -115,10 +115,10 @@ fun CourseFilterResultScreen(
             LazyColumn(modifier = Modifier.padding(start = 15.dp)) {
                 state?.onSuccess {
                     it?.let {
-                        items(it) {course->
+                        items(it) { course ->
                             CourseColumn(
                                 course = course,
-                                //here we will send id to details screen
+                                // here we will send id to details screen
                                 onClickListener = { string ->
                                     // here we will navigate to details screen based on id
                                 },
@@ -126,7 +126,6 @@ fun CourseFilterResultScreen(
                         }
                     }
                 }
-
             }
         }
     }
@@ -179,7 +178,7 @@ fun CourseColumn(course: Course, onClickListener: (String) -> Unit) {
                         tint = starFillingColor,
                     )
                     Text(
-                        //he didn't use rating
+                        // he didn't use rating
                         text = "4.5",
                         style = MaterialTheme.typography.titleMedium,
                         fontSize = 15.sp,

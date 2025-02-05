@@ -1,9 +1,9 @@
 package com.example.student_project.data.network
 
+import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 object ApiClientFactory {
     private const val BASE_URL_FOR_AUTH = "https://terrific-swamp-tilapia.glitch.me/api/v1/auth/"
@@ -11,9 +11,7 @@ object ApiClientFactory {
     private const val BASE_URL_FOR_COURSES =
         "https://terrific-swamp-tilapia.glitch.me/api/v1/course/"
 
-    private val client = OkHttpClient.Builder()
-        .readTimeout(10, TimeUnit.SECONDS)
-        .build()
+    private val client = OkHttpClient.Builder().readTimeout(10, TimeUnit.SECONDS).build()
 
     val apiClientForAuth: ApiClient by lazy {
         Retrofit.Builder()

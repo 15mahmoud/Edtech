@@ -37,9 +37,8 @@ class OtpViewModel : ViewModel() {
                     )
                 }
             }
-            else ->throw Exception()
+            else -> throw Exception()
         }
-
     }
 
     private fun enterNumber(number: Int?, index: Int) {

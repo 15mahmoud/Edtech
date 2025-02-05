@@ -10,17 +10,14 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiClient {
-    //we will this response to make default attribute for user
-    //user can change it later
-    //by using put Request
-    @POST("login")
-    suspend fun login(@Body studentLogin: StudentLogin): BaseResponse<User>
+    // we will this response to make default attribute for user
+    // user can change it later
+    // by using put Request
+    @POST("login") suspend fun login(@Body studentLogin: StudentLogin): BaseResponse<User>
 
-    @POST("signup")
-    suspend fun addStudent(@Body student: Student)
+    @POST("signup") suspend fun addStudent(@Body student: Student)
 
-    @GET("getAllCourses")
-    suspend fun getAllCourses(): BaseResponse<List<Course>>
+    @GET("getAllCourses") suspend fun getAllCourses(): BaseResponse<List<Course>>
 
     @POST("getFullCourseDetails")
     suspend fun getFullCourseDetails(@Body courseId: String): BaseResponse<Course>

@@ -5,11 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.repo.StudentRepo
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignupViewModel : ViewModel() {
-    private val studentRepo: StudentRepo = StudentRepo()
+class SignupViewModel @Inject constructor(private val studentRepo: StudentRepo) : ViewModel() {
+
 
     fun addStudent(student: Student) {
-        viewModelScope.launch { studentRepo.addStudent(student) }
+        viewModelScope.launch { studentRepo.addUser(student) }
     }
 }
