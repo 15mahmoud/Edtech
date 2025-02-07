@@ -15,4 +15,8 @@ data class Instructor(
     val lastName: String,
     val password: String,
     val updatedAt: String,
-)
+    val courseProgress: List<Any>,
+    val additionalDetails: AdditionalDetails,
+
+
+    )

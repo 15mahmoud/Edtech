@@ -90,7 +90,7 @@ val mentorRepo = MentorRepo()
 data class HomeScreenMentorState(val mentor: List<Mentor>)
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController,courseRepo: CourseRepo) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
