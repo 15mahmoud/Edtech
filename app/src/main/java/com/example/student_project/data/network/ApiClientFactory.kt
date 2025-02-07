@@ -6,26 +6,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClientFactory {
-    private const val BASE_URL_FOR_AUTH = "https://terrific-swamp-tilapia.glitch.me/api/v1/auth/"
-
-    private const val BASE_URL_FOR_COURSES =
-        "https://terrific-swamp-tilapia.glitch.me/api/v1/course/"
+    private const val BASE_URL = "https://terrific-swamp-tilapia.glitch.me/api/v1/"
 
     private val client = OkHttpClient.Builder().readTimeout(10, TimeUnit.SECONDS).build()
 
-    val apiClientForAuth: ApiClient by lazy {
+    val apiClient: ApiClient by lazy {
         Retrofit.Builder()
-            .baseUrl(BASE_URL_FOR_AUTH)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiClient::class.java)
-    }
-    val apiClientForCourses: ApiClient by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL_FOR_COURSES)
+            .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiClient::class.java)
     }
+
+
 }

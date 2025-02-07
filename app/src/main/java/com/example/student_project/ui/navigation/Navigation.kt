@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.student_project.DepContainer
+import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.screen.LearningScreen
 import com.example.student_project.ui.screen.details.CourseDetailsScreen
 import com.example.student_project.ui.screen.home.content.HomeScreen
@@ -30,13 +32,13 @@ import com.example.student_project.ui.screen.profile.privacypolicy.PrivacyPolicy
 import com.example.student_project.ui.screen.profile.security.SecurityScreen
 
 @Composable
-fun Navigation() {
+fun Navigation(depContainer:DepContainer) {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.SignupScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.HomeScreen.route) {
         composable(Screens.SplashScreen.route) { SplashScreen(navController) }
         composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
-        composable(Screens.LoginScreen.route) { LoginScreen(navController) }
+        composable(Screens.LoginScreen.route) { LoginScreen(navController, depContainer.studentRepo) }
         composable(
             Screens.AdditionalInfoScreen.route + "/{email}" + "/{password}",
             arguments =
@@ -51,7 +53,7 @@ fun Navigation() {
                 backStackEntry.arguments?.getString("password"),
             )
         }
-        composable(Screens.HomeScreen.route) { HomeScreen(navController = navController) }
+        composable(Screens.HomeScreen.route) { HomeScreen(navController,depContainer.courseRepo) }
         composable(
             Screens.CourseDetailScreen.route + "/{course_title}",
             arguments = (listOf(navArgument(name = "course_title") { type = NavType.StringType })),
@@ -142,7 +144,7 @@ fun Navigation() {
             // we should take a phone or email from previous screen
             // then send it to backend and get otp code
             // then pass it if true move to next screen
-            EditProfileScreen(navController = navController)
+            EditProfileScreen(navController = navController,depContainer.studentRepo)
         }
         composable(Screens.NotificationScreen.route) {
             // we should take a phone or email from previous screen

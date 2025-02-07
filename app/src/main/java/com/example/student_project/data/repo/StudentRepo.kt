@@ -4,15 +4,35 @@ import coil.network.HttpException
 import com.example.student_project.data.db.StudentDatabaseDao
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
-import com.example.student_project.data.network.ApiClientFactory.apiClientForAuth
+import com.example.student_project.data.network.ApiClientFactory.apiClient
 import com.example.student_project.data.network.request.StudentLogin
+import com.example.student_project.data.network.request.StudentUpdateRequest
 import javax.inject.Inject
 
 class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDatabaseDao) {
 
     suspend fun checkUser(studentLogin: StudentLogin): Result<User?> {
         // wrapper class to handle error
-        val result = Result.runCatching { apiClientForAuth.login(studentLogin).data }
+        val result = Result.runCatching { apiClient.login(studentLogin).data }
+        return if (result.isSuccess) {
+            result
+        } else {
+            Result.failure(
+                if (result.exceptionOrNull() is HttpException) {
+                    HttpException((result.exceptionOrNull() as HttpException).response)
+                } else {
+                    result.exceptionOrNull() ?: Exception("Unknown error")
+                }
+            )
+        }
+    }
+
+    suspend fun addUser(student: Student) {
+        apiClient.addStudent(student)
+    }
+
+    suspend fun updateProfile(student: StudentUpdateRequest): Result<User?> {
+        val result = Result.runCatching { apiClient.updateProfile(student).data }
         return if (result.isSuccess) {
             result
         } else {
@@ -42,7 +62,4 @@ class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDat
         studentDatabaseDao.updateStudent(student)
     }
 
-    suspend fun addUser(student: Student) {
-        apiClientForAuth.addStudent(student)
-    }
 }

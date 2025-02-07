@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.student_project.data.db.StudentDatabase
 import com.example.student_project.data.db.StudentDatabaseDao
+import com.example.student_project.data.repo.StudentRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,4 +28,6 @@ object AppModule {
         Room.databaseBuilder(context, StudentDatabase::class.java, "student_db")
             .fallbackToDestructiveMigration()
             .build()
+
+
 }
