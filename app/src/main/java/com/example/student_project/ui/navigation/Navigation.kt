@@ -35,7 +35,7 @@ import com.example.student_project.ui.screen.profile.security.SecurityScreen
 fun Navigation(depContainer:DepContainer) {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.HomeScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.LoginScreen.route) {
         composable(Screens.SplashScreen.route) { SplashScreen(navController) }
         composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
         composable(Screens.LoginScreen.route) { LoginScreen(navController, depContainer.studentRepo) }
@@ -53,7 +53,7 @@ fun Navigation(depContainer:DepContainer) {
                 backStackEntry.arguments?.getString("password"),
             )
         }
-        composable(Screens.HomeScreen.route) { HomeScreen(navController,depContainer.courseRepo) }
+        composable(Screens.HomeScreen.route) { HomeScreen(navController,depContainer.courseRepo,depContainer.studentRepo) }
         composable(
             Screens.CourseDetailScreen.route + "/{course_title}",
             arguments = (listOf(navArgument(name = "course_title") { type = NavType.StringType })),
@@ -61,6 +61,7 @@ fun Navigation(depContainer:DepContainer) {
             CourseDetailsScreen(
                 navController = navController,
                 backStackEntry.arguments?.getString("course_title"),
+                depContainer.courseRepo
             )
         }
         composable(Screens.LearningScreen.route) { LearningScreen(navController = navController) }
@@ -120,6 +121,7 @@ fun Navigation(depContainer:DepContainer) {
                 backStackEntry.arguments?.getString("released_date"),
                 backStackEntry.arguments?.getFloat("rating"),
                 backStackEntry.arguments?.getFloat("hourly_rate"),
+                depContainer.courseRepo
             )
         }
         // here we will send this info to course result screen

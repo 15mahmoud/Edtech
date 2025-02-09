@@ -1,16 +1,17 @@
 package com.example.student_project.data.repo
 
 import com.example.student_project.data.model.Course
-import com.example.student_project.data.network.ApiClientFactory.apiClient
+import com.example.student_project.data.network.ApiClient
+import com.example.student_project.data.network.request.GetFullDetailsRequest
 import javax.inject.Inject
 
-class CourseRepo @Inject constructor(){
+class CourseRepo @Inject constructor(private val apiClient: ApiClient){
 
     suspend fun getAllCourses(): Result<List<Course>?> {
         return Result.runCatching { apiClient.getAllCourses().data }
     }
     suspend fun getFullCourseDetails(courseId: String): Result<Course?> {
-        return Result.runCatching { apiClient.getFullCourseDetails(courseId).data }
+        return Result.runCatching { apiClient.getFullCourseDetails(GetFullDetailsRequest(courseId) ).data }
     }
 
     //    suspend fun getCourseList(): List<Course> {
