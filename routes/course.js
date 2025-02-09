@@ -63,16 +63,20 @@ router.post('/createCourse', auth, isInstructor, createCourse);
 
 //Add a Section to a Course
 router.post('/addSection', auth, isInstructor, createSection);
-// Update a Section
+
+// Update a Section 
 router.post('/updateSection', auth, isInstructor, updateSection);
-// Delete a Section
+
+// Delete a Section  
 router.post('/deleteSection', auth, isInstructor, deleteSection);
 
 // Add a Sub Section to a Section
 router.post('/addSubSection', auth, isInstructor, createSubSection);
-// Edit Sub Section
+
+// Edit Sub Section  
 router.post('/updateSubSection', auth, isInstructor, updateSubSection);
-// Delete Sub Section
+
+// Delete Sub Section 
 router.post('/deleteSubSection', auth, isInstructor, deleteSubSection);
 
 
@@ -86,10 +90,10 @@ router.post('/getFullCourseDetails', auth, getFullCourseDetails);
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
 
 
-// Edit Course routes
+// Edit Course routes 
 router.post("/editCourse", auth, isInstructor, editCourse)
 
-// Delete a Course
+// Delete a Course  .>>>>>>>>>>
 router.delete("/deleteCourse", auth, isInstructor, deleteCourse)
 
 // update Course Progress
@@ -103,7 +107,10 @@ router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress)
 // Category can Only be Created by Admin
 
 router.post('/createCategory', auth, isAdmin, createCategory);
+
+//                >>>>>>>>>>
 router.delete('/deleteCategory', auth, isAdmin, deleteCategory);
+
 router.get('/showAllCategories', showAllCategories);
 router.post("/getCategoryPageDetails", getCategoryPageDetails)
 

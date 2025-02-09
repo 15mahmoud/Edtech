@@ -16,6 +16,8 @@ const userRoutes = require('./routes/user');
 const profileRoutes = require('./routes/profile');
 const paymentRoutes = require('./routes/payments');
 const courseRoutes = require('./routes/course');
+const meetingRoutes = require('./routes/meeting');
+const chatRoutes = require('./routes/chat');
 
 
 // middleware 
@@ -23,7 +25,7 @@ app.use(express.json()); // to parse json body
 app.use(cookieParser());
 app.use(
     cors({
-        // origin: 'http://localhost:5173', // frontend link
+        
         origin: "*",
         credentials: true
     })
@@ -51,6 +53,8 @@ app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/course', courseRoutes);
+app.use("/api/v1/course", meetingRoutes);
+app.use("/api/v1/course", chatRoutes);
 
 
 

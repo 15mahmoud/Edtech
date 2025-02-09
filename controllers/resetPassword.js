@@ -4,55 +4,87 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 
 // ================ resetPasswordToken ================
+// exports.resetPasswordToken = async (req, res) => {
+//     try {
+//         // extract email 
+//         const { email } = req.body;
+
+//         // email validation
+//         const user = await User.findOne({ email });
+
+//         if (!user) {
+//             return res.status(401).json({
+//                 success: false,
+//                 message: 'Your Email is not registered with us'
+//             });
+//         }
+
+//         // generate token
+//         const token = crypto.randomBytes(20).toString("hex");
+
+//         // update user by adding token & token expire date
+//         const updatedUser = await User.findOneAndUpdate(
+//             { email: email },
+//             { token: token, resetPasswordTokenExpires: Date.now() + 5 * 60 * 1000 },
+//             { new: true }); // by marking true, it will return updated user
+
+
+//         // create url
+//         const url = `https://study-notion-mern-stack.netlify.app/update-password/${token}`;
+
+//         // send email containing url
+//         await mailSender(email, 'Password Reset Link', `Password Reset Link : ${url}`);
+
+//         // return succes response
+//         res.status(200).json({
+//             success: true,
+//             message: 'Email sent successfully , Please check your mail box and change password'
+//         })
+//     }
+
+//     catch (error) {
+//         console.log('Error while creating token for reset password');
+//         console.log(error)
+//         res.status(500).json({
+//             success: false,
+//             error: error.message,
+//             message: 'Error while creating token for reset password'
+//         })
+//     }
+// }
+
 exports.resetPasswordToken = async (req, res) => {
-    try {
-        // extract email 
-        const { email } = req.body;
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
 
-        // email validation
-        const user = await User.findOne({ email });
-
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Your Email is not registered with us'
-            });
-        }
-
-        // generate token
-        const token = crypto.randomBytes(20).toString("hex");
-
-        // update user by adding token & token expire date
-        const updatedUser = await User.findOneAndUpdate(
-            { email: email },
-            { token: token, resetPasswordTokenExpires: Date.now() + 5 * 60 * 1000 },
-            { new: true }); // by marking true, it will return updated user
-
-
-        // create url
-        const url = `https://study-notion-mern-stack.netlify.app/update-password/${token}`;
-
-        // send email containing url
-        await mailSender(email, 'Password Reset Link', `Password Reset Link : ${url}`);
-
-        // return succes response
-        res.status(200).json({
-            success: true,
-            message: 'Email sent successfully , Please check your mail box and change password'
-        })
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Your Email is not registered with us",
+      });
     }
-
-    catch (error) {
-        console.log('Error while creating token for reset password');
-        console.log(error)
-        res.status(500).json({
-            success: false,
-            error: error.message,
-            message: 'Error while creating token for reset password'
-        })
-    }
-}
-
+    const token = "C9&@zL!u1k*Q%R#mB7^T4oPn$G!";
+    const updatedUser = await User.findOneAndUpdate(
+      { email: email },
+      { token: token, resetPasswordTokenExpires: Date.now() + 5 * 60 * 1000 },
+      { new: true } 
+    ); 
+    res.status(200).json({
+      success: true,
+      message: "Token generated successfully",
+      token: token, 
+    });
+  } catch (error) {
+    console.log("Error while creating token for reset password");
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Error while creating token for reset password",
+    });
+  }
+};
 
 
 // ================ resetPassword ================

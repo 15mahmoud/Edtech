@@ -1,17 +1,19 @@
 const express = require("express");
 const router = express.Router();
 
-const { auth, isInstructor } = require("../middleware/auth");
+const { auth, isInstructor, isAdmin } = require("../middleware/auth");
 
 // controllers
 const {
-    updateProfile,
-    updateUserProfileImage,
-    getUserDetails,
-    getEnrolledCourses,
-    deleteAccount,
-    instructorDashboard
-} = require('../controllers/profile');
+  updateProfile,
+  updateUserProfileImage,
+  getUserDetails,
+  getEnrolledCourses,
+  deleteAccount,
+  instructorDashboard,
+  getAllInstructors,
+  getAllStudents,
+} = require("../controllers/profile");
 
 
 // ********************************************************************************************************
@@ -32,6 +34,10 @@ router.put('/updateUserProfileImage', auth, updateUserProfileImage);
 
 // instructor Dashboard Details
 router.get('/instructorDashboard', auth, isInstructor, instructorDashboard);
+
+router.get("/getAllInstructors", auth, getAllInstructors);
+
+router.get("/getAllStudents", auth,isAdmin, getAllStudents);
 
 
 
