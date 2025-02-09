@@ -127,6 +127,9 @@ dependencies {
     // Kotlin
     implementation("androidx.concurrent:concurrent-futures-ktx:1.2.0")
 
+    //logging interceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
     //phoneNumberPicker
 //    implementation ("com.github.slaviboy:ComposeCountryPicker:1.0.0")
 //    implementation ("com.googlecode.libphonenumber:libphonenumber:8.13.5")

@@ -4,12 +4,12 @@ import coil.network.HttpException
 import com.example.student_project.data.db.StudentDatabaseDao
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
-import com.example.student_project.data.network.ApiClientFactory.apiClient
+import com.example.student_project.data.network.ApiClient
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.network.request.StudentUpdateRequest
 import javax.inject.Inject
 
-class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDatabaseDao) {
+class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiClient: ApiClient) {
 
     suspend fun checkUser(studentLogin: StudentLogin): Result<User?> {
         // wrapper class to handle error
@@ -31,9 +31,15 @@ class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDat
         apiClient.addStudent(student)
     }
 
+
+
     suspend fun updateProfile(student: StudentUpdateRequest): Result<User?> {
+        //we will change this later
         val result = Result.runCatching { apiClient.updateProfile(student).data }
         return if (result.isSuccess) {
+            val updatedStudent = result.getOrThrow()
+            updatedStudent.token = studentDatabaseDao.getCurrentStudent()?.token
+            studentDatabaseDao.updateStudent(updatedStudent)
             result
         } else {
             Result.failure(
@@ -50,8 +56,8 @@ class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDat
         studentDatabaseDao.addStudent(student)
     }
 
-    suspend fun getAllStudents(): User {
-        return studentDatabaseDao.getAllStudents()
+    suspend fun getAllStudents(): User? {
+        return studentDatabaseDao.getCurrentStudent()
     }
 
     suspend fun getStudentById(id: String): User {
