@@ -6,5 +6,5 @@ data class StudentUpdateRequest(
     val dateOfBirth: String?,
     var firstName: String,
     var gender: String?,
-    var lastName: String
+    var lastName: String,
 )

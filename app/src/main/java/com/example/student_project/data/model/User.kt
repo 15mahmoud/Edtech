@@ -13,21 +13,19 @@ data class User(
     val approved: Boolean,
     val courses: List<String>,
     val createdAt: String,
-    @Embedded
-    val additionalDetails:AdditionalDetails,
+    @Embedded val additionalDetails: AdditionalDetails,
     val email: String,
     var firstName: String,
     val image: String,
     var lastName: String,
     var token: String?,
-    val updatedAt: String
+    val updatedAt: String,
 )
 
 data class AdditionalDetails(
-    @SerializedName("_id")
-    val idForAdditionalDetails : String,
+    @SerializedName("_id") val idForAdditionalDetails: String,
     var contactNumber: String?,
     val dateOfBirth: String?,
     var about: String?,
-    var gender : String?
+    var gender: String?,
 )

@@ -53,7 +53,7 @@ fun CourseFilterResultScreen(
     releasedDate: String?,
     rating: Float?,
     hourlyRate: Float?,
-    courseRepo: CourseRepo
+    courseRepo: CourseRepo,
 ) {
     val scope = rememberCoroutineScope()
     var state by remember { mutableStateOf<Result<List<Course>?>?>(null) }

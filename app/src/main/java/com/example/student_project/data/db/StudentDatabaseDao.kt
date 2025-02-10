@@ -17,5 +17,4 @@ interface StudentDatabaseDao {
     @Query("SELECT * FROM student Limit 1") suspend fun getCurrentStudent(): User?
 
     @Update(onConflict = OnConflictStrategy.REPLACE) suspend fun updateStudent(student: User)
-
 }
