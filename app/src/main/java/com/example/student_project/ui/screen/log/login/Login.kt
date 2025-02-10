@@ -1,6 +1,5 @@
 package com.example.student_project.ui.screen.log.login
 
-import android.app.Application
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,11 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
-import com.example.student_project.StudentApp
 import com.example.student_project.data.model.User
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.repo.StudentRepo
-import com.example.student_project.di.AppModule
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.theme.borderButton
 import com.example.student_project.ui.theme.buttonColor
@@ -59,17 +56,15 @@ import com.example.student_project.ui.theme.textFieldColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 // this will change
-//val studentRepo = StudentRepo()
-
+// val studentRepo = StudentRepo()
 
 @Composable
 fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
     // val loginViewModel: LoginViewModel = viewModel()
-//    val application = LocalContext.current.applicationContext as StudentApp
-//    val studentRepo = application.studentRepo
+    //    val application = LocalContext.current.applicationContext as StudentApp
+    //    val studentRepo = application.studentRepo
     val context = LocalContext.current
 
     //    var idState by remember {
@@ -90,15 +85,10 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
 
     // we will make api call
 
-    Scaffold(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)) { innerPadding ->
+    Scaffold(modifier = Modifier.fillMaxSize().background(Color.White)) { innerPadding ->
         Box(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
+                Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = "Login to your Account",
@@ -106,13 +96,10 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                 fontSize = 30.sp,
                 color = headLineColor,
                 modifier =
-                Modifier
-                    .padding(top = 100.dp, start = 10.dp)
-                    .align(alignment = Alignment.TopCenter),
+                    Modifier.padding(top = 100.dp, start = 10.dp)
+                        .align(alignment = Alignment.TopCenter),
             )
-            Column(modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth()) {
+            Column(modifier = Modifier.align(Alignment.Center).fillMaxWidth()) {
 
                 // we need to make shadow
                 TextField(
@@ -122,16 +109,15 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                         emailError = it.isEmpty()
                     },
                     modifier =
-                    Modifier
-                        .padding(10.dp)
-                        .width(screenWidth * 90 / 100)
-                        .align(alignment = Alignment.CenterHorizontally)
-                        .shadow(
-                            elevation = 6.dp,
-                            shape = MaterialTheme.shapes.small,
-                            ambientColor = Color.Gray,
-                            spotColor = Color.LightGray,
-                        ),
+                        Modifier.padding(10.dp)
+                            .width(screenWidth * 90 / 100)
+                            .align(alignment = Alignment.CenterHorizontally)
+                            .shadow(
+                                elevation = 6.dp,
+                                shape = MaterialTheme.shapes.small,
+                                ambientColor = Color.Gray,
+                                spotColor = Color.LightGray,
+                            ),
                     //  .shadow(elevation = 2.dp, ambientColor = Color.Gray),
                     label = {
                         Text(
@@ -157,25 +143,24 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                     //                        }
                     //                    },
                     colors =
-                    TextFieldDefaults.colors(
-                        unfocusedContainerColor = textFieldColor,
-                        focusedContainerColor = textFieldColor,
-                        unfocusedIndicatorColor = textFieldColor,
-                        focusedIndicatorColor = textFieldColor,
-                    ),
+                        TextFieldDefaults.colors(
+                            unfocusedContainerColor = textFieldColor,
+                            focusedContainerColor = textFieldColor,
+                            unfocusedIndicatorColor = textFieldColor,
+                            focusedIndicatorColor = textFieldColor,
+                        ),
                 )
                 TextField(
                     modifier =
-                    Modifier
-                        .padding(10.dp)
-                        .width(screenWidth * 90 / 100)
-                        .align(alignment = Alignment.CenterHorizontally)
-                        .shadow(
-                            elevation = 6.dp,
-                            shape = MaterialTheme.shapes.small,
-                            ambientColor = Color.Gray,
-                            spotColor = Color.LightGray,
-                        ),
+                        Modifier.padding(10.dp)
+                            .width(screenWidth * 90 / 100)
+                            .align(alignment = Alignment.CenterHorizontally)
+                            .shadow(
+                                elevation = 6.dp,
+                                shape = MaterialTheme.shapes.small,
+                                ambientColor = Color.Gray,
+                                spotColor = Color.LightGray,
+                            ),
                     // .shadow(elevation = 2.dp, ambientColor = Color.Gray)
                     //      .border(width = 1.dp, color = Color.Transparent),
                     value = passwordState,
@@ -219,27 +204,25 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                     //                        }
                     //                    },
                     colors =
-                    TextFieldDefaults.colors(
-                        unfocusedContainerColor = textFieldColor,
-                        focusedContainerColor = textFieldColor,
-                        unfocusedIndicatorColor = textFieldColor,
-                        focusedIndicatorColor = textFieldColor,
-                    ),
+                        TextFieldDefaults.colors(
+                            unfocusedContainerColor = textFieldColor,
+                            focusedContainerColor = textFieldColor,
+                            unfocusedIndicatorColor = textFieldColor,
+                            focusedIndicatorColor = textFieldColor,
+                        ),
                     visualTransformation =
-                    if (showPassword) VisualTransformation.None
-                    else PasswordVisualTransformation(),
+                        if (showPassword) VisualTransformation.None
+                        else PasswordVisualTransformation(),
                 )
                 // we will remove this after we make local storage
                 // it remember me feature
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp))
+                Spacer(modifier = Modifier.fillMaxWidth().height(40.dp))
                 Button(
                     onClick = {
                         if (
                             emailState.isNotEmpty() &&
-                            passwordState.isNotEmpty() &&
-                            emailState.endsWith("@gmail.com")
+                                passwordState.isNotEmpty() &&
+                                emailState.endsWith("@gmail.com")
                         ) {
                             //                            loginResponseState.studentLogin =
                             // StudentLogin(emailState, passwordState)
@@ -263,10 +246,10 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                                 }
                                 ?.onFailure {
                                     Toast.makeText(
-                                        context,
-                                        "your email or password is mismatched",
-                                        Toast.LENGTH_SHORT,
-                                    )
+                                            context,
+                                            "your email or password is mismatched",
+                                            Toast.LENGTH_SHORT,
+                                        )
                                         .show()
                                 }
                             // we will send data to back to check if true the move to next false
@@ -280,14 +263,13 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                     },
                     shape = RoundedCornerShape(100.dp),
                     modifier =
-                    Modifier
-                        .height(screenHeight * 6 / 100)
-                        .width(screenWidth * 90 / 100)
-                        .align(alignment = Alignment.CenterHorizontally),
+                        Modifier.height(screenHeight * 6 / 100)
+                            .width(screenWidth * 90 / 100)
+                            .align(alignment = Alignment.CenterHorizontally),
                     colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = colorResource(id = R.color.button_color)
-                    ),
+                        ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.button_color)
+                        ),
                 ) {
                     Text(
                         text = "Sign in",
@@ -304,9 +286,7 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                         navController.navigate(Screens.EmailAndPhoneScreen.route)
                     },
                     modifier =
-                    Modifier
-                        .padding(10.dp)
-                        .align(alignment = Alignment.CenterHorizontally),
+                        Modifier.padding(10.dp).align(alignment = Alignment.CenterHorizontally),
                 ) {
                     Text(
                         text = "Forgot the password?",
@@ -319,17 +299,15 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
             Column(modifier = Modifier.align(Alignment.BottomCenter)) {
                 Text(
                     modifier =
-                    Modifier
-                        .padding(bottom = 10.dp)
-                        .align(alignment = Alignment.CenterHorizontally),
+                        Modifier.padding(bottom = 10.dp)
+                            .align(alignment = Alignment.CenterHorizontally),
                     text = "Or continue with",
                 )
                 Row {
                     Button(
                         modifier =
-                        Modifier
-                            .padding(10.dp)
-                            .border(1.dp, borderButton, RoundedCornerShape(16.dp)),
+                            Modifier.padding(10.dp)
+                                .border(1.dp, borderButton, RoundedCornerShape(16.dp)),
                         onClick = { /*TODO*/ },
                         colors = ButtonDefaults.buttonColors(Color.Transparent),
                     ) {
@@ -341,9 +319,8 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                     }
                     Button(
                         modifier =
-                        Modifier
-                            .padding(10.dp)
-                            .border(1.dp, borderButton, RoundedCornerShape(16.dp)),
+                            Modifier.padding(10.dp)
+                                .border(1.dp, borderButton, RoundedCornerShape(16.dp)),
                         onClick = { /*TODO*/ },
                         colors = ButtonDefaults.buttonColors(Color.Transparent),
                     ) {
@@ -354,9 +331,8 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                     }
                     Button(
                         modifier =
-                        Modifier
-                            .padding(10.dp)
-                            .border(1.dp, borderButton, RoundedCornerShape(16.dp)),
+                            Modifier.padding(10.dp)
+                                .border(1.dp, borderButton, RoundedCornerShape(16.dp)),
                         onClick = { /*TODO*/ },
                         colors = ButtonDefaults.buttonColors(Color.Transparent),
                     ) {

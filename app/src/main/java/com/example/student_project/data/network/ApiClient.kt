@@ -22,13 +22,9 @@ interface ApiClient {
 
     @GET("course/getAllCourses") suspend fun getAllCourses(): BaseResponse<List<Course>>
 
-
-
     // i need to add these new feature
     @POST("course/getFullCourseDetails")
     suspend fun getFullCourseDetails(@Body courseId: GetFullDetailsRequest): BaseResponse<Course>
-
-
 
     // we need to test this first
     @PUT("profile/updateProfile")

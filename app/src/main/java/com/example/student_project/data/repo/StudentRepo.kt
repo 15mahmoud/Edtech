@@ -9,7 +9,9 @@ import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.network.request.StudentUpdateRequest
 import javax.inject.Inject
 
-class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiClient: ApiClient) {
+class StudentRepo
+@Inject
+constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiClient: ApiClient) {
 
     suspend fun checkUser(studentLogin: StudentLogin): Result<User?> {
         // wrapper class to handle error
@@ -31,10 +33,8 @@ class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDat
         apiClient.addStudent(student)
     }
 
-
-
     suspend fun updateProfile(student: StudentUpdateRequest): Result<User?> {
-        //we will change this later
+        // we will change this later
         val result = Result.runCatching { apiClient.updateProfile(student).data }
         return if (result.isSuccess) {
             val updatedStudent = result.getOrThrow()
@@ -67,5 +67,4 @@ class StudentRepo @Inject constructor(private val studentDatabaseDao: StudentDat
     suspend fun updateStudent(student: User) {
         studentDatabaseDao.updateStudent(student)
     }
-
 }

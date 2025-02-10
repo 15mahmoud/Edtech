@@ -198,7 +198,7 @@ fun ProfileScreen(navController: NavController) {
                         imageVector = ImageVector.vectorResource(R.drawable.logout),
                         tint = editProfileLogoutColor,
                         contentDescription = "button icon",
-                        modifier = Modifier.padding(start = 10.dp, bottom =5.dp ),
+                        modifier = Modifier.padding(start = 10.dp, bottom = 5.dp),
                     )
                     Text(
                         text = "Logout",
