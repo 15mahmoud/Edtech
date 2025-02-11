@@ -6,7 +6,9 @@ import com.example.student_project.data.model.User
 import com.example.student_project.data.network.request.GetFullDetailsRequest
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.network.request.StudentUpdateRequest
+import com.example.student_project.data.network.request.TokenReq
 import com.example.student_project.data.network.response.BaseResponse
+import com.example.student_project.data.network.response.BaseResponse1
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -29,4 +31,9 @@ interface ApiClient {
     // we need to test this first
     @PUT("profile/updateProfile")
     suspend fun updateProfile(@Body student: StudentUpdateRequest): BaseResponse<User>
+
+
+    //this one not used yet
+    @POST("auth/reset-password-token")
+    suspend fun resetPasswordToken(@Body email:TokenReq): BaseResponse1<String>
 }
