@@ -13,7 +13,7 @@ sealed class Screens(val route: String) {
 
     data object NewPasswordScreen : Screens("new_password_screen")
 
-    data object OtpScreen : Screens("otp_screen")
+    data object OtpTokenScreen : Screens("otp_token_screen")
 
     data object HomeScreen : Screens("home_screen")
 
