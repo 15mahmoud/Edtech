@@ -4,6 +4,7 @@ import android.content.Context
 import android.service.autofill.OnClickAction
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -68,6 +70,7 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.student_project.R
 import com.example.student_project.data.model.Course
+import com.example.student_project.data.model.RatingAndReview
 import com.example.student_project.data.model.SubSection
 import com.example.student_project.data.repo.CourseRepo
 import com.example.student_project.ui.navigation.Screens
@@ -81,6 +84,8 @@ import com.example.student_project.ui.theme.spotShadowColor
 import com.example.student_project.ui.theme.starFillingColor
 import com.example.student_project.ui.theme.unselectedButton
 import retrofit2.http.Headers
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun CourseDetailsScreen(navController: NavController, courseId: String?, courseRepo: CourseRepo) {
@@ -492,14 +497,17 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     course?.let { courses ->
                                         itemsIndexed(courses.courseContent) { index, item ->
                                             Text(
-                                                text = "Section" + " "+ (index + 1).toString() + " "+ item.sectionName,
+                                                text = "Section" + " " + (index + 1).toString() + " " + item.sectionName,
                                                 style = MaterialTheme.typography.titleMedium,
                                                 color = jopTitleColor,
                                                 fontWeight = FontWeight(700),
                                                 fontSize = 18.sp,
-                                                modifier = Modifier.padding(start = 15.dp , bottom = 12.5.dp)
+                                                modifier = Modifier.padding(
+                                                    start = 15.dp,
+                                                    bottom = 12.5.dp
+                                                )
                                             )
-                                            LazyColumn (modifier = Modifier.height(250.dp)){
+                                            LazyColumn(modifier = Modifier.height(250.dp)) {
                                                 itemsIndexed(item.subSection) { subsectionIndex, subSection ->
                                                     Card(onClick = {
 
@@ -509,9 +517,12 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                             index = subsectionIndex,
                                                             lock = lock,
                                                             context = context,
-
-                                                            ) {
-                                                            navController.navigate(Screens.CourseLessonScreen.route + "/${subSection.videoUrl}")
+                                                        ) {
+                                                            val encodedUrl = URLEncoder.encode(
+                                                                subSection.videoUrl,
+                                                                StandardCharsets.UTF_8.toString()
+                                                            )
+                                                            navController.navigate(Screens.CourseLessonScreen.route + "/${encodedUrl}")
                                                         }
                                                     }
                                                 }
@@ -523,10 +534,28 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                         }
 
                         AnimatedVisibility(visible = reviewsVisibilityState) {
-                            LazyColumn {
-                                course?.let { item ->
-                                    items(item.ratingAndReviews) { rate ->
+                            Column {
+                                Row (modifier = Modifier.fillMaxWidth().padding(15.dp)){
 
+                                    Icon(
+                                        imageVector = Icons.Default.Star,
+                                        tint = starFillingColor,
+                                        contentDescription = "rating icon",
+                                        modifier = Modifier.padding( end = 5.dp)
+                                    )
+                                    Text(
+                                        text = "4.5",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight(700),
+                                        color = buttonColor
+                                    )
+                                }
+                                LazyColumn(modifier = Modifier.height(500.dp)) {
+                                    course?.let { item ->
+                                        items(item.ratingAndReviews) { rate ->
+                                            ReviewRow(ratingAndReview = rate, context = context)
+                                            HorizontalDivider(modifier = Modifier.padding(start = 15.dp, end = 15.dp))
+                                        }
                                     }
                                 }
                             }
@@ -572,8 +601,12 @@ fun LessonsRow(
 //            .clip(RoundedCornerShape(200.dp))
             .shadow(4.dp),
 
-    ) {
-        Row(modifier = Modifier.fillMaxSize().padding(15.dp)) {
+        ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(15.dp)
+        ) {
             Card(
                 shape = CircleShape,
                 colors = CardDefaults.cardColors(
@@ -589,7 +622,7 @@ fun LessonsRow(
 
 
                 ) {
-                Box(modifier = Modifier.fillMaxSize()){
+                Box(modifier = Modifier.fillMaxSize()) {
 
                     Text(
                         text = (index + 1).toString(),
@@ -599,7 +632,7 @@ fun LessonsRow(
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.align(Alignment.Center)
 
-                        )
+                    )
                 }
             }
             Column(modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp)) {
@@ -620,8 +653,84 @@ fun LessonsRow(
             }
             Spacer(modifier = Modifier.width(130.dp))
             AnimatedVisibility(visible = lock) {
-                Icon(imageVector = Icons.Filled.Lock, contentDescription = "Lock icon", modifier = Modifier.padding(10.dp))
+                Icon(
+                    imageVector = Icons.Filled.Lock,
+                    contentDescription = "Lock icon",
+                    modifier = Modifier.padding(10.dp)
+                )
             }
+        }
+    }
+}
+
+@Composable
+fun ReviewRow(
+    ratingAndReview: RatingAndReview,
+    context: Context
+) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Column(modifier = Modifier.padding(15.dp)) {
+            Row {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = context)
+                        .transformations(CircleCropTransformation()).crossfade(true)
+                        .data("https://i.redd.it/spgt1hclj2cd1.jpeg")
+                        .build(), contentDescription = "user image",
+                    modifier = Modifier
+                        .padding(end = 7.5.dp, bottom = 5.dp)
+                        .width(screenWidth * 11 / 100)
+                        .height(screenHeight * 6 / 100)
+                )
+                Text(
+                    text = ratingAndReview.user.firstName + " " + ratingAndReview.user.lastName,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight(700),
+                    modifier = Modifier
+                )
+                Spacer(modifier = Modifier.width(50.dp))
+                Box(
+                    Modifier
+                        .width(screenWidth * 14 / 100)
+                        .height(screenHeight * 4 / 100)
+                        .clip(RoundedCornerShape(100))
+                        .border(width = 2.dp, color = buttonColor, RoundedCornerShape(99.dp)),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        tint = buttonColor,
+                        contentDescription = "rating icon",
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 2.dp)
+                    )
+                    Text(
+                        text = ratingAndReview.rating,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 16.sp,
+                        color = buttonColor,
+                        fontWeight = FontWeight(700),
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 8.dp)
+                    )
+                }
+
+            }
+            Text(
+                text = ratingAndReview.review,
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(400),
+                modifier = Modifier.padding(top = 7.5.dp)
+            )
         }
     }
 }
