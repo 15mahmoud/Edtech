@@ -1,9 +1,13 @@
 package com.example.student_project.ui.screen.details
 
+import android.content.Context
+import android.service.autofill.OnClickAction
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,18 +15,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.BottomNavigation
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -60,15 +68,19 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.student_project.R
 import com.example.student_project.data.model.Course
+import com.example.student_project.data.model.SubSection
 import com.example.student_project.data.repo.CourseRepo
+import com.example.student_project.ui.navigation.Screens
+import com.example.student_project.ui.theme.ambientShadowColor
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.cardContainerColor
 import com.example.student_project.ui.theme.editProfileTextColor
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.jopTitleColor
-import com.example.student_project.ui.theme.shadowColor
+import com.example.student_project.ui.theme.spotShadowColor
 import com.example.student_project.ui.theme.starFillingColor
 import com.example.student_project.ui.theme.unselectedButton
+import retrofit2.http.Headers
 
 @Composable
 fun CourseDetailsScreen(navController: NavController, courseId: String?, courseRepo: CourseRepo) {
@@ -90,6 +102,9 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
         mutableStateOf(false)
     }
 
+    var lock by remember {
+        mutableStateOf(false)
+    }
     LaunchedEffect(scope) {
         val courseDetails = courseRepo.getFullCourseDetails(courseId.toString())
         courseDetailsState = courseDetails
@@ -133,14 +148,12 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                 .shadow(
                                     elevation = 10.dp,
                                     RoundedCornerShape(100.dp),
-                                    spotColor = shadowColor.copy(
+                                    spotColor = spotShadowColor.copy(
                                         alpha = 0.4f
                                     ),
-                                    ambientColor = shadowColor.copy(
+                                    ambientColor = ambientShadowColor.copy(
                                         alpha = 0.35f
                                     ),
-
-
                                 ),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = buttonColor
@@ -384,7 +397,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                         )
 
                         AnimatedVisibility(visible = aboutVisibilityState) {
-                            Column {
+                            Column(modifier = Modifier) {
 
                                 Text(
                                     modifier = Modifier.padding(start = 15.dp, bottom = 10.dp),
@@ -463,6 +476,61 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                             }
 
                         }
+                        AnimatedVisibility(visible = lessonVisibilityState) {
+                            Column {
+                                //size -> no of section
+                                Text(
+                                    text = course?.courseContent?.size.toString() + " " + "Sections",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = headLineColor,
+                                    fontWeight = FontWeight(700),
+                                    fontSize = 20.sp,
+                                    modifier = Modifier.padding(15.dp)
+                                )
+
+                                LazyColumn(modifier = Modifier.height(500.dp)) {
+                                    course?.let { courses ->
+                                        itemsIndexed(courses.courseContent) { index, item ->
+                                            Text(
+                                                text = "Section" + " "+ (index + 1).toString() + " "+ item.sectionName,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                color = jopTitleColor,
+                                                fontWeight = FontWeight(700),
+                                                fontSize = 18.sp,
+                                                modifier = Modifier.padding(start = 15.dp , bottom = 12.5.dp)
+                                            )
+                                            LazyColumn (modifier = Modifier.height(250.dp)){
+                                                itemsIndexed(item.subSection) { subsectionIndex, subSection ->
+                                                    Card(onClick = {
+
+                                                    }) {
+                                                        LessonsRow(
+                                                            subSection = subSection,
+                                                            index = subsectionIndex,
+                                                            lock = lock,
+                                                            context = context,
+
+                                                            ) {
+                                                            navController.navigate(Screens.CourseLessonScreen.route + "/${subSection.videoUrl}")
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        AnimatedVisibility(visible = reviewsVisibilityState) {
+                            LazyColumn {
+                                course?.let { item ->
+                                    items(item.ratingAndReviews) { rate ->
+
+                                    }
+                                }
+                            }
+                        }
 
                     }
                 }
@@ -474,3 +542,86 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
         }
 }
 
+@Composable
+fun LessonsRow(
+    subSection: SubSection,
+    index: Int,
+    lock: Boolean,
+    context: Context,
+    onClickListener: (String) -> Unit
+) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+
+        modifier = Modifier
+            .clickable {
+                if (lock) {
+                    Toast
+                        .makeText(context, "This section is locked", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    onClickListener(subSection.videoUrl)
+                }
+            }
+//            .clip(RoundedCornerShape(200.dp))
+            .shadow(4.dp),
+
+    ) {
+        Row(modifier = Modifier.fillMaxSize().padding(15.dp)) {
+            Card(
+                shape = CircleShape,
+                colors = CardDefaults.cardColors(
+                    containerColor = cardContainerColor
+                ),
+                modifier = Modifier
+                    .width(screenWidth * 10 / 100)
+                    .height(screenHeight * 5 / 100)
+
+                    //.padding(10.dp)
+                    .shadow(4.dp, CircleShape)
+                    .align(Alignment.CenterVertically),
+
+
+                ) {
+                Box(modifier = Modifier.fillMaxSize()){
+
+                    Text(
+                        text = (index + 1).toString(),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight(700),
+                        color = buttonColor,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.align(Alignment.Center)
+
+                        )
+                }
+            }
+            Column(modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp)) {
+                Text(
+                    text = subSection.title,
+                    fontWeight = FontWeight(700),
+                    color = buttonColor,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(bottom = 7.5.dp)
+                )
+                Text(
+                    text = subSection.timeDuration + " mins", fontWeight = FontWeight(700),
+                    color = jopTitleColor,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 14.sp
+                )
+            }
+            Spacer(modifier = Modifier.width(130.dp))
+            AnimatedVisibility(visible = lock) {
+                Icon(imageVector = Icons.Filled.Lock, contentDescription = "Lock icon", modifier = Modifier.padding(10.dp))
+            }
+        }
+    }
+}

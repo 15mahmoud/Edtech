@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.example.student_project.DepContainer
 import com.example.student_project.ui.screen.LearningScreen
 import com.example.student_project.ui.screen.details.CourseDetailsScreen
+import com.example.student_project.ui.screen.details.course.CourseLessonScreen
 import com.example.student_project.ui.screen.home.content.HomeScreen
 import com.example.student_project.ui.screen.home.filtering.filteration.CourseFilterScreen
 import com.example.student_project.ui.screen.home.filtering.filteration.MentorFilterScreen
@@ -198,6 +199,17 @@ fun Navigation(depContainer: DepContainer) {
             // then send it to backend and get otp code
             // then pass it if true move to next screen
             InviteFriendsScreen(navController = navController)
+        }
+        composable(Screens.CourseLessonScreen.route +
+                "/{video_url}",
+            arguments = listOf(
+                navArgument(name = "video_url"){type = NavType.StringType}
+            )
+        )
+        {backStackEntry->
+            CourseLessonScreen(navController = navController,
+                backStackEntry.arguments?.getString("video_url"))
+
         }
     }
 }

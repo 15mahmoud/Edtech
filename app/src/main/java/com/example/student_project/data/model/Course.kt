@@ -42,7 +42,8 @@ data class RatingAndReview(
     val course: String,
     val rating: String,
     val review: String,
-    val user: String,
+    //val user: User,
+    val user: User,
 )
 data class SubSection(
     @SerializedName("_id") val id: String,
