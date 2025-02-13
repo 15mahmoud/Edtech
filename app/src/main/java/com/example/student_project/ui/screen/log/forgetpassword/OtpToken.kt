@@ -2,7 +2,6 @@ package com.example.student_project.ui.screen.log.forgetpassword
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 

@@ -8,11 +8,10 @@ data class Course(
     val courseContent: List<CourseContent>,
     val courseDescription: String,
     val courseName: String,
-    val createdAt:   String,
+    val createdAt: String,
     val instructions: List<String>,
     val instructor: Instructor,
-    val price: Int,
-    // these is ratingAndReviews
+    val price: Double,
     val ratingAndReviews: List<RatingAndReview>,
     val status: String,
     val studentsEnrolled: List<String>,
@@ -21,8 +20,7 @@ data class Course(
     val thumbnail: String,
     val totalDuration: String,
     val completedVideos: List<Any>,
-
-    )
+)
 
 data class Category(
     @SerializedName("_id") val id: String,
@@ -31,20 +29,21 @@ data class Category(
     val name: String,
 )
 
-
 data class CourseContent(
     @SerializedName("_id") val id: String,
     val sectionName: String,
     val subSection: List<SubSection>,
 )
+
 data class RatingAndReview(
     @SerializedName("_id") val id: String,
     val course: String,
     val rating: String,
     val review: String,
-    //val user: User,
+    // val user: User,
     val user: User,
 )
+
 data class SubSection(
     @SerializedName("_id") val id: String,
     val description: String,
@@ -52,4 +51,3 @@ data class SubSection(
     val title: String,
     val videoUrl: String,
 )
-

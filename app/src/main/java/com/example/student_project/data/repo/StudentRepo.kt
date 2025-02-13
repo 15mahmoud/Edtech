@@ -7,7 +7,6 @@ import com.example.student_project.data.model.User
 import com.example.student_project.data.network.ApiClient
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.network.request.StudentUpdateRequest
-import com.example.student_project.data.network.request.TokenReq
 import javax.inject.Inject
 
 class StudentRepo
@@ -53,10 +52,11 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
         }
     }
 
-    //this one not used yet
-    suspend fun resetPasswordToken(studentEmail: String): Result<String> {
-        return Result.runCatching { apiClient.resetPasswordToken(TokenReq(studentEmail)).token }
-    }
+    // this one not used yet
+    //    suspend fun resetPasswordToken(studentEmail: String): Result<String> {
+    //        return Result.runCatching { apiClient.resetPasswordToken(TokenReq(studentEmail)).token
+    // }
+    //    }
 
     suspend fun addUser(student: User) {
         studentDatabaseDao.addStudent(student)

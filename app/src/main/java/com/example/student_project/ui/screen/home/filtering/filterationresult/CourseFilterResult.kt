@@ -1,5 +1,6 @@
 package com.example.student_project.ui.screen.home.filtering.filterationresult
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,11 +35,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.repo.CourseRepo
 import com.example.student_project.ui.theme.buttonColor
@@ -55,6 +60,7 @@ fun CourseFilterResultScreen(
     hourlyRate: Float?,
     courseRepo: CourseRepo,
 ) {
+    val context: Context = LocalContext.current
     val scope = rememberCoroutineScope()
     var state by remember { mutableStateOf<Result<List<Course>?>?>(null) }
     LaunchedEffect(key1 = scope) {
@@ -119,6 +125,7 @@ fun CourseFilterResultScreen(
                         items(it) { course ->
                             CourseColumn(
                                 course = course,
+                                context = context,
                                 // here we will send id to details screen
                                 onClickListener = { string ->
                                     // here we will navigate to details screen based on id
@@ -133,21 +140,25 @@ fun CourseFilterResultScreen(
 }
 
 @Composable
-fun CourseColumn(course: Course, onClickListener: (String) -> Unit) {
+fun CourseColumn(course: Course, context: Context, onClickListener: (String) -> Unit) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Card(
         modifier =
-            Modifier.padding(10.dp)
-                .fillMaxWidth()
-                // .height(screenHeight * 15/100)
-                .clickable { onClickListener(course.id) }
+        Modifier
+            .padding(10.dp)
+            .fillMaxWidth()
+            // .height(screenHeight * 15/100)
+            .clickable { onClickListener(course.id) }
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            Image(
-                painter = rememberAsyncImagePainter(model = course.thumbnail),
-                contentDescription = "course image",
+            AsyncImage(
+                model = ImageRequest.Builder(context = context).crossfade(true)
+                    .data(course.thumbnail).build(), contentDescription = "course image",
+                modifier = Modifier
+                    .width(screenWidth * 37 / 100)
+                    .height(screenHeight * 14 / 100)
             )
             Column {
                 Text(

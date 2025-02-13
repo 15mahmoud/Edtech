@@ -42,7 +42,6 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
     var studentResponseState by remember { mutableStateOf<Result<User?>?>(null) }
 
     val context = LocalContext.current
-    var studentUpdateRequestState by remember { mutableStateOf<StudentUpdateRequest?>(null) }
     // var countryState by remember { mutableStateOf("") }
     var genderState by remember { mutableStateOf("") }
     //    val countryList = listOf("United States", "Canada", "United Kingdom", "Australia",
@@ -105,7 +104,15 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                 onValueChange = { phoneNumber = it },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 isError =
-                    if (phoneNumber.isDigitsOnly() && phoneNumber.length == 10) phoneNumberError
+                    if (
+                        phoneNumber.isDigitsOnly() &&
+                            phoneNumber.length == 11 &&
+                            phoneNumber.startsWith("010") &&
+                            phoneNumber.startsWith("011") &&
+                            phoneNumber.startsWith("012") &&
+                            phoneNumber.startsWith("015")
+                    )
+                        phoneNumberError
                     else !phoneNumberError,
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.fillMaxWidth().padding(15.dp),
@@ -143,13 +150,20 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                 onClick = {
                     // here we will send this data to server
                     // and then take response
-                    if (phoneNumber.isDigitsOnly() && phoneNumber.length == 10) {
+                    if (
+                        phoneNumber.isDigitsOnly() &&
+                            phoneNumber.length == 11 &&
+                            phoneNumber.startsWith("010") &&
+                            phoneNumber.startsWith("011") &&
+                            phoneNumber.startsWith("012") &&
+                            phoneNumber.startsWith("015")
+                    ) {
                         //                        studentUpdateRequestState =
                         // studentUpdateRequestState?.copy()
                         val student =
                             StudentUpdateRequest(
                                 about = aboutState,
-                                contactNumber = "+2$phoneNumber",
+                                contactNumber = "+$phoneNumber",
                                 dateOfBirth = "1990-01-01",
                                 firstName = firstName,
                                 lastName = lastName,
@@ -159,6 +173,7 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                         CoroutineScope(Dispatchers.IO).launch {
                             studentResponseState = studentRepo.updateProfile(student)
                         }
+
                         studentResponseState
                             ?.onSuccess {
                                 Toast.makeText(context, "Updated", Toast.LENGTH_SHORT).show()

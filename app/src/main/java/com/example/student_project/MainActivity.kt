@@ -14,16 +14,15 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject
-    lateinit var studentRepo: StudentRepo
+    @Inject lateinit var studentRepo: StudentRepo
 
-    @Inject
-    lateinit var courseRepo: CourseRepo
+    @Inject lateinit var courseRepo: CourseRepo
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { StudentProjectTheme { Navigation(DepContainer(studentRepo,courseRepo)) } }
+        setContent { StudentProjectTheme { Navigation(DepContainer(studentRepo, courseRepo)) } }
     }
 }
 
