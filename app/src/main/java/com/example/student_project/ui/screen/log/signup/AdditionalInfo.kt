@@ -49,14 +49,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.student_project.R
 import com.example.student_project.data.model.Student
+import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.widgets.PopBackStackEntry
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.textFieldColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-fun AdditionalInfoScreen(navController: NavController, email: String?, password: String?) {
-    var signupViewModel: SignupViewModel = viewModel()
+fun AdditionalInfoScreen(navController: NavController, email: String?, password: String?,studentRepo: StudentRepo) {
+
 
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -293,7 +297,9 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
                             password.toString(),
                             "Student",
                         )
-                    signupViewModel.addStudent(student)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        studentRepo.addUser(student)
+                    }
                     navController.navigate(Screens.LoginScreen.route)
                     // Proceed to next screen or perform sign-up actions
                     // this one will change

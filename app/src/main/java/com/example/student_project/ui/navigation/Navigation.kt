@@ -15,7 +15,7 @@ import com.example.student_project.ui.screen.home.filtering.filteration.CourseFi
 import com.example.student_project.ui.screen.home.filtering.filteration.MentorFilterScreen
 import com.example.student_project.ui.screen.home.filtering.filterationresult.CourseFilterResultScreen
 import com.example.student_project.ui.screen.home.filtering.filterationresult.MentorFilterResultScreen
-import com.example.student_project.ui.screen.log.SplashScreen
+import com.example.student_project.ui.screen.SplashScreen
 import com.example.student_project.ui.screen.log.forgetpassword.EmailAndPhoneScreen
 import com.example.student_project.ui.screen.log.forgetpassword.NewPasswordScreen
 import com.example.student_project.ui.screen.log.forgetpassword.OtpTokenScreen
@@ -44,15 +44,16 @@ fun Navigation(depContainer: DepContainer) {
         composable(
             Screens.AdditionalInfoScreen.route + "/{email}" + "/{password}",
             arguments =
-            listOf(
-                navArgument(name = "email") { type = NavType.StringType },
-                navArgument(name = "password") { type = NavType.StringType },
-            ),
+                listOf(
+                    navArgument(name = "email") { type = NavType.StringType },
+                    navArgument(name = "password") { type = NavType.StringType },
+                )
         ) { backStackEntry ->
             AdditionalInfoScreen(
                 navController = navController,
                 backStackEntry.arguments?.getString("email"),
                 backStackEntry.arguments?.getString("password"),
+                depContainer.studentRepo
             )
         }
         composable(Screens.HomeScreen.route) {
@@ -76,15 +77,15 @@ fun Navigation(depContainer: DepContainer) {
         }
         composable(
             Screens.MentorFilterResultScreen.route +
-                    "/{jop_title}" +
-                    "/{rating}" +
-                    "/{hourly_rate}",
+                "/{jop_title}" +
+                "/{rating}" +
+                "/{hourly_rate}",
             arguments =
-            (listOf(
-                navArgument(name = "jop_title") { type = NavType.StringType },
-                navArgument(name = "rating") { type = NavType.FloatType },
-                navArgument(name = "hourly_rate") { type = NavType.FloatType },
-            )),
+                (listOf(
+                    navArgument(name = "jop_title") { type = NavType.StringType },
+                    navArgument(name = "rating") { type = NavType.FloatType },
+                    navArgument(name = "hourly_rate") { type = NavType.FloatType },
+                )),
         ) { backStackEntry ->
             MentorFilterResultScreen(
                 navController = navController,
@@ -104,19 +105,19 @@ fun Navigation(depContainer: DepContainer) {
         //
         composable(
             Screens.CourseFilterResultScreen.route +
-                    "/{course_category}" +
-                    "/{difficulty_level}" +
-                    "/{released_date}" +
-                    "/{rating}" +
-                    "/{hourly_rate}",
+                "/{course_category}" +
+                "/{difficulty_level}" +
+                "/{released_date}" +
+                "/{rating}" +
+                "/{hourly_rate}",
             arguments =
-            (listOf(
-                navArgument(name = "course_category") { type = NavType.StringType },
-                navArgument(name = "difficulty_level") { type = NavType.StringType },
-                navArgument(name = "released_date") { type = NavType.StringType },
-                navArgument(name = "rating") { type = NavType.FloatType },
-                navArgument(name = "hourly_rate") { type = NavType.FloatType },
-            )),
+                (listOf(
+                    navArgument(name = "course_category") { type = NavType.StringType },
+                    navArgument(name = "difficulty_level") { type = NavType.StringType },
+                    navArgument(name = "released_date") { type = NavType.StringType },
+                    navArgument(name = "rating") { type = NavType.FloatType },
+                    navArgument(name = "hourly_rate") { type = NavType.FloatType },
+                )),
         ) { backStackEntry ->
             CourseFilterResultScreen(
                 navController,
@@ -134,29 +135,29 @@ fun Navigation(depContainer: DepContainer) {
         // and other one will be for courseDetailsScreen
         // will activate when we click on a course
 
-        composable(Screens.EmailAndPhoneScreen.route + "/{user_email}",
-            arguments = listOf(
-                navArgument(name = "user_email") { type = NavType.StringType }
-
-            )) { backStackEntry ->
+        composable(
+            Screens.EmailAndPhoneScreen.route + "/{user_email}",
+            arguments = listOf(navArgument(name = "user_email") { type = NavType.StringType }),
+        ) { backStackEntry ->
             EmailAndPhoneScreen(
                 navController = navController,
-                backStackEntry.arguments?.getString("user_email")
+                backStackEntry.arguments?.getString("user_email"),
             )
         }
         composable(Screens.NewPasswordScreen.route) {
             NewPasswordScreen(navController = navController)
         }
-        composable(Screens.OtpTokenScreen.route + "/{user_email}",
-            arguments = listOf(
-                navArgument(name = "user_email"){type = NavType.StringType}
-            )
-        ) {backStackEntry->
+        composable(
+            Screens.OtpTokenScreen.route + "/{user_email}",
+            arguments = listOf(navArgument(name = "user_email") { type = NavType.StringType }),
+        ) { backStackEntry ->
             // we should take a phone or email from previous screen
             // then send it to backend and get otp code
             // then pass it if true move to next screen
-            OtpTokenScreen(navController = navController,
-                backStackEntry.arguments?.getString("user_email"))
+            OtpTokenScreen(
+                navController = navController,
+                backStackEntry.arguments?.getString("user_email"),
+            )
         }
         composable(Screens.EditProfileScreen.route) {
             // we should take a phone or email from previous screen
@@ -200,16 +201,14 @@ fun Navigation(depContainer: DepContainer) {
             // then pass it if true move to next screen
             InviteFriendsScreen(navController = navController)
         }
-        composable(Screens.CourseLessonScreen.route +
-                "/{video_url}",
-            arguments = listOf(
-                navArgument(name = "video_url"){type = NavType.StringType}
+        composable(
+            Screens.CourseLessonScreen.route + "/{video_url}",
+            arguments = listOf(navArgument(name = "video_url") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            CourseLessonScreen(
+                navController = navController,
+                backStackEntry.arguments?.getString("video_url"),
             )
-        )
-        {backStackEntry->
-            CourseLessonScreen(navController = navController,
-                backStackEntry.arguments?.getString("video_url"))
-
         }
     }
 }

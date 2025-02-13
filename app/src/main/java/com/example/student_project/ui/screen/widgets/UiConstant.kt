@@ -121,11 +121,12 @@ fun EditProfileButton(
             Icon(
                 imageVector = imgVector,
                 contentDescription = "button icon",
+                tint = editProfileTextColor,
                 modifier = modifier.padding(start = 10.dp),
             )
             Text(
                 text = text,
-                modifier = Modifier.padding(start = 10.dp),
+                modifier = Modifier.padding(start = 10.dp, top = 5.dp),
                 style = MaterialTheme.typography.titleMedium,
                 fontSize = 18.sp,
                 color = editProfileTextColor,

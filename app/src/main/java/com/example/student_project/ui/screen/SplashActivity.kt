@@ -1,4 +1,4 @@
-package com.example.student_project.ui.screen.log
+package com.example.student_project.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

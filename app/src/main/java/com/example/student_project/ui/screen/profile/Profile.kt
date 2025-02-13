@@ -202,7 +202,7 @@ fun ProfileScreen(navController: NavController) {
                     )
                     Text(
                         text = "Logout",
-                        modifier = Modifier.padding(start = 10.dp),
+                        modifier = Modifier.padding(start = 10.dp, top = 5.dp),
                         style = MaterialTheme.typography.titleMedium,
                         fontSize = 18.sp,
                         color = editProfileLogoutColor,

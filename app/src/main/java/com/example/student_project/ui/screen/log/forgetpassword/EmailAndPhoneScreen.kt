@@ -58,19 +58,17 @@ fun EmailAndPhoneScreen(navController: NavController, userEmail: String?) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Image(
                 modifier =
-                Modifier
-                    .width(screenWidth * 64 / 100)
-                    .height(screenHeight * 28 / 100)
-                    .align(alignment = Alignment.CenterVertically),
+                    Modifier.width(screenWidth * 64 / 100)
+                        .height(screenHeight * 28 / 100)
+                        .align(alignment = Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.forgot_password),
                 contentDescription = null,
             )
         }
         Text(
             modifier =
-            Modifier
-                .align(alignment = Alignment.CenterHorizontally)
-                .padding(top = 50.dp, start = 10.dp, end = 10.dp, bottom = 10.dp),
+                Modifier.align(alignment = Alignment.CenterHorizontally)
+                    .padding(top = 50.dp, start = 10.dp, end = 10.dp, bottom = 10.dp),
             text = "Select which contact details should we use to reset your password",
             style = MaterialTheme.typography.titleMedium,
             fontSize = 18.sp,
@@ -79,42 +77,37 @@ fun EmailAndPhoneScreen(navController: NavController, userEmail: String?) {
             Column {
                 Card(
                     modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(screenHeight * 20 / 100)
-                        .padding(10.dp)
-                        .clickable {
-                            // here we call backend and give email and back will response with
-                            // phone number
-                            // will navigate to otp code screen and we will pass phone with it
-                            // to give it to back to give me code
-                            navController.navigate(Screens.OtpTokenScreen.route )
-                        },
+                        Modifier.fillMaxWidth()
+                            .height(screenHeight * 20 / 100)
+                            .padding(10.dp)
+                            .clickable {
+                                // here we call backend and give email and back will response with
+                                // phone number
+                                // will navigate to otp code screen and we will pass phone with it
+                                // to give it to back to give me code
+                                navController.navigate(Screens.OtpTokenScreen.route)
+                            },
                     shape = RoundedCornerShape(20.dp),
                     border = BorderStroke(width = 3.dp, color = borderButton),
                     colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Card(
                             modifier =
-                            Modifier
-                                .padding(10.dp)
-                                .height(screenHeight * 9 / 100)
-                                .width(screenWidth * 19 / 100),
+                                Modifier.padding(10.dp)
+                                    .height(screenHeight * 9 / 100)
+                                    .width(screenWidth * 19 / 100),
                             shape = CircleShape,
                             colors = CardDefaults.cardColors(containerColor = cardColor),
                         ) {
                             Image(
                                 modifier =
-                                Modifier
-                                    .padding(15.dp)
-                                    .align(alignment = Alignment.CenterHorizontally)
-                                    .size(30.dp),
+                                    Modifier.padding(15.dp)
+                                        .align(alignment = Alignment.CenterHorizontally)
+                                        .size(30.dp),
                                 painter = painterResource(id = R.drawable.sms),
                                 contentDescription = null,
                             )
@@ -138,40 +131,35 @@ fun EmailAndPhoneScreen(navController: NavController, userEmail: String?) {
                 }
                 Card(
                     modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(screenHeight * 20 / 100)
-                        .padding(10.dp)
-                        .clickable {
-                            // will navigate to otp code screen and we will pass email with it
-                            // to give it to backend to give me code
-                            navController.navigate(Screens.OtpTokenScreen.route + "/$userEmail")
-                        },
+                        Modifier.fillMaxWidth()
+                            .height(screenHeight * 20 / 100)
+                            .padding(10.dp)
+                            .clickable {
+                                // will navigate to otp code screen and we will pass email with it
+                                // to give it to backend to give me code
+                                navController.navigate(Screens.OtpTokenScreen.route + "/$userEmail")
+                            },
                     shape = RoundedCornerShape(20.dp),
                     border = BorderStroke(width = 3.dp, color = borderButton),
                     colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Card(
                             modifier =
-                            Modifier
-                                .padding(10.dp)
-                                .height(screenHeight * 9 / 100)
-                                .width(screenWidth * 19 / 100),
+                                Modifier.padding(10.dp)
+                                    .height(screenHeight * 9 / 100)
+                                    .width(screenWidth * 19 / 100),
                             shape = CircleShape,
                             colors = CardDefaults.cardColors(containerColor = cardColor),
                         ) {
                             Image(
                                 modifier =
-                                Modifier
-                                    .padding(15.dp)
-                                    .align(alignment = Alignment.CenterHorizontally)
-                                    .size(30.dp),
+                                    Modifier.padding(15.dp)
+                                        .align(alignment = Alignment.CenterHorizontally)
+                                        .size(30.dp),
                                 painter = painterResource(id = R.drawable.gmail_otp),
                                 contentDescription = null,
                             )
