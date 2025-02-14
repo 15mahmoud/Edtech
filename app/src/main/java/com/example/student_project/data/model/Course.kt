@@ -2,6 +2,7 @@ package com.example.student_project.data.model
 
 import com.google.gson.annotations.SerializedName
 
+
 data class Course(
     @SerializedName("_id") val id: String,
     val category: Category,
@@ -20,6 +21,7 @@ data class Course(
     val thumbnail: String,
     val totalDuration: String,
     val completedVideos: List<Any>,
+    val averageRating:Double?
 )
 
 data class Category(

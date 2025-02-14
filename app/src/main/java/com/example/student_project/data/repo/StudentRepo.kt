@@ -62,7 +62,7 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
         studentDatabaseDao.addStudent(student)
     }
 
-    suspend fun getAllStudents(): User? {
+    suspend fun getCurrentStudent(): User? {
         return studentDatabaseDao.getCurrentStudent()
     }
 

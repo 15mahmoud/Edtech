@@ -46,4 +46,6 @@ sealed class Screens(val route: String) {
     data object InviteFriendsScreen : Screens("invite_friends_screen")
 
     data object CourseLessonScreen : Screens("course_lesson_screen")
+
+    data object MentorDetailsScreen : Screens("mentor_details_screen")
 }

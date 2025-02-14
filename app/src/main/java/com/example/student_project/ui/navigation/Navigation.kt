@@ -16,6 +16,7 @@ import com.example.student_project.ui.screen.home.filtering.filteration.MentorFi
 import com.example.student_project.ui.screen.home.filtering.filterationresult.CourseFilterResultScreen
 import com.example.student_project.ui.screen.home.filtering.filterationresult.MentorFilterResultScreen
 import com.example.student_project.ui.screen.SplashScreen
+import com.example.student_project.ui.screen.details.MentorDetailsScreen
 import com.example.student_project.ui.screen.log.forgetpassword.EmailAndPhoneScreen
 import com.example.student_project.ui.screen.log.forgetpassword.NewPasswordScreen
 import com.example.student_project.ui.screen.log.forgetpassword.OtpTokenScreen
@@ -44,10 +45,10 @@ fun Navigation(depContainer: DepContainer) {
         composable(
             Screens.AdditionalInfoScreen.route + "/{email}" + "/{password}",
             arguments =
-                listOf(
-                    navArgument(name = "email") { type = NavType.StringType },
-                    navArgument(name = "password") { type = NavType.StringType },
-                )
+            listOf(
+                navArgument(name = "email") { type = NavType.StringType },
+                navArgument(name = "password") { type = NavType.StringType },
+            )
         ) { backStackEntry ->
             AdditionalInfoScreen(
                 navController = navController,
@@ -57,7 +58,12 @@ fun Navigation(depContainer: DepContainer) {
             )
         }
         composable(Screens.HomeScreen.route) {
-            HomeScreen(navController, depContainer.courseRepo, depContainer.studentRepo)
+            HomeScreen(
+                navController,
+                depContainer.courseRepo,
+                depContainer.studentRepo,
+                depContainer.instructorRepo
+            )
         }
         composable(
             Screens.CourseDetailScreen.route + "/{course_title}",
@@ -76,22 +82,33 @@ fun Navigation(depContainer: DepContainer) {
             MentorFilterScreen(navController)
         }
         composable(
+            Screens.MentorDetailsScreen.route + "/{instructor_id}", arguments = listOf(
+                navArgument(name = "instructor_id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            MentorDetailsScreen(
+                navController = navController,
+                instructorId = backStackEntry.arguments?.getString("instructor_id")
+            )
+
+        }
+        composable(
             Screens.MentorFilterResultScreen.route +
-                "/{jop_title}" +
-                "/{rating}" +
-                "/{hourly_rate}",
+                    "/{jop_title}" +
+                    "/{rating}" +
+                    "/{hourly_rate}",
             arguments =
-                (listOf(
-                    navArgument(name = "jop_title") { type = NavType.StringType },
-                    navArgument(name = "rating") { type = NavType.FloatType },
-                    navArgument(name = "hourly_rate") { type = NavType.FloatType },
-                )),
+            (listOf(
+                navArgument(name = "jop_title") { type = NavType.StringType },
+                navArgument(name = "rating") { type = NavType.FloatType },
+                navArgument(name = "hourly_rate") { type = NavType.FloatType },
+            )),
         ) { backStackEntry ->
             MentorFilterResultScreen(
                 navController = navController,
                 backStackEntry.arguments?.getString("jop_title"),
                 backStackEntry.arguments?.getFloat("rating"),
                 backStackEntry.arguments?.getFloat("hourly_rate"),
+                depContainer.instructorRepo
             )
         }
         // when we click
@@ -105,19 +122,19 @@ fun Navigation(depContainer: DepContainer) {
         //
         composable(
             Screens.CourseFilterResultScreen.route +
-                "/{course_category}" +
-                "/{difficulty_level}" +
-                "/{released_date}" +
-                "/{rating}" +
-                "/{hourly_rate}",
+                    "/{course_category}" +
+                    "/{difficulty_level}" +
+                    "/{released_date}" +
+                    "/{rating}" +
+                    "/{hourly_rate}",
             arguments =
-                (listOf(
-                    navArgument(name = "course_category") { type = NavType.StringType },
-                    navArgument(name = "difficulty_level") { type = NavType.StringType },
-                    navArgument(name = "released_date") { type = NavType.StringType },
-                    navArgument(name = "rating") { type = NavType.FloatType },
-                    navArgument(name = "hourly_rate") { type = NavType.FloatType },
-                )),
+            (listOf(
+                navArgument(name = "course_category") { type = NavType.StringType },
+                navArgument(name = "difficulty_level") { type = NavType.StringType },
+                navArgument(name = "released_date") { type = NavType.StringType },
+                navArgument(name = "rating") { type = NavType.FloatType },
+                navArgument(name = "hourly_rate") { type = NavType.FloatType },
+            )),
         ) { backStackEntry ->
             CourseFilterResultScreen(
                 navController,

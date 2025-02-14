@@ -1,6 +1,7 @@
 package com.example.student_project.ui.screen.home.content
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -66,22 +67,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.student_project.R
 import com.example.student_project.data.model.Course
-import com.example.student_project.data.model.Mentor
+import com.example.student_project.data.model.Instructor
 import com.example.student_project.data.model.User
 import com.example.student_project.data.repo.CourseRepo
-import com.example.student_project.data.repo.MentorRepo
+import com.example.student_project.data.repo.InstructorRepo
 import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.home.uidata.BottomNavItem
 import com.example.student_project.ui.theme.lightGray
 import com.example.student_project.ui.theme.starFillingColor
 
-val mentorRepo = MentorRepo()
 
 // data class HomeScreenState(
 //    val courses: Result<List<Data>?>?,
@@ -89,11 +88,16 @@ val mentorRepo = MentorRepo()
 //
 //    )
 
-data class HomeScreenMentorState(val mentor: List<Mentor>)
+//data class HomeScreenMentorState(val mentor: List<>)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo: StudentRepo) {
+fun HomeScreen(
+    navController: NavController,
+    courseRepo: CourseRepo,
+    studentRepo: StudentRepo,
+    instructorRepo: InstructorRepo
+) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -104,7 +108,7 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
     var searchState by rememberSaveable { mutableStateOf("") }
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
-    val mentorState = remember { mutableStateOf(HomeScreenMentorState(emptyList())) }
+    var instructorState by remember { mutableStateOf<Result<List<Instructor>?>?>(null) }
 
     var topNewCourseState by remember { mutableStateOf<Result<List<Course>?>?>(null) }
     var studentState by remember { mutableStateOf<User?>(null) }
@@ -112,10 +116,10 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
     LaunchedEffect(scope) {
         val courseList = courseRepo.getAllCourses()
         topNewCourseState = courseList
-        studentState = studentRepo.getAllStudents()
+        studentState = studentRepo.getCurrentStudent()
         //  val trendingCoursesList = courseRepo.getTrendingCourse()
-        val mentorList = mentorRepo.getMentorList()
-        mentorState.value = HomeScreenMentorState(mentorList)
+        instructorState = instructorRepo.getAllInstructor()
+
     }
 
     // we will make var that be true to show api
@@ -142,9 +146,11 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
                                     .border(2.dp, color = Color.White, shape = CircleShape),
                             )
                             Column {
-                                Spacer(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(15.dp))
+                                Spacer(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(15.dp)
+                                )
                                 Text(
                                     text = "Hello",
                                     style = MaterialTheme.typography.headlineSmall,
@@ -184,12 +190,14 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
         Box(
             Modifier
                 .fillMaxSize()
-                .padding(innerPadding)) {
+                .padding(innerPadding)
+        ) {
             Column(
                 Modifier
                     .padding(19.dp)
                     .fillMaxSize()
-                    .verticalScroll(scrollState)) {
+                    .verticalScroll(scrollState)
+            ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     TextField(
                         modifier =
@@ -233,9 +241,11 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
                         )
                     }
                 }
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(10.dp))
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(10.dp)
+                )
 
                 // we will make pager(slider)
                 Box(
@@ -256,9 +266,11 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
                         painter = painterResource(id = R.drawable.pager_background),
                         contentDescription = null,
                     )
-                    Row(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(20.dp)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(20.dp)
+                    ) {
                         Column(modifier = Modifier.fillMaxHeight()) {
                             Text(
                                 text = "40% OFF",
@@ -319,16 +331,18 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
                     }
                 }
 
-                LazyRow(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 5.dp, bottom = 5.dp)) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 5.dp, bottom = 5.dp)
+                ) {
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
                     topNewCourseState
                         ?.onSuccess {
                             it?.let {
                                 items(it) { course ->
-                                    CourseRaw(course,context) {
+                                    CourseRaw(course, context) {
                                         // navigate
                                         navController.navigate(
                                             Screens.CourseDetailScreen.route + "/${it.id}"
@@ -349,63 +363,26 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
                     fontSize = 15.sp,
                     style = MaterialTheme.typography.titleMedium,
                 )
-                LazyRow(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 5.dp, bottom = 5.dp)) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 5.dp, bottom = 5.dp)
+                ) {
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
-                    items(mentorState.value.mentor) { mentor ->
-                        Box(
-                            modifier =
-                            Modifier
-                                .width(140.dp)
-                                .height(136.dp)
-                                .padding(top = 5.dp, bottom = 5.dp)
-                                .clip(RoundedCornerShape(15.dp))
-                                .border(
-                                    width = 2.dp,
-                                    color = lightGray,
-                                    shape = RoundedCornerShape(14.dp),
-                                )
-                                .background(Color.White)
-                                .clickable {
-                                    // here i will put code to navigate to the desired course
+                    instructorState?.onSuccess { instructor ->
+                        instructor?.let{
+                            items(it) { mentor ->
+                                InstructorRow(instructor = mentor) {
+                                    navController.navigate(Screens.MentorDetailsScreen.route + "/${mentor.id}")
                                 }
-                        ) {
-                            AsyncImage(
-                                model =
-                                ImageRequest.Builder(LocalContext.current)
-                                    .data(mentor.image)
-                                    .crossfade(true)
-                                    .transformations(CircleCropTransformation())
-                                    .build(),
-                                contentDescription = "mentor image",
-                                modifier =
-                                Modifier
-                                    .width(60.dp)
-                                    .height(60.dp)
-                                    .padding(top = 10.dp, bottom = 10.dp)
-                                    .align(alignment = Alignment.TopCenter),
-                            )
-                            Text(
-                                text = mentor.mentorName,
-                                style = MaterialTheme.typography.headlineLarge,
-                                fontSize = 15.sp,
-                                modifier =
-                                Modifier
-                                    .padding(top = 25.dp)
-                                    .align(alignment = Alignment.Center),
-                            )
-                            Text(
-                                modifier =
-                                Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .padding(bottom = 25.dp),
-                                text = mentor.jopTitle,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color.Gray,
-                            )
+                            }
                         }
+
+
+                    }?.onFailure {
+                        Toast.makeText(context, "faild to load mentor data", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
                 Box(modifier = Modifier.fillMaxWidth()) {
@@ -429,9 +406,11 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
                         }
                     }
                 }
-                LazyRow(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 5.dp, bottom = 5.dp)) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 5.dp, bottom = 5.dp)
+                ) {
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
                     //                    itemsIndexed(state.value.courses) { index, course ->
@@ -447,7 +426,7 @@ fun HomeScreen(navController: NavController, courseRepo: CourseRepo, studentRepo
                         ?.onSuccess {
                             it?.let {
                                 items(it) { course ->
-                                    CourseRaw(course,context) {
+                                    CourseRaw(course, context) {
                                         // navigate
                                         navController.navigate(
                                             Screens.CourseDetailScreen.route + "/${it.id}"
@@ -582,11 +561,66 @@ fun CourseRaw(course: Course, context: Context, onCLickListener: (Course) -> Uni
 
             Text(
                 // we need to change this
-                text = 4.5.toString(),
+                text = course.averageRating.toString(),
                 fontSize = 12.sp,
                 modifier = Modifier.padding(start = 4.dp, top = 1.dp),
             )
         }
+    }
+}
+
+@Composable
+fun InstructorRow(instructor: Instructor, onClick: (String) -> (Unit)) {
+    Box(
+        modifier =
+        Modifier
+            .width(140.dp)
+            .height(136.dp)
+            .padding(top = 5.dp, bottom = 5.dp)
+            .clip(RoundedCornerShape(15.dp))
+            .border(
+                width = 2.dp,
+                color = lightGray,
+                shape = RoundedCornerShape(14.dp),
+            )
+            .background(Color.White)
+            .clickable {
+                onClick(instructor.id)
+            }
+    ) {
+        AsyncImage(
+            model =
+            ImageRequest.Builder(LocalContext.current)
+                .data(instructor.image)
+                .crossfade(true)
+                .transformations(CircleCropTransformation())
+                .build(),
+            contentDescription = "mentor image",
+            modifier =
+            Modifier
+                .width(60.dp)
+                .height(60.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
+                .align(alignment = Alignment.TopCenter),
+        )
+        Text(
+            text = instructor.firstName + " " + instructor.lastName,
+            style = MaterialTheme.typography.headlineLarge,
+            fontSize = 15.sp,
+            modifier =
+            Modifier
+                .padding(top = 25.dp)
+                .align(alignment = Alignment.Center),
+        )
+        Text(
+            modifier =
+            Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 25.dp),
+            text = instructor.additionalDetails.about.toString(),
+            style = MaterialTheme.typography.titleMedium,
+            color = Color.Gray,
+        )
     }
 }
 

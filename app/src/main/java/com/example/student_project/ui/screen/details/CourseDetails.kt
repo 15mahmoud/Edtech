@@ -3,6 +3,7 @@ package com.example.student_project.ui.screen.details
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.sharp.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,8 +42,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,10 +61,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -69,9 +75,12 @@ import com.example.student_project.R
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.model.RatingAndReview
 import com.example.student_project.data.model.SubSection
+import com.example.student_project.data.network.request.CreateRatingReq
 import com.example.student_project.data.repo.CourseRepo
 import com.example.student_project.ui.navigation.Screens
+import com.example.student_project.ui.theme.addReviewTextColor
 import com.example.student_project.ui.theme.ambientShadowColor
+import com.example.student_project.ui.theme.anotherColorForFillingStar
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.cardContainerColor
 import com.example.student_project.ui.theme.editProfileTextColor
@@ -100,14 +109,24 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
     var lessonVisibilityState by remember { mutableStateOf(false) }
     var reviewsVisibilityState by remember { mutableStateOf(false) }
 
+    var rateNumber by remember {
+        mutableStateOf(0.0)
+    }
+
     var paymentState by remember {
         mutableStateOf<Result<String?>?>(null)
     }
 
-    var dialogKey by remember {
+    var dialogKeyForPayment by remember {
+        mutableStateOf(false)
+    }
+    var dialogKeyForReview by remember {
         mutableStateOf(false)
     }
 
+    var rateTextState by remember {
+        mutableStateOf("")
+    }
     var unLock by remember { mutableStateOf<Result<Boolean?>?>(null) }
     var lock by remember { mutableStateOf(false) }
     LaunchedEffect(scope) {
@@ -120,7 +139,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                 unLock = courseRepo.verifyPayment(listOf(course?.id.toString()))
             }
             unLock?.onSuccess {
-                it?.let { unLockState->
+                it?.let { unLockState ->
                     lock = unLockState
                 }
             }
@@ -153,11 +172,43 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                     )
                 },
                 bottomBar = {
+                    AnimatedVisibility(visible = lock) {
+                        BottomAppBar(containerColor = Color.White) {
+                            Button(
+                                onClick = {
+                                    dialogKeyForReview = true
+                                },
+                                shape = RoundedCornerShape(100.dp),
+                                modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 15.dp, end = 15.dp)
+                                    // .clip(RoundedCornerShape(100.dp))
+                                    // .border(width = 1.dp, color = buttonColor, shape =
+                                    // RoundedCornerShape(99.dp))
+                                    .shadow(
+                                        elevation = 10.dp,
+                                        RoundedCornerShape(100.dp),
+                                        spotColor = spotShadowColor.copy(alpha = 0.4f),
+                                        ambientColor = ambientShadowColor.copy(alpha = 0.35f),
+                                    ),
+                                colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+                            ) {
+                                Text(
+                                    text = "Add Review",
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight(700),
+                                )
+                            }
+                        }
+                    }
                     AnimatedVisibility(visible = !lock) {
                         BottomAppBar(containerColor = Color.White) {
                             Button(
                                 onClick = {
-                                    dialogKey = true
+                                    dialogKeyForPayment = true
                                 },
                                 shape = RoundedCornerShape(100.dp),
                                 modifier =
@@ -178,6 +229,9 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                 Text(
                                     text = "Enroll Course - $ ${course?.price.toString()}",
                                     color = Color.White,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight(700),
                                 )
                             }
                         }
@@ -189,7 +243,160 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    if (dialogKey) {
+                    if (dialogKeyForReview) {
+                        Dialog(onDismissRequest = { dialogKeyForReview = false }) {
+                            Card(
+                                modifier = Modifier.fillMaxSize(), colors = CardDefaults.cardColors(
+                                    containerColor = Color.White
+                                )
+                            ) {
+
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(top = Constant.paddingComponentFromScreen),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+
+                                    Image(
+                                        painter = painterResource(id = R.drawable.add_review),
+                                        contentDescription = "add_review_img",
+                                        modifier = Modifier
+                                            .padding(top = Constant.paddingComponentFromScreen)
+                                            .width(screenWidth * 44 / 100)
+                                            .height(screenHeight * 21 / 100)
+                                    )
+                                    Text(
+                                        text = "Course Completed!",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight(700),
+                                        fontSize = 27.sp,
+                                        color = buttonColor,
+                                        modifier = Modifier.padding(
+                                            top = Constant.normalPadding,
+                                            bottom = Constant.normalPadding
+                                        )
+                                    )
+                                    Text(
+                                        text = "please leave a review for your course",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight(400),
+                                        fontSize = 20.sp,
+                                        color = headLineColor,
+                                        modifier = Modifier.padding(
+                                            bottom = Constant.normalPadding
+                                        )
+                                    )
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(
+                                                start = 25.dp,
+                                                end = Constant.paddingComponentFromScreen
+                                            )
+                                    ) {
+                                        (1..5).forEach { number ->
+                                            IconButton(onClick = {
+                                                rateNumber = number.toDouble()
+                                            }) {
+                                                Icon(
+                                                    //here we need to add green border
+                                                    imageVector =if (number.toDouble() <= rateNumber) Icons.Sharp.Star else Icons.Default.Star,
+                                                    tint =  anotherColorForFillingStar ,
+                                                    contentDescription = "rating icon"
+                                                )
+                                            }
+                                        }
+                                    }
+                                    OutlinedTextField(
+                                        value = rateTextState,
+                                        onValueChange = {
+                                            rateTextState = it
+                                        },
+                                        colors = TextFieldDefaults.colors(
+                                            focusedContainerColor = addReviewTextColor,
+                                            unfocusedContainerColor = addReviewTextColor
+                                        ),
+                                        textStyle = MaterialTheme.typography.titleMedium,
+                                        shape = RoundedCornerShape(12.dp),
+                                        modifier = Modifier
+                                            .padding(
+                                                top = Constant.normalPadding,
+                                                start = Constant.paddingComponentFromScreen,
+                                                end = Constant.paddingComponentFromScreen,
+                                                bottom = Constant.normalPadding
+                                            )
+                                            .border(
+                                                2.dp,
+                                                color = buttonColor,
+                                                RoundedCornerShape(12.dp)
+                                            )
+                                    )
+                                    Button(
+                                        shape = RoundedCornerShape(100.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = buttonColor
+                                        ),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(
+                                                start = Constant.paddingComponentFromScreen,
+                                                end = Constant.paddingComponentFromScreen,
+                                                bottom = Constant.normalPadding
+                                            )
+                                            .shadow(elevation = 4.dp, RoundedCornerShape(100.dp)),
+                                        onClick = {
+                                            val studentReview = CreateRatingReq(
+                                                course?.id.toString(),
+                                                rateNumber.toInt(),
+                                                rateTextState
+                                            )
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                courseRepo.createRating(studentReview)
+                                                //here we need to handle exception
+                                                //to save app from crashing
+                                            }
+                                            dialogKeyForReview = false
+                                        }) {
+                                        Text(
+                                            text = "Write Review",
+                                            style = MaterialTheme.typography.titleLarge,
+                                            fontWeight = FontWeight(700),
+                                            fontSize = 16.sp,
+                                            color = Color.White
+                                        )
+                                    }
+
+                                    Button(shape = RoundedCornerShape(100.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = addReviewTextColor
+                                        ),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(
+                                                start = Constant.paddingComponentFromScreen,
+                                                end = Constant.paddingComponentFromScreen,
+                                                bottom = Constant.paddingComponentFromScreen
+                                            )
+                                            .shadow(elevation = 4.dp, RoundedCornerShape(100.dp)),
+                                        onClick = {
+                                            dialogKeyForReview = false
+                                        }) {
+                                        Text(
+                                            text = "Cancel",
+                                            style = MaterialTheme.typography.titleLarge,
+                                            fontWeight = FontWeight(700),
+                                            fontSize = 16.sp,
+                                            color = buttonColor
+                                        )
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                    if (dialogKeyForPayment) {
                         AlertDialog(
                             title = {
                                 Text(
@@ -208,7 +415,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     fontWeight = FontWeight(500)
                                 )
                             },
-                            onDismissRequest = { dialogKey = false },
+                            onDismissRequest = { dialogKeyForPayment = false },
                             buttons = {
                                 Button(
                                     shape = RoundedCornerShape(100.dp),
@@ -226,7 +433,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         }
                                         paymentState?.onSuccess {
                                             lock = false
-                                            dialogKey = false
+                                            dialogKeyForPayment = false
                                         }?.onFailure {
                                             Toast.makeText(
                                                 context,
@@ -619,15 +826,11 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         modifier = Modifier.padding(end = 5.dp),
                                     )
                                     Text(
-                                        text = "4.5",
+                                        text = course?.averageRating.toString(),
                                         style = MaterialTheme.typography.titleLarge,
                                         fontWeight = FontWeight(700),
                                         color = buttonColor,
                                     )
-                                }
-                                AnimatedVisibility(visible = lock) {
-                                    // here we will make user able to rate
-                                    Text(text = "lock is true")
                                 }
                                 LazyColumn(modifier = Modifier.height(500.dp)) {
                                     course?.let { item ->
@@ -745,6 +948,7 @@ fun ReviewRow(ratingAndReview: RatingAndReview, context: Context) {
         colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Column(modifier = Modifier.padding(15.dp)) {
+
             Row {
                 AsyncImage(
                     model =
@@ -768,6 +972,7 @@ fun ReviewRow(ratingAndReview: RatingAndReview, context: Context) {
                     modifier = Modifier,
                 )
                 Spacer(modifier = Modifier.width(50.dp))
+
                 Box(
                     Modifier
                         .width(screenWidth * 14 / 100)
