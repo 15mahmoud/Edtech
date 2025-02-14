@@ -45,6 +45,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.repo.CourseRepo
+import com.example.student_project.ui.screen.widgets.CourseColumn
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.jopTitleColor
 import com.example.student_project.ui.theme.starFillingColor
@@ -133,70 +134,6 @@ fun CourseFilterResultScreen(
                             )
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun CourseColumn(course: Course, context: Context, onClickListener: (String) -> Unit) {
-    val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp
-    val screenWidth = configuration.screenWidthDp.dp
-    Card(
-        modifier =
-        Modifier
-            .padding(10.dp)
-            .fillMaxWidth()
-            // .height(screenHeight * 15/100)
-            .clickable { onClickListener(course.id) }
-    ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = ImageRequest.Builder(context = context).crossfade(true)
-                    .data(course.thumbnail).build(), contentDescription = "course image",
-                modifier = Modifier
-                    .width(screenWidth * 37 / 100)
-                    .height(screenHeight * 14 / 100)
-            )
-            Column {
-                Text(
-                    text = course.courseName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(5.dp),
-                )
-                Text(
-                    text = course.instructor.firstName + " " + course.instructor.lastName,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontSize = 15.sp,
-                    modifier = Modifier.padding(5.dp),
-                    color = jopTitleColor,
-                )
-                HorizontalDivider()
-                Row {
-                    Text(
-                        text = "${course.price}$",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontSize = 15.sp,
-                        modifier = Modifier.padding(5.dp),
-                        color = buttonColor,
-                    )
-                    Spacer(modifier = Modifier.width(150.dp))
-                    Icon(
-                        imageVector = Icons.Filled.Star,
-                        contentDescription = "rating star",
-                        tint = starFillingColor,
-                    )
-                    Text(
-                        // he didn't use rating
-                        text = "4.5",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontSize = 15.sp,
-                        modifier = Modifier.padding(5.dp),
-                        color = buttonColor,
-                    )
                 }
             }
         }

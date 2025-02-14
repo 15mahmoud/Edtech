@@ -321,6 +321,7 @@ fun HomeScreen(
                         modifier = Modifier.align(alignment = Alignment.CenterEnd),
                         onClick = {
                             // here we write code to navigate to all subject
+                            navController.navigate(Screens.TrendingCourseScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     ) {
@@ -340,8 +341,8 @@ fun HomeScreen(
                     // we suppose to modify this size to match all device
                     topNewCourseState
                         ?.onSuccess {
-                            it?.let {
-                                items(it) { course ->
+                            it?.sortedBy { course -> course.averageRating }?.let { sortedCourse ->
+                                items(sortedCourse) { course ->
                                     CourseRaw(course, context) {
                                         // navigate
                                         navController.navigate(
@@ -363,6 +364,7 @@ fun HomeScreen(
                     fontSize = 15.sp,
                     style = MaterialTheme.typography.titleMedium,
                 )
+                //here there are button for show all instructor
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -371,7 +373,7 @@ fun HomeScreen(
                     // we will change this subject list with another list we will get from api
                     // we suppose to modify this size to match all device
                     instructorState?.onSuccess { instructor ->
-                        instructor?.let{
+                        instructor?.let {
                             items(it) { mentor ->
                                 InstructorRow(instructor = mentor) {
                                     navController.navigate(Screens.MentorDetailsScreen.route + "/${mentor.id}")
@@ -396,7 +398,7 @@ fun HomeScreen(
                     Button(
                         modifier = Modifier.align(alignment = Alignment.CenterEnd),
                         onClick = {
-                            // here we write code to navigate to all subject
+                           navController.navigate(Screens.AllCourseScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     ) {

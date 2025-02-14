@@ -1,5 +1,6 @@
 package com.example.student_project.data.repo
 
+import com.example.student_project.data.model.Category
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.network.ApiClient
 import com.example.student_project.data.network.request.CapturePayment
@@ -29,6 +30,10 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
 
     suspend fun createRating(ratingReq: CreateRatingReq) {
         apiClient.createRating(ratingReq)
+    }
+
+    suspend fun showAllCategories():Result<List<Category>?>{
+        return Result.runCatching { apiClient.showAllCategories().data }
     }
 
     //    suspend fun getCourseList(): List<Course> {
