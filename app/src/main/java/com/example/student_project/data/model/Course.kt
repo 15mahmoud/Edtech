@@ -24,6 +24,7 @@ data class Course(
     val averageRating:Double?
 )
 
+
 data class Category(
     @SerializedName("_id") val id: String,
     val courses: List<String>,

@@ -17,6 +17,8 @@ import com.example.student_project.ui.screen.home.filtering.filterationresult.Co
 import com.example.student_project.ui.screen.home.filtering.filterationresult.MentorFilterResultScreen
 import com.example.student_project.ui.screen.SplashScreen
 import com.example.student_project.ui.screen.details.MentorDetailsScreen
+import com.example.student_project.ui.screen.home.allcourses.AllCourseScreen
+import com.example.student_project.ui.screen.home.trendingcourses.TrendingCourseScreen
 import com.example.student_project.ui.screen.log.forgetpassword.EmailAndPhoneScreen
 import com.example.student_project.ui.screen.log.forgetpassword.NewPasswordScreen
 import com.example.student_project.ui.screen.log.forgetpassword.OtpTokenScreen
@@ -64,6 +66,12 @@ fun Navigation(depContainer: DepContainer) {
                 depContainer.studentRepo,
                 depContainer.instructorRepo
             )
+        }
+        composable (Screens.AllCourseScreen.route){
+            AllCourseScreen(navController = navController,depContainer.courseRepo)
+        }
+        composable (Screens.TrendingCourseScreen.route){
+            TrendingCourseScreen(navController = navController,depContainer.courseRepo)
         }
         composable(
             Screens.CourseDetailScreen.route + "/{course_title}",

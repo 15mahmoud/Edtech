@@ -1,6 +1,6 @@
 package com.example.student_project.data.network
 
-import com.example.student_project.data.model.Categories
+import com.example.student_project.data.model.Category
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.model.Instructor
 import com.example.student_project.data.model.Student
@@ -51,7 +51,7 @@ interface ApiClient {
     suspend fun allInstructors():BaseResponse<List<Instructor>>
 
     @GET("course/showAllCategories")
-    suspend fun showAllCategories():BaseResponse<List<Categories>>
+    suspend fun showAllCategories():BaseResponse<List<Category>>
 
     // this one not used yet
     //    @POST("auth/reset-password-token")

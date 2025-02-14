@@ -1,13 +1,24 @@
 package com.example.student_project.ui.screen.widgets
 
+import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,15 +32,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.student_project.R
+import com.example.student_project.data.model.Category
+import com.example.student_project.data.model.Course
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.darkerGrayColor
 import com.example.student_project.ui.theme.editProfileTextColor
+import com.example.student_project.ui.theme.jopTitleColor
+import com.example.student_project.ui.theme.starFillingColor
+import com.example.student_project.util.Constant
 
 // we will change this to lambda fun that will take string and will return -> string
 // then take the returning string and put it in a a list
@@ -131,6 +150,102 @@ fun EditProfileButton(
                 fontSize = 18.sp,
                 color = editProfileTextColor,
             )
+        }
+    }
+}
+
+
+@Composable
+fun CategoryRow(category: Category, focused: Boolean, onclick: (String) -> Unit) {
+    var focus by remember {
+        mutableStateOf(focused)
+    }
+    Button(
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (focus) buttonColor else Color.Transparent
+        ),
+        shape = RoundedCornerShape(100.dp),
+        modifier = Modifier
+            .padding(
+                end = Constant.mediumPadding,
+                bottom = Constant.paddingComponentFromScreen
+            )
+            .border(2.dp, color = buttonColor, RoundedCornerShape(100.dp)),
+
+        onClick = {
+            focus = !focus
+            onclick(category.name)
+        }) {
+        Text(
+            text = category.name,
+            style = MaterialTheme.typography.titleLarge,
+            fontSize = 16.sp,
+            fontWeight = FontWeight(600),
+            color = if (focus) Color.White else buttonColor
+        )
+    }
+}
+
+@Composable
+fun CourseColumn(course: Course, context: Context, onClickListener: (String) -> Unit) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    Card(
+        modifier =
+        Modifier
+            .padding(10.dp)
+            .fillMaxWidth()
+            // .height(screenHeight * 15/100)
+            .clickable { onClickListener(course.id) }
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            AsyncImage(
+                model = ImageRequest.Builder(context = context).crossfade(true)
+                    .data(course.thumbnail).build(), contentDescription = "course image",
+                modifier = Modifier
+                    .width(screenWidth * 37 / 100)
+                    .height(screenHeight * 14 / 100)
+            )
+            Column {
+                Text(
+                    text = course.courseName,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(5.dp),
+                )
+                Text(
+                    text = course.instructor.firstName + " " + course.instructor.lastName,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontSize = 15.sp,
+                    modifier = Modifier.padding(5.dp),
+                    color = jopTitleColor,
+                )
+                HorizontalDivider()
+                Row {
+                    Text(
+                        text = "${course.price}$",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(5.dp),
+                        color = buttonColor,
+                    )
+                    Spacer(modifier = Modifier.width(150.dp))
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = "rating star",
+                        tint = starFillingColor,
+                    )
+                    Text(
+                        // he didn't use rating
+                        text = "4.5",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(5.dp),
+                        color = buttonColor,
+                    )
+                }
+            }
         }
     }
 }
