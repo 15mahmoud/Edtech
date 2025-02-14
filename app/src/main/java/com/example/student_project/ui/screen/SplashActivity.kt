@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.student_project.R
+import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController) {
+fun SplashScreen(navController: NavController,studentRepo: StudentRepo) {
     val timeState = rememberCoroutineScope()
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -25,7 +26,11 @@ fun SplashScreen(navController: NavController) {
         )
         LaunchedEffect(timeState) {
             delay(2000)
-            navController.navigate(Screens.LoginScreen.route)
+            if (studentRepo.getCurrentStudent()==null) {
+                navController.navigate(Screens.LoginScreen.route)
+            }else{
+                navController.navigate(Screens.HomeScreen.route)
+            }
         }
     }
 }

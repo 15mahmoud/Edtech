@@ -1,6 +1,7 @@
 package com.example.student_project.data.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -17,4 +18,6 @@ interface StudentDatabaseDao {
     @Query("SELECT * FROM student Limit 1") suspend fun getCurrentStudent(): User?
 
     @Update(onConflict = OnConflictStrategy.REPLACE) suspend fun updateStudent(student: User)
+
+    @Query("DELETE FROM student") suspend fun deleteAllStudents()
 }
