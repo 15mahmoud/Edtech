@@ -1,5 +1,6 @@
 package com.example.student_project.ui.screen.home.filtering.filterationresult
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,17 +35,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.example.student_project.data.model.Mentor
-import com.example.student_project.ui.screen.home.content.mentorRepo
+import com.example.student_project.data.model.Instructor
+import com.example.student_project.data.repo.InstructorRepo
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.jopTitleColor
 
-data class MentorFilterResultScreenState(val mentor: List<Mentor>)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,22 +54,23 @@ fun MentorFilterResultScreen(
     jopTitle: String?,
     rating: Float?,
     hourlyRate: Float?,
+    instructorRepo: InstructorRepo
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    val state = remember { mutableStateOf(MentorFilterResultScreenState(emptyList())) }
+    var instructorState by remember { mutableStateOf<Result<List<Instructor>?>?>(null) }
     LaunchedEffect(scope) {
-        val mentorList = mentorRepo.getMentorList()
-        state.value = MentorFilterResultScreenState(mentorList)
+        instructorState = instructorRepo.getAllInstructor()
     }
     // for showing search Text field
     var togel by remember { mutableStateOf(false) }
-    val newMentorList =
-        state.value.mentor.filter { mentor ->
-            mentor.jopTitle == jopTitle &&
-                mentor.rating >= rating!! &&
-                mentor.hourlyRate <= hourlyRate!!
-        }
+//    val newMentorList =
+//        state.value.mentor.filter { mentor ->
+//            mentor.jopTitle == jopTitle &&
+//                mentor.rating >= rating!! &&
+//                mentor.hourlyRate <= hourlyRate!!
+//        }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -102,13 +104,20 @@ fun MentorFilterResultScreen(
         Column(modifier = Modifier.padding(innerPadding)) {
             AnimatedVisibility(togel) { Text(text = "this will be search") }
             LazyColumn() {
-                items(newMentorList) {
-                    MentorResult(
-                        mentor = it,
-                        onClickListener = { string ->
-                            // here we will navigate to details screen based on id
-                        },
-                    )
+                instructorState?.onSuccess { instructor->
+                    instructor?.let {mentor->
+                        items(mentor) {
+                            MentorResult(
+                                instructor = it,
+                                onClickListener = { string ->
+                                    // here we will navigate to details screen based on id
+                                },
+                            )
+                        }
+
+                    }
+                }?.onFailure {
+                    Toast.makeText(context,"failed to load data",Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -118,17 +127,17 @@ fun MentorFilterResultScreen(
 // this string may change to list of strings
 // may be we modify this and make it for course and mentor result
 @Composable
-fun MentorResult(mentor: Mentor, onClickListener: (String) -> Unit) {
+fun MentorResult(instructor: Instructor, onClickListener: (String) -> Unit) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Card(
-        modifier = Modifier.fillMaxWidth().clickable { onClickListener(mentor.mentorName) },
+        modifier = Modifier.fillMaxWidth().clickable { onClickListener(instructor.id) },
         contentColor = Color.White,
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Image(
-                painter = rememberAsyncImagePainter(model = mentor.image),
+                painter = rememberAsyncImagePainter(model = instructor.image),
                 contentDescription = "mentor image",
                 modifier =
                     Modifier.padding(10.dp)
@@ -137,13 +146,13 @@ fun MentorResult(mentor: Mentor, onClickListener: (String) -> Unit) {
             )
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
-                    text = mentor.mentorName,
+                    text = instructor.firstName + " " + instructor.lastName,
                     style = MaterialTheme.typography.headlineLarge,
                     fontSize = 18.sp,
                     color = buttonColor,
                 )
                 Text(
-                    text = mentor.jopTitle,
+                    text = instructor.additionalDetails.about.toString(),
                     style = MaterialTheme.typography.headlineMedium,
                     fontSize = 14.sp,
                     color = jopTitleColor,

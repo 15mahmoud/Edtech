@@ -54,7 +54,7 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
     val phoneNumberError by remember { mutableStateOf(false) }
     var aboutState by remember { mutableStateOf("") }
     LaunchedEffect(scope) {
-        val student = studentRepo.getAllStudents()
+        val student = studentRepo.getCurrentStudent()
         studentState = student
         firstName = studentState?.firstName.toString()
         lastName = studentState?.lastName.toString()

@@ -7,14 +7,18 @@ data class Instructor(
     val accountType: String,
     val active: Boolean,
     val approved: Boolean,
-    val courses: List<String>,
+    val courses: List<Course>,
     val createdAt: String,
     val email: String,
     val firstName: String,
     val image: String,
+    val savedCourses: List<Any>,
     val lastName: String,
     val password: String,
     val updatedAt: String,
     val courseProgress: List<Any>,
     val additionalDetails: AdditionalDetails,
 )
+
+
+

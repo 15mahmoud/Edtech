@@ -49,6 +49,7 @@ import com.example.student_project.ui.screen.widgets.ScaffoldFilterScreenTopBar
 import com.example.student_project.ui.theme.borderRating
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.darkerGrayColor
+import com.example.student_project.ui.theme.starFillingColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -264,7 +265,7 @@ fun CourseFilterScreen(navController: NavController) {
                             imageVector = Icons.Filled.Star,
                             contentDescription = "Rating Star",
                             tint =
-                                if (number.toDouble() <= selectedRating) Color.Yellow
+                                if (number.toDouble() <= selectedRating) starFillingColor
                                 else Color.Gray,
                         )
                     }

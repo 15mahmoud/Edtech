@@ -12,6 +12,8 @@ data class User(
     val active: Boolean,
     val approved: Boolean,
     val courses: List<String>,
+    val courseProgress:List<String>,
+    val savedCourses:List<String>,
     val createdAt: String,
     @Embedded val additionalDetails: AdditionalDetails,
     val email: String,
@@ -29,3 +31,4 @@ data class AdditionalDetails(
     var about: String?,
     var gender: String?,
 )
+

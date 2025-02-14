@@ -3,6 +3,7 @@ package com.example.student_project.data.repo
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.network.ApiClient
 import com.example.student_project.data.network.request.CapturePayment
+import com.example.student_project.data.network.request.CreateRatingReq
 import com.example.student_project.data.network.request.GetFullDetailsRequest
 import javax.inject.Inject
 
@@ -17,11 +18,17 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
             apiClient.getFullCourseDetails(GetFullDetailsRequest(courseId)).data
         }
     }
-    suspend fun capturePayment(courseId: List<String>):Result<String>{
-        return Result.runCatching {  apiClient.capturePayment(CapturePayment(courseId)).data}
+
+    suspend fun capturePayment(courseId: List<String>): Result<String> {
+        return Result.runCatching { apiClient.capturePayment(CapturePayment(courseId)).data }
     }
-    suspend fun verifyPayment(courseId: List<String>):Result<Boolean>{
-        return Result.runCatching {  apiClient.verifyPayment(CapturePayment(courseId)).data}
+
+    suspend fun verifyPayment(courseId: List<String>): Result<Boolean> {
+        return Result.runCatching { apiClient.verifyPayment(CapturePayment(courseId)).data }
+    }
+
+    suspend fun createRating(ratingReq: CreateRatingReq) {
+        apiClient.createRating(ratingReq)
     }
 
     //    suspend fun getCourseList(): List<Course> {
