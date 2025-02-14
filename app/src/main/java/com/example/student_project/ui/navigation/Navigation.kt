@@ -38,8 +38,8 @@ import com.example.student_project.ui.screen.profile.security.SecurityScreen
 fun Navigation(depContainer: DepContainer) {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.HomeScreen.route) {
-        composable(Screens.SplashScreen.route) { SplashScreen(navController) }
+    NavHost(navController = navController, startDestination = Screens.SplashScreen.route) {
+        composable(Screens.SplashScreen.route) { SplashScreen(navController,depContainer.studentRepo) }
         composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
         composable(Screens.LoginScreen.route) {
             LoginScreen(navController, depContainer.studentRepo)
@@ -84,7 +84,7 @@ fun Navigation(depContainer: DepContainer) {
             )
         }
         composable(Screens.LearningScreen.route) { LearningScreen(navController = navController) }
-        composable(Screens.ProfileScreen.route) { ProfileScreen(navController = navController) }
+        composable(Screens.ProfileScreen.route) { ProfileScreen(navController = navController,depContainer.studentRepo) }
         composable(Screens.MentorFilterScreen.route) {
             // filled parcel object "FiltrationResult" and send it to search result screen
             MentorFilterScreen(navController)

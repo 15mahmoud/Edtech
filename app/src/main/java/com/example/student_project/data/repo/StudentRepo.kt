@@ -73,4 +73,8 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
     suspend fun updateStudent(student: User) {
         studentDatabaseDao.updateStudent(student)
     }
+
+    suspend fun deleteAllStudent(){
+        studentDatabaseDao.deleteAllStudents()
+    }
 }
