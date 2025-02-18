@@ -1,5 +1,6 @@
 package com.example.student_project.ui.screen.home.allcourses
 
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,6 +47,9 @@ fun AllCourseScreen(navController: NavController, courseRepo: CourseRepo) {
     var courseState by remember { mutableStateOf<Result<List<Course>?>?>(null) }
     var categoryState by remember {
         mutableStateOf<Result<List<Category>?>?>(null)
+    }
+    var categoryDetailsState by remember {
+        mutableStateOf<Result<Category>?>(null)
     }
     var focused by remember {
         mutableStateOf(true)
@@ -101,13 +105,17 @@ fun AllCourseScreen(navController: NavController, courseRepo: CourseRepo) {
                     categoryState?.onSuccess { category ->
                         category?.let {
                             items(it) { notNullCategory ->
-                                CategoryRow(category = notNullCategory, focusedForLazyRow) {
+                                CategoryRow(category = notNullCategory, false) {
+                                    focusedForLazyRow = !focusedForLazyRow
                                     focusedCategory = notNullCategory.name
                                 }
                             }
 
                         }
 
+                    }?.onFailure {
+                        Toast.makeText(context, "failed to load category", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
@@ -122,8 +130,8 @@ fun AllCourseScreen(navController: NavController, courseRepo: CourseRepo) {
                                 }
                             }
                         } else if (focusedForLazyRow) {
-                            items(notNollCourse.filter { it.category.name == focusedCategory }) { item ->
-                                Text(text = focusedCategory)
+                            items(notNollCourse.filter { it.category.name == focusedCategory }
+                                .sortedBy { it.averageRating }) { item ->
                                 CourseColumn(course = item, context = context) {
                                     navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
                                 }
@@ -131,6 +139,8 @@ fun AllCourseScreen(navController: NavController, courseRepo: CourseRepo) {
                         }
                     }
 
+                }?.onFailure {
+                    Toast.makeText(context, "failed to load courses", Toast.LENGTH_SHORT).show()
                 }
             }
         }

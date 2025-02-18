@@ -82,14 +82,6 @@ import com.example.student_project.ui.theme.lightGray
 import com.example.student_project.ui.theme.starFillingColor
 
 
-// data class HomeScreenState(
-//    val courses: Result<List<Data>?>?,
-////    val trendingCourses: List<Course>,
-//
-//    )
-
-//data class HomeScreenMentorState(val mentor: List<>)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -469,8 +461,19 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
                 route = "learning_screen",
                 selectedIcon = imageVector,
                 unselectedIcon = ImageVector.vectorResource(id = R.drawable.courses_nav),
-                label = "Learning",
+                label = "My Courses",
             ),
+            BottomNavItem(
+                route = "profile_screen",
+                selectedIcon = Icons.Filled.Person,
+                unselectedIcon = Icons.Outlined.Person,
+                label = "Your AI"),
+            BottomNavItem(
+                route = "profile_screen",
+                selectedIcon = Icons.Filled.Person,
+                unselectedIcon = Icons.Outlined.Person,
+                label = "Inbox"),
+
             BottomNavItem(
                 route = "profile_screen",
                 selectedIcon = Icons.Filled.Person,

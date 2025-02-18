@@ -135,5 +135,10 @@ dependencies {
 //    implementation ("com.googlecode.libphonenumber:libphonenumber:8.13.5")
 //    implementation ("com.hbb20:ccp:2.7.2")
 //    implementation ("com.github.murgupluoglu:flagkit-android:1.0.3")
+
+    //exo-player
+    implementation ("androidx.media3:media3-exoplayer:1.5.1")
+    implementation ("androidx.media3:media3-ui:1.5.1")
+    implementation ("androidx.media3:media3-common:1.5.1")
 }
 

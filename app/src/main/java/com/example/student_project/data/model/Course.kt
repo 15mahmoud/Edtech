@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 
 data class Course(
     @SerializedName("_id") val id: String,
+    //this field will change
+    //so all course and trending course screen need to change
     val category: Category,
     val courseContent: List<CourseContent>,
     val courseDescription: String,
@@ -27,7 +29,7 @@ data class Course(
 
 data class Category(
     @SerializedName("_id") val id: String,
-    val courses: List<String>,
+    val courses: List<Course>,
     val description: String,
     val name: String,
 )
@@ -43,7 +45,7 @@ data class RatingAndReview(
     val course: String,
     val rating: String,
     val review: String,
-    // val user: User,
+    // val user: User,  
     val user: User,
 )
 

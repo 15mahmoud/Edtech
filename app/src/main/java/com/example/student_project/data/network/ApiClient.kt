@@ -7,7 +7,8 @@ import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
 import com.example.student_project.data.network.request.CapturePayment
 import com.example.student_project.data.network.request.CreateRatingReq
-import com.example.student_project.data.network.request.GetFullDetailsRequest
+import com.example.student_project.data.network.request.ApiRequestWithCourseId
+import com.example.student_project.data.network.request.ApiRequestWithInstructorId
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.network.request.StudentUpdateRequest
 import com.example.student_project.data.network.response.BaseResponse
@@ -31,7 +32,7 @@ interface ApiClient {
 
     // i need to add these new feature
     @POST("course/getFullCourseDetails")
-    suspend fun getFullCourseDetails(@Body courseId: GetFullDetailsRequest): BaseResponse<Course>
+    suspend fun getFullCourseDetails(@Body courseId: ApiRequestWithCourseId): BaseResponse<Course>
 
     // we need to test this first
     @PUT("profile/updateProfile")
@@ -47,11 +48,28 @@ interface ApiClient {
     @POST("course/createRating")
     suspend fun createRating(@Body ratingReq: CreateRatingReq)
 
+    //we will made it
+    @POST("profile/saveCourse")
+    suspend fun saveCourse(@Body courseId: ApiRequestWithCourseId)
+
+    //this too
+    @POST("course/getInstructorDetails")
+    suspend fun getInstructorDetails(@Body instructorId: ApiRequestWithInstructorId):BaseResponse<Instructor>
+
+    //we will do it too
+    @GET("profile/getSavedCourses")
+    suspend fun getSavedCourses(): BaseResponse<List<Course>>
+
+    //this one will remove and we will add get all course progress
+    @GET("profile/getEnrolledCourses")
+    suspend fun getEnrolledCourses(): BaseResponse<List<Course>>
+
+
     @GET("auth/all-instructors")
-    suspend fun allInstructors():BaseResponse<List<Instructor>>
+    suspend fun allInstructors(): BaseResponse<List<Instructor>>
 
     @GET("course/showAllCategories")
-    suspend fun showAllCategories():BaseResponse<List<Category>>
+    suspend fun showAllCategories(): BaseResponse<List<Category>>
 
     // this one not used yet
     //    @POST("auth/reset-password-token")

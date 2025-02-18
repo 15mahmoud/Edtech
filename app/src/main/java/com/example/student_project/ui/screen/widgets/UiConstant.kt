@@ -1,22 +1,29 @@
 package com.example.student_project.ui.screen.widgets
 
 import android.content.Context
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,7 +36,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
@@ -40,10 +50,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 import com.example.student_project.R
 import com.example.student_project.data.model.Category
 import com.example.student_project.data.model.Course
+import com.example.student_project.data.model.RatingAndReview
+import com.example.student_project.data.model.SubSection
 import com.example.student_project.ui.theme.buttonColor
+import com.example.student_project.ui.theme.cardContainerColor
 import com.example.student_project.ui.theme.darkerGrayColor
 import com.example.student_project.ui.theme.editProfileTextColor
 import com.example.student_project.ui.theme.jopTitleColor
@@ -249,3 +263,162 @@ fun CourseColumn(course: Course, context: Context, onClickListener: (String) -> 
         }
     }
 }
+@Composable
+fun LessonsColumn(
+    subSection: SubSection,
+    index: Int,
+    lock: Boolean,
+    context: Context,
+    onClickListener: (String) -> Unit,
+) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        modifier =
+        Modifier
+            .clickable {
+                if (lock) {
+                    Toast
+                        .makeText(context, "This section is locked", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    onClickListener(subSection.videoUrl)
+                }
+            }
+            //            .clip(RoundedCornerShape(200.dp))
+            .shadow(4.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(15.dp)
+        ) {
+            Card(
+                shape = CircleShape,
+                colors = CardDefaults.cardColors(containerColor = cardContainerColor),
+                modifier =
+                Modifier
+                    .width(screenWidth * 10 / 100)
+                    .height(screenHeight * 5 / 100)
+
+                    // .padding(10.dp)
+                    .shadow(4.dp, CircleShape)
+                    .align(Alignment.CenterVertically),
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = (index + 1).toString(),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight(700),
+                        color = buttonColor,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                }
+            }
+            Column(modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp)) {
+                Text(
+                    text = subSection.title,
+                    fontWeight = FontWeight(700),
+                    color = buttonColor,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(bottom = 7.5.dp),
+                )
+                Text(
+                    text = subSection.timeDuration + " mins",
+                    fontWeight = FontWeight(700),
+                    color = jopTitleColor,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 14.sp,
+                )
+            }
+            Spacer(modifier = Modifier.width(130.dp))
+            AnimatedVisibility(visible = lock) {
+                Icon(
+                    imageVector = Icons.Filled.Lock,
+                    contentDescription = "Lock icon",
+                    modifier = Modifier.padding(10.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ReviewColumn(ratingAndReview: RatingAndReview, context: Context) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+    ) {
+        Column(modifier = Modifier.padding(15.dp)) {
+
+            Row {
+                AsyncImage(
+                    model =
+                    ImageRequest.Builder(context = context)
+                        .transformations(CircleCropTransformation())
+                        .crossfade(true)
+                        .data(ratingAndReview.user.image)
+                        .build(),
+                    contentDescription = "user image",
+                    modifier =
+                    Modifier
+                        .padding(end = 7.5.dp, bottom = 5.dp)
+                        .width(screenWidth * 11 / 100)
+                        .height(screenHeight * 6 / 100),
+                )
+                Text(
+                    text = ratingAndReview.user.firstName + " " + ratingAndReview.user.lastName,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight(700),
+                    modifier = Modifier,
+                )
+                Spacer(modifier = Modifier.width(50.dp))
+
+                Box(
+                    Modifier
+                        .width(screenWidth * 14 / 100)
+                        .height(screenHeight * 4 / 100)
+                        .clip(RoundedCornerShape(100))
+                        .border(width = 2.dp, color = buttonColor, RoundedCornerShape(99.dp))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        tint = buttonColor,
+                        contentDescription = "rating icon",
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 2.dp),
+                    )
+                    Text(
+                        text = ratingAndReview.rating,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 16.sp,
+                        color = buttonColor,
+                        fontWeight = FontWeight(700),
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 8.dp),
+                    )
+                }
+            }
+            Text(
+                text = ratingAndReview.review,
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(400),
+                modifier = Modifier.padding(top = 7.5.dp),
+            )
+        }
+    }
+}
+

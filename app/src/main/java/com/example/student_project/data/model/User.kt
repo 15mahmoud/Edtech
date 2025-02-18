@@ -2,6 +2,7 @@ package com.example.student_project.data.model
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
@@ -11,9 +12,9 @@ data class User(
     val accountType: String,
     val active: Boolean,
     val approved: Boolean,
-    val courses: List<String>,
-    val courseProgress:List<String>,
-    val savedCourses:List<String>,
+//    val courses: List<Course>,
+    val courseProgress: List<String>,
+    val savedCourses: List<String>,
     val createdAt: String,
     @Embedded val additionalDetails: AdditionalDetails,
     val email: String,
