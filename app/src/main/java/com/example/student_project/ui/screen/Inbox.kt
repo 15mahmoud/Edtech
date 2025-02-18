@@ -16,8 +16,8 @@ import com.example.student_project.ui.screen.home.content.BottomNavBar
 import com.example.student_project.ui.screen.home.content.ScaffoldTopAppBar
 
 @Composable
-fun LearningScreen(navController: NavController) {
-    val selectedItemIndex by rememberSaveable { mutableStateOf(1) }
+fun InboxScreen(navController: NavController) {
+    val selectedItemIndex by rememberSaveable { mutableStateOf(3) }
     Scaffold(
         Modifier.fillMaxSize().background(Color.White),
         topBar = { ScaffoldTopAppBar() },

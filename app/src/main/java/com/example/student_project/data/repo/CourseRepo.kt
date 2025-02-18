@@ -5,7 +5,7 @@ import com.example.student_project.data.model.Course
 import com.example.student_project.data.network.ApiClient
 import com.example.student_project.data.network.request.CapturePayment
 import com.example.student_project.data.network.request.CreateRatingReq
-import com.example.student_project.data.network.request.GetFullDetailsRequest
+import com.example.student_project.data.network.request.ApiRequestWithCourseId
 import javax.inject.Inject
 
 class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
@@ -16,7 +16,7 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
 
     suspend fun getFullCourseDetails(courseId: String): Result<Course?> {
         return Result.runCatching {
-            apiClient.getFullCourseDetails(GetFullDetailsRequest(courseId)).data
+            apiClient.getFullCourseDetails(ApiRequestWithCourseId(courseId)).data
         }
     }
 
@@ -29,18 +29,25 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
     }
 
     suspend fun createRating(ratingReq: CreateRatingReq) {
-        apiClient.createRating(ratingReq)
+        Result.runCatching {
+            apiClient.createRating(ratingReq)
+        }
     }
 
     suspend fun showAllCategories():Result<List<Category>?>{
         return Result.runCatching { apiClient.showAllCategories().data }
     }
 
-    //    suspend fun getCourseList(): List<Course> {
-    //        return courseList
-    //    }
-    // we need to modify this function to sort data based on rating
-    //    suspend fun getTrendingCourse(): List<Course> {
-    //        return trendingCourse
-    //    }
+    //we will make all those end point
+    suspend fun getSavedCourses():Result<List<Course>?>{
+        return Result.runCatching { apiClient.getSavedCourses().data }
+    }
+    suspend fun getEnrolledCourses():Result<List<Course>?>{
+        return Result.runCatching { apiClient.getEnrolledCourses().data }
+    }
+    suspend fun savedCourse(courseId:String){
+         Result.runCatching { apiClient.saveCourse(ApiRequestWithCourseId(courseId)) }
+    }
+
+
 }

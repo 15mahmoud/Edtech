@@ -52,4 +52,8 @@ sealed class Screens(val route: String) {
     data object AllCourseScreen : Screens("all_course_screen")
 
     data object TrendingCourseScreen : Screens("trending_course_screen")
+
+    data object YourAiScreen : Screens("your_ai_screen")
+
+    data object InboxScreen : Screens("inbox_screen")
 }

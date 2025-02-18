@@ -70,7 +70,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController,studentRepo: StudentRepo) {
-    val selectedItemIndex by rememberSaveable { mutableStateOf(2) }
+    val selectedItemIndex by rememberSaveable { mutableStateOf(4) }
 
     val context = LocalContext.current
 

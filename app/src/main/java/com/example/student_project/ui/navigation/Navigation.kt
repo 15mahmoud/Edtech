@@ -7,7 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.student_project.DepContainer
-import com.example.student_project.ui.screen.LearningScreen
+import com.example.student_project.ui.screen.InboxScreen
+import com.example.student_project.ui.screen.MyCoursesScreen
 import com.example.student_project.ui.screen.details.CourseDetailsScreen
 import com.example.student_project.ui.screen.details.course.CourseLessonScreen
 import com.example.student_project.ui.screen.home.content.HomeScreen
@@ -16,6 +17,7 @@ import com.example.student_project.ui.screen.home.filtering.filteration.MentorFi
 import com.example.student_project.ui.screen.home.filtering.filterationresult.CourseFilterResultScreen
 import com.example.student_project.ui.screen.home.filtering.filterationresult.MentorFilterResultScreen
 import com.example.student_project.ui.screen.SplashScreen
+import com.example.student_project.ui.screen.YourAiScreen
 import com.example.student_project.ui.screen.details.MentorDetailsScreen
 import com.example.student_project.ui.screen.home.allcourses.AllCourseScreen
 import com.example.student_project.ui.screen.home.trendingcourses.TrendingCourseScreen
@@ -38,7 +40,7 @@ import com.example.student_project.ui.screen.profile.security.SecurityScreen
 fun Navigation(depContainer: DepContainer) {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.SplashScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.HomeScreen.route) {
         composable(Screens.SplashScreen.route) { SplashScreen(navController,depContainer.studentRepo) }
         composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
         composable(Screens.LoginScreen.route) {
@@ -83,7 +85,7 @@ fun Navigation(depContainer: DepContainer) {
                 depContainer.courseRepo,
             )
         }
-        composable(Screens.LearningScreen.route) { LearningScreen(navController = navController) }
+        composable(Screens.LearningScreen.route) { MyCoursesScreen(navController = navController) }
         composable(Screens.ProfileScreen.route) { ProfileScreen(navController = navController,depContainer.studentRepo) }
         composable(Screens.MentorFilterScreen.route) {
             // filled parcel object "FiltrationResult" and send it to search result screen
@@ -95,7 +97,8 @@ fun Navigation(depContainer: DepContainer) {
         ) { backStackEntry ->
             MentorDetailsScreen(
                 navController = navController,
-                instructorId = backStackEntry.arguments?.getString("instructor_id")
+                instructorId = backStackEntry.arguments?.getString("instructor_id"),
+                depContainer.instructorRepo
             )
 
         }
@@ -225,6 +228,13 @@ fun Navigation(depContainer: DepContainer) {
             // then send it to backend and get otp code
             // then pass it if true move to next screen
             InviteFriendsScreen(navController = navController)
+        }
+        composable(Screens.YourAiScreen.route) {
+
+            YourAiScreen(navController = navController)
+        }
+        composable(Screens.InboxScreen.route) {
+            InboxScreen(navController = navController)
         }
         composable(
             Screens.CourseLessonScreen.route + "/{video_url}",
