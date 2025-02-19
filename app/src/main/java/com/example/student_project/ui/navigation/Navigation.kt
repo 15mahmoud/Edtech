@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.student_project.DepContainer
 import com.example.student_project.ui.screen.InboxScreen
-import com.example.student_project.ui.screen.MyCoursesScreen
+import com.example.student_project.ui.screen.mycourses.MyCoursesScreen
 import com.example.student_project.ui.screen.details.CourseDetailsScreen
 import com.example.student_project.ui.screen.details.course.CourseLessonScreen
 import com.example.student_project.ui.screen.home.content.HomeScreen
@@ -85,7 +85,7 @@ fun Navigation(depContainer: DepContainer) {
                 depContainer.courseRepo,
             )
         }
-        composable(Screens.LearningScreen.route) { MyCoursesScreen(navController = navController) }
+        composable(Screens.LearningScreen.route) { MyCoursesScreen(navController = navController,depContainer.courseRepo) }
         composable(Screens.ProfileScreen.route) { ProfileScreen(navController = navController,depContainer.studentRepo) }
         composable(Screens.MentorFilterScreen.route) {
             // filled parcel object "FiltrationResult" and send it to search result screen

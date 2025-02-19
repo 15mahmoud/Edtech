@@ -461,15 +461,15 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
                 route = "learning_screen",
                 selectedIcon = imageVector,
                 unselectedIcon = ImageVector.vectorResource(id = R.drawable.courses_nav),
-                label = "My Courses",
+                label = "Coursaty",
             ),
             BottomNavItem(
-                route = "profile_screen",
+                route = "your_ai_screen",
                 selectedIcon = Icons.Filled.Person,
                 unselectedIcon = Icons.Outlined.Person,
                 label = "Your AI"),
             BottomNavItem(
-                route = "profile_screen",
+                route = "inbox_screen",
                 selectedIcon = Icons.Filled.Person,
                 unselectedIcon = Icons.Outlined.Person,
                 label = "Inbox"),
@@ -491,7 +491,7 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
                     selectedItemIndex = index
                     navController.navigate(bottomNavItem.route)
                 },
-                label = { Text(text = bottomNavItem.label) },
+                label = { Text(text = bottomNavItem.label, ) },
                 icon = {
                     Icon(
                         imageVector =

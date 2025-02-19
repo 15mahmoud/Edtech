@@ -4,13 +4,10 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -31,6 +27,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -59,13 +56,9 @@ import com.example.student_project.data.model.Instructor
 import com.example.student_project.data.model.User
 import com.example.student_project.data.repo.InstructorRepo
 import com.example.student_project.ui.navigation.Screens
-import com.example.student_project.ui.screen.home.content.CourseRaw
-import com.example.student_project.ui.screen.widgets.CourseColumn
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.editProfileTextColor
 import com.example.student_project.ui.theme.headLineColor
-import com.example.student_project.ui.theme.jopTitleColor
-import com.example.student_project.ui.theme.starFillingColor
 import com.example.student_project.ui.theme.unselectedButton
 import com.example.student_project.util.Constant
 
@@ -214,10 +207,11 @@ fun MentorDetailsScreen(
                         alignment = Alignment.CenterHorizontally
                     )
                 ) {
-                    Button(
+                    OutlinedButton(
                         shape = RoundedCornerShape(100.dp),
                         modifier = Modifier
-                            .border(2.dp, buttonColor, RoundedCornerShape(100.dp))
+                            .weight(.5f)
+//                            .border(1.dp, buttonColor, RoundedCornerShape(120.dp))
                             .shadow(4.dp, RoundedCornerShape(100.dp)),
                         onClick = {
 
@@ -225,20 +219,17 @@ fun MentorDetailsScreen(
                     ) {
                         Text(
                             text = "Message",
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleMedium,
                             fontSize = 18.sp,
                             color = Color.White,
                             fontWeight = FontWeight(700)
                         )
                     }
-                    Button(
+                    OutlinedButton(
                         shape = RoundedCornerShape(100.dp),
                         modifier = Modifier
-                            .border(
-                                2.dp,
-                                color = buttonColor,
-                                RoundedCornerShape(100.dp)
-                            )
+                            .weight(.5f)
+//                            .border(2.dp, color = buttonColor, RoundedCornerShape(120.dp))
                             .shadow(4.dp, RoundedCornerShape(100.dp)),
                         onClick = {
 
@@ -246,7 +237,7 @@ fun MentorDetailsScreen(
                     ) {
                         Text(
                             text = "Website",
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleMedium,
                             fontSize = 18.sp,
                             color = buttonColor,
                             fontWeight = FontWeight(700)
@@ -352,7 +343,11 @@ fun MentorDetailsScreen(
 }
 
 @Composable
-fun CourseColumnForMentorDetails(course: Course, context: Context, onClickListener: (String) -> Unit) {
+fun CourseColumnForMentorDetails(
+    course: Course,
+    context: Context,
+    onClickListener: (String) -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
@@ -364,8 +359,7 @@ fun CourseColumnForMentorDetails(course: Course, context: Context, onClickListen
             .fillMaxWidth()
             // .height(screenHeight * 15/100)
             .clickable { onClickListener(course.id) }
-            .shadow(4.dp, RoundedCornerShape(32.dp))
-        , colors = CardDefaults.cardColors(
+            .shadow(4.dp, RoundedCornerShape(32.dp)), colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
     ) {
