@@ -49,5 +49,9 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
          Result.runCatching { apiClient.saveCourse(ApiRequestWithCourseId(courseId)) }
     }
 
+    suspend fun getAllCourseProgress():Result<List<Course>?>{
+        return Result.runCatching { apiClient.getAllCourseProgress().data }
+    }
+
 
 }

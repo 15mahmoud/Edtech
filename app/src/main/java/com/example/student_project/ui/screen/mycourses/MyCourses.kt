@@ -1,0 +1,275 @@
+package com.example.student_project.ui.screen.mycourses
+
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TopAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.student_project.data.model.Course
+import com.example.student_project.data.repo.CourseRepo
+import com.example.student_project.ui.navigation.Screens
+import com.example.student_project.ui.screen.home.content.BottomNavBar
+import com.example.student_project.ui.theme.buttonColor
+import com.example.student_project.ui.theme.colorForProgressParFrom50To75
+import com.example.student_project.ui.theme.colorForProgressParFrom75To100
+import com.example.student_project.ui.theme.headLineColor
+import com.example.student_project.ui.theme.jopTitleColor
+import com.example.student_project.ui.theme.progressBar
+import com.example.student_project.ui.theme.unselectedButton
+import com.example.student_project.util.Constant
+
+@Composable
+fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
+    val selectedItemIndex by rememberSaveable { mutableStateOf(1) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+
+    var courseState by remember {
+        mutableStateOf<Result<List<Course>?>?>(null)
+    }
+    var ongoingButtonVisibilityState by remember {
+        mutableStateOf(true)
+    }
+    var completedButtonVisibilityState by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(scope) {
+        courseState = courseRepo.getAllCourseProgress()
+    }
+    Scaffold(
+        Modifier
+            .fillMaxSize()
+            .background(Color.White),
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
+                backgroundColor = Color.White,
+                title = {
+                    Text(
+                        text = "My Courses",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = headLineColor,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(700),
+                        modifier = Modifier.padding(Constant.paddingComponentFromScreen)
+                    )
+                })
+        },
+        bottomBar = { BottomNavBar(selectedItemIndex, navController) },
+    ) { innerPadding ->
+        Column(Modifier.padding(innerPadding)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = Constant.paddingComponentFromScreen,
+                        end = Constant.paddingComponentFromScreen,
+                        bottom = Constant.mediumPadding
+                    ),
+                horizontalArrangement = Arrangement.spacedBy(
+                    Constant.normalPadding,
+                    Alignment.CenterHorizontally
+                )
+            ) {
+                Button(colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                ), onClick = {
+                    ongoingButtonVisibilityState = true
+                    completedButtonVisibilityState = false
+                }) {
+                    Text(
+                        text = "Ongoing",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(600),
+                        color = if (ongoingButtonVisibilityState) buttonColor else unselectedButton
+                    )
+                }
+                Button(colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                ), onClick = {
+                    ongoingButtonVisibilityState = false
+                    completedButtonVisibilityState = true
+                }) {
+                    Text(
+                        text = "Completed",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(600),
+                        color = if (completedButtonVisibilityState) buttonColor else unselectedButton
+                    )
+                }
+            }
+            HorizontalDivider(
+                modifier = Modifier.padding(
+                    start = Constant.paddingComponentFromScreen,
+                    end = Constant.paddingComponentFromScreen
+                )
+            )
+            courseState?.onSuccess { courseList ->
+
+                AnimatedVisibility(visible = ongoingButtonVisibilityState) {
+                    LazyColumn {
+                        courseList?.let { course ->
+                            items(course.filter { it.totalLessons != it.completedLessons }) {item->
+                                CourseProgressColumn(course = item, context = context) {
+                                    navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                AnimatedVisibility(visible = completedButtonVisibilityState) {
+                    LazyColumn {
+                        courseList?.let { course ->
+                            items(course.filter { it.totalLessons == it.completedLessons }) {item->
+                                CourseProgressColumn(course = item, context = context) {
+                                    navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
+                                }
+                            }
+                        }
+                    }
+                }
+            }?.onFailure {
+                Toast.makeText(context, "Failed to load data", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+}
+
+@Composable
+fun CourseProgressColumn(course: Course, context: Context, onClickListener: (String) -> (Unit)) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    Card(
+        shape = RoundedCornerShape(32.dp),
+        modifier =
+        Modifier
+            .padding(top = Constant.mediumPadding)
+            .fillMaxWidth()
+            // .height(screenHeight * 15/100)
+            .clickable { onClickListener(course.id) }
+            .shadow(4.dp, RoundedCornerShape(32.dp)), colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            AsyncImage(
+                model = ImageRequest.Builder(context = context).crossfade(true)
+                    .data("").build(), contentDescription = "course image",
+                modifier = Modifier
+                    .width(screenWidth * 37 / 100)
+                    .height(screenHeight * 14 / 100)
+            )
+            Column {
+                Text(
+                    text = course.courseName,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 15.sp,
+                    color = buttonColor,
+                    modifier = Modifier.padding(
+                        start = Constant.smallPadding,
+                        top = Constant.smallPadding,
+                        bottom = Constant.mediumPadding
+                    ),
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+                    Text(
+                        text = course.completedLessons.toString() + "/" + course.totalLessons.toString(),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(5.dp).align(Alignment.CenterHorizontally),
+                        color = jopTitleColor,
+                       fontWeight = FontWeight(600)
+                    )
+                    LinearProgressIndicator(
+
+                        modifier = Modifier.width(175.dp),
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        color =  if (course.progressPercentage!! >0 && course.progressPercentage <=50) progressBar else if (course.progressPercentage in 50.0..75.0) colorForProgressParFrom50To75 else if (course.progressPercentage in 75.0..100.0) colorForProgressParFrom75To100 else MaterialTheme.colorScheme.surfaceVariant,
+                        progress = {
+                            course.progressPercentage.toFloat()
+                        }
+                    )
+
+
+
+//                HorizontalDivider()
+//                Row {
+//                    Text(
+//                        text = "${course.price}$",
+//                        style = MaterialTheme.typography.titleMedium,
+//                        fontSize = 15.sp,
+//                        modifier = Modifier.padding(5.dp),
+//                        color = buttonColor,
+//                    )
+//                    Spacer(modifier = Modifier.width(150.dp))
+//                    Icon(
+//                        imageVector = Icons.Filled.Star,
+//                        contentDescription = "rating star",
+//                        tint = starFillingColor,
+//                    )
+//                    Text(
+//                        // he didn't use rating
+//                        text = "4.5",
+//                        style = MaterialTheme.typography.titleMedium,
+//                        fontSize = 15.sp,
+//                        modifier = Modifier.padding(5.dp),
+//                        color = buttonColor,
+//                    )
+//                }
+//            }
+                //      }
+            }
+        }
+    }
+}

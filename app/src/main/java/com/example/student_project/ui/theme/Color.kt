@@ -1,5 +1,6 @@
 package com.example.student_project.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -10,7 +11,7 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val lightGreen = Color(0xFF32BCA3)
+val progressBar = Color(0xFF0FC39F)
 val lightOrange = Color(0xFFFFDDA0)
 val lightGray = Color(0xFFCBD5E1)
 val headLineColor = Color(0xFF212121)
@@ -31,3 +32,5 @@ val ambientShadowColor = Color(0xFF00008B)
 val anotherColorForFillingStar = Color(0xFF4ADE80)
 val addReviewTextColor = Color(0xFFF0F0F0)
 val cancelButton = Color(0xFFEBEFFE)
+val colorForProgressParFrom50To75 = Color(0xFFEBEFFE)
+val colorForProgressParFrom75To100 = Color(0xFFFF697E)

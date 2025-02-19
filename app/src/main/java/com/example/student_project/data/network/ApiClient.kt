@@ -54,7 +54,7 @@ interface ApiClient {
 
     //this too
     @POST("course/getInstructorDetails")
-    suspend fun getInstructorDetails(@Body instructorId: ApiRequestWithInstructorId):BaseResponse<Instructor>
+    suspend fun getInstructorDetails(@Body instructorId: ApiRequestWithInstructorId): BaseResponse<Instructor>
 
     //we will do it too
     @GET("profile/getSavedCourses")
@@ -63,6 +63,9 @@ interface ApiClient {
     //this one will remove and we will add get all course progress
     @GET("profile/getEnrolledCourses")
     suspend fun getEnrolledCourses(): BaseResponse<List<Course>>
+
+    @GET("course/getAllCoursesProgress")
+    suspend fun getAllCourseProgress(): BaseResponse<List<Course>>
 
 
     @GET("auth/all-instructors")
