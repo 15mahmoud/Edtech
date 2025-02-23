@@ -219,6 +219,11 @@ const CourseProgress = require("../models/courseProgress");
 
 const { default: mongoose } = require("mongoose");
 
+
+
+
+
+
 exports.capturePayment = async (req, res) => {
   const { coursesId } = req.body;
   const userId = req.user.id;
@@ -274,7 +279,7 @@ exports.capturePayment = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Student enrolled successfully without payment",
+      data: "Student enrolled successfully without payment",
     });
   } catch (error) {
     console.log(error);
@@ -297,7 +302,6 @@ exports.verifyPayment = async (req, res) => {
   try {
     for (const courseId of coursesId) {
       const course = await Course.findById(courseId);
-
       if (!course) {
         return res.status(404).json({
           success: false,
@@ -305,25 +309,16 @@ exports.verifyPayment = async (req, res) => {
         });
       }
 
-      await Course.findByIdAndUpdate(courseId, {
-        $push: { studentsEnrolled: userId },
-      });
-
-      const courseProgress = await CourseProgress.create({
-        courseID: courseId,
-        userId: userId,
-        completedVideos: [],
-      });
-
-      await User.findByIdAndUpdate(userId, {
-        $push: { courses: courseId, courseProgress: courseProgress._id },
-      });
+      // تحقق مما إذا كان المستخدم مسجلاً بالفعل في الكورس
+      const isEnrolled = course.studentsEnrolled.some(
+        (id) => id.toString() === userId
+      );
+      if (!isEnrolled) {
+        return res.status(200).json({ success: true, data: false });
+      }
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Student enrolled successfully without payment verification",
-    });
+    return res.status(200).json({ success: true, data: true });
   } catch (error) {
     console.log(error);
     return res

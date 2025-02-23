@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { auth } = require("../middleware/auth");
+const { auth ,isInstructor } = require("../middleware/auth");
 const {
   createMeeting,
   getAllMeetings,
@@ -9,10 +9,12 @@ const {
 } = require("../controllers/meeting");
 
 // إنشاء اجتماع جديد
-router.post("/create", auth, createMeeting);
+router.post("/create", auth,isInstructor, createMeeting);
 
 // جلب جميع الاجتماعات الخاصة بالمستخدم
 router.get("/all", auth, getAllMeetings);
+
+
 
 // تحديث تفاصيل الاجتماع
 router.put("/update/:id", auth, updateMeeting);

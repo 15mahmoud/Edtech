@@ -7,11 +7,9 @@ const mongoose = require('mongoose');
 
 exports.createRating = async (req, res) => {
   try {
-    // get data
     const { rating, review, courseId } = req.body;
     const userId = req.user.id;
 
-    // validation
     if (!rating || !review || !courseId) {
       return res.status(401).json({
         success: false,
@@ -19,7 +17,15 @@ exports.createRating = async (req, res) => {
       });
     }
 
-    // check user is enrolled in course
+    // ✅ تحويل rating إلى Number لضمان عدم حدوث أخطاء في الحساب
+    const numericRating = Number(rating);
+    if (isNaN(numericRating) || numericRating < 1 || numericRating > 5) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid rating value. Rating must be between 1 and 5.",
+      });
+    }
+
     const courseDetails = await Course.findOne({
       _id: courseId,
       studentsEnrolled: userId,
@@ -32,7 +38,6 @@ exports.createRating = async (req, res) => {
       });
     }
 
-    // check if user already reviewed
     const alreadyReviewed = await RatingAndReview.findOne({
       course: courseId,
       user: userId,
@@ -45,39 +50,36 @@ exports.createRating = async (req, res) => {
       });
     }
 
-    // create rating entry in DB
     const ratingReview = await RatingAndReview.create({
       user: userId,
       course: courseId,
-      rating,
+      rating: numericRating, // ✅ حفظ الرقم بعد التحويل
       review,
     });
 
-    // link this rating to course
     await Course.findByIdAndUpdate(courseId, {
       $push: { ratingAndReviews: ratingReview._id },
     });
 
-    // update course average rating
+    // ✅ تحديث التقييم المتوسط ليكون صحيحاً
     const result = await RatingAndReview.aggregate([
       { $match: { course: new mongoose.Types.ObjectId(courseId) } },
       { $group: { _id: null, averageRating: { $avg: "$rating" } } },
     ]);
 
-    let newAverageRating = 0; // Default value
-    if (result.length > 0 && result[0].averageRating) {
-      newAverageRating = result[0].averageRating;
-    }
+    const newAverageRating = result.length > 0 ? result[0].averageRating : 0;
 
-    // Update the course with the new average rating
     await Course.findByIdAndUpdate(courseId, {
       averageRating: newAverageRating,
     });
 
     return res.status(200).json({
       success: true,
-      data: ratingReview,
-      averageRating: newAverageRating, // Return the updated average rating
+      data: {
+        ...ratingReview.toObject(),
+        newAverageRating,
+      },
+      
       message: "Rating and Review created Successfully",
     });
   } catch (error) {
@@ -89,8 +91,6 @@ exports.createRating = async (req, res) => {
     });
   }
 };
-
-
 // exports.createRating = async (req, res) => {
 //   try {
 //     // get data
@@ -150,8 +150,12 @@ exports.createRating = async (req, res) => {
 //       { $group: { _id: null, averageRating: { $avg: "$rating" } } },
 //     ]);
 
-//     const newAverageRating = result.length > 0 ? result[0].averageRating : 0;
+//     let newAverageRating = 0; // Default value
+//     if (result.length > 0 && result[0].averageRating) {
+//       newAverageRating = result[0].averageRating;
+//     }
 
+//     // Update the course with the new average rating
 //     await Course.findByIdAndUpdate(courseId, {
 //       averageRating: newAverageRating,
 //     });
@@ -159,7 +163,7 @@ exports.createRating = async (req, res) => {
 //     return res.status(200).json({
 //       success: true,
 //       data: ratingReview,
-//       averageRating: newAverageRating,
+//       averageRating: newAverageRating, // Return the updated average rating
 //       message: "Rating and Review created Successfully",
 //     });
 //   } catch (error) {
@@ -177,18 +181,19 @@ exports.createRating = async (req, res) => {
 
 
 
+
+
+
 // ================ Get Average Rating ================
+
 exports.getAverageRating = async (req, res) => {
   try {
-    // get course ID
     const courseId = req.body.courseId;
 
-    // calculate avg rating with a check for valid ratings
     const result = await RatingAndReview.aggregate([
       {
         $match: {
           course: new mongoose.Types.ObjectId(courseId),
-          rating: { $gte: 1, $lte: 5 }, // تأكد من أن التقييم بين 1 و 5
         },
       },
       {
@@ -199,19 +204,13 @@ exports.getAverageRating = async (req, res) => {
       },
     ]);
 
-    // return rating
-    if (result.length > 0) {
-      return res.status(200).json({
-        success: true,
-        averageRating: result[0].averageRating,
-      });
-    }
-
-    // if no valid rating/Review exist
     return res.status(200).json({
       success: true,
-      message: "Average Rating is 0, no valid ratings given till now",
-      averageRating: 0,
+      averageRating: result.length > 0 ? result[0].averageRating : 0,
+      message:
+        result.length > 0
+          ? ""
+          : "Average Rating is 0, no valid ratings given till now",
     });
   } catch (error) {
     console.log(error);

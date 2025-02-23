@@ -152,40 +152,126 @@ exports.createCourse = async (req, res) => {
 // };
 
 
+// exports.getAllCourses = async (req, res) => {
+//     try {
+//         const allCourses = await Course.find(
+//           {},
+//           {
+//             courseName: 1,
+//             courseDescription: 1,
+//             price: 1,
+//             thumbnail: 1,
+//             instructor: 1,
+//           // ratingAndReviews: 1,
+//             studentsEnrolled: 1
+//           }
+//         )
+//           .populate({
+//             path: "instructor",
+//             select: "firstName lastName email image",
+//           })
+//           .exec();
+
+//         return res.status(200).json({
+//             success: true,
+//             data: allCourses,
+//             message: "Data for all courses fetched successfully"
+//         });
+
+//     } catch (error) {
+//         console.log("Error while fetching data of all courses", error);
+//         res.status(500).json({
+//             success: false,
+//             error: error.message,
+//             message: "Error while fetching data of all courses",
+//         });
+//     }
+// };
 exports.getAllCourses = async (req, res) => {
-    try {
-        const allCourses = await Course.find(
-          {},
-          {
-            courseName: 1,
-            courseDescription: 1,
-            price: 1,
-            thumbnail: 1,
-            instructor: 1,
-          // ratingAndReviews: 1,
-            studentsEnrolled: 1
-          }
-        )
-          .populate({
-            path: "instructor",
-            select: "firstName lastName email image",
-          })
-          .exec();
+  try {
+    const allCourses = await Course.aggregate([
+      {
+        $lookup: {
+          from: "ratingandreviews",
+          localField: "_id",
+          foreignField: "course",
+          as: "ratings",
+        },
+      },
+      {
+        $addFields: {
+          averageRating: {
+            $cond: {
+              if: { $gt: [{ $size: "$ratings" }, 0] },
+              then: { $avg: "$ratings.rating" },
+              else: 0,
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "instructor",
+          foreignField: "_id",
+          as: "instructor",
+        },
+      },
+      {
+        $unwind: "$instructor",
+      },
+      //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $unwind: {
+          path: "$category",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      //........>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      {
+        $project: {
+          courseName: 1,
+          courseDescription: 1,
+          price: 1,
+          thumbnail: 1,
+          studentsEnrolled: 1,
+          averageRating: 1,
+          //>>>>>>>>>>>>>>>>>>>>>>>
+          category: {
+            _id: "$category._id",
+            name: "$category.name",
+            description: "$category.description",
+          },
+          //>>>>>>>>>>>>>>>>>>>>>>>
+          "instructor.firstName": 1,
+          "instructor.lastName": 1,
+          "instructor.email": 1,
+          "instructor.image": 1,
+        },
+      },
+    ]);
 
-        return res.status(200).json({
-            success: true,
-            data: allCourses,
-            message: "Data for all courses fetched successfully"
-        });
-
-    } catch (error) {
-        console.log("Error while fetching data of all courses", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-            message: "Error while fetching data of all courses",
-        });
-    }
+    return res.status(200).json({
+      success: true,
+      data: allCourses,
+      message: "Data for all courses fetched successfully",
+    });
+  } catch (error) {
+    console.log("Error while fetching data of all courses", error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Error while fetching data of all courses",
+    });
+  }
 };
 
 
@@ -273,9 +359,6 @@ exports.getCourseDetails = async (req, res) => {
 
 
 // ================ Get Full Course Details ================
-
-
-
 exports.getFullCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body;
@@ -284,10 +367,26 @@ exports.getFullCourseDetails = async (req, res) => {
     const courseDetails = await Course.findOne({ _id: courseId })
       .populate({
         path: "instructor",
-        populate: { path: "additionalDetails" },
+        populate: [
+          { path: "additionalDetails" },
+          { path: "courses", select: "courseName thumbnail" }, // تعديل هنا لإحضار الكورسات كـ List of Objects
+        ],
       })
-      .populate("category")
-      .populate("ratingAndReviews")
+      // .populate({
+      //   path: "instructor",
+      //   populate: { path: "additionalDetails" },
+      // })
+      .populate({
+        path: "category",
+        select: "-courses",
+      })
+      .populate({
+        path: "ratingAndReviews",
+        populate: {
+          path: "user",
+          select: "firstName lastName image",
+        },
+      })
       .populate({
         path: "courseContent",
         populate: { path: "subSection" },
@@ -306,7 +405,7 @@ exports.getFullCourseDetails = async (req, res) => {
       userId: userId,
     });
 
-    // حساب المدة الإجمالية
+    
     let totalDurationInSeconds = 0;
     courseDetails.courseContent.forEach((content) => {
       content.subSection.forEach((subSection) => {
@@ -319,7 +418,7 @@ exports.getFullCourseDetails = async (req, res) => {
     return res.status(200).json({
       success: true,
       data: {
-        ...courseDetails.toObject(), // تحويل بيانات الكورس إلى كائن عادي بدون courseDetails
+        ...courseDetails.toObject(), 
         totalDuration,
         completedVideos: courseProgressCount?.completedVideos || [],
       },
@@ -332,6 +431,7 @@ exports.getFullCourseDetails = async (req, res) => {
     });
   }
 };
+
 
 
 
@@ -412,31 +512,120 @@ exports.editCourse = async (req, res) => {
 
 
 // ================ Get a list of Course for a given Instructor ================
-exports.getInstructorCourses = async (req, res) => {
-    try {
-        // Get the instructor ID from the authenticated user or request body
-        const instructorId = req.user.id
 
-        // Find all courses belonging to the instructor
-        const instructorCourses = await Course.find({ instructor: instructorId, }).sort({ createdAt: -1 })
+exports.getInstructorWithCourses = async (req, res) => {
+  try {
+    const { instructorId } = req.body;
 
-
-        // Return the instructor's courses
-        res.status(200).json({
-            success: true,
-            data: instructorCourses,
-            // totalDurationInSeconds:totalDurationInSeconds,
-            message: 'Courses made by Instructor fetched successfully'
-        })
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({
-            success: false,
-            message: "Failed to retrieve instructor courses",
-            error: error.message,
-        })
+    if (!instructorId) {
+      return res.status(400).json({
+        success: false,
+        message: "Instructor ID is required",
+      });
     }
-}
+
+    let instructor = await User.findOne({
+      _id: instructorId,
+      accountType: "Instructor",
+    }).populate("additionalDetails");
+
+    if (!instructor) {
+      return res.status(404).json({
+        success: false,
+        message: "Instructor not found",
+      });
+    }
+
+    // تحويل المدرب إلى كائن عادي لحذف `courses`
+    instructor = instructor.toObject();
+    delete instructor.courses; // حذف الكورسات من بيانات المدرب
+
+    // جلب قائمة الكورسات
+    const courses = await Course.find({ instructor: instructorId }).select(
+      "courseName _id thumbnail"
+    );
+
+    // استخراج الطلاب بدون تكرار
+    const studentIds = new Set();
+    const coursesWithStudents = await Course.find({
+      instructor: instructorId,
+    }).select("studentsEnrolled");
+
+    coursesWithStudents.forEach((course) => {
+      course.studentsEnrolled.forEach((student) => {
+        studentIds.add(student.toString());
+      });
+    });
+
+    // جلب بيانات الطلاب الفريدة
+    const uniqueStudents = await User.find({
+      _id: { $in: Array.from(studentIds) },
+    }).select("firstName lastName email image _id");
+
+    res.status(200).json({
+      success: true,
+      data: {
+        instructor, // المدرب بدون courses
+        courses, // قائمة الكورسات
+        students: uniqueStudents, // قائمة الطلاب
+      },
+      message: "Instructor details, courses, and students fetched successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve instructor details, courses, and students",
+      error: error.message,
+    });
+  }
+};
+// exports.getInstructorWithCourses = async (req, res) => {
+//   try {
+//     const { instructorId } = req.body; // استلام ID من الـ body
+
+//     // التأكد من تمرير معرف المدرب
+//     if (!instructorId) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Instructor ID is required",
+//       });
+//     }
+
+//     // البحث عن المدرب مع بياناته وملفه الشخصي وكورسات مختصرة
+//     const instructor = await User.findOne({
+//       _id: instructorId,
+//       accountType: "Instructor",
+//     })
+//       .populate("additionalDetails") // جلب بيانات Profile
+//       .populate({
+//         path: "courses",
+//         select: "courseName _id thumbnail",
+//       });
+
+//     // التحقق مما إذا كان المدرب موجودًا
+//     if (!instructor) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Instructor not found",
+//       });
+//     }
+
+//     // إرجاع بيانات المدرب فقط (الكورسات موجودة داخل `instructor`)
+//     res.status(200).json({
+//       success: true,
+//       data: instructor, // لا نكرر الكورسات في response
+//       message: "Instructor details and courses fetched successfully",
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Failed to retrieve instructor details and courses",
+//       error: error.message,
+//     });
+//   }
+// };
 
 
 

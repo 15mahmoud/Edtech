@@ -171,7 +171,7 @@ exports.signup = async (req, res) => {
         accountType: accountType,
         additionalDetails: profileDetails._id,
         approved: approved,
-        image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
+        // image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
       });
 
       // return success message
@@ -244,7 +244,7 @@ exports.login = async (req, res) => {
             res.cookie('token', token, cookieOptions).status(200).json({
                 success: true,
                 data: user,
-                //token,
+                // token,
                 message: 'User logged in successfully'
             });
         }

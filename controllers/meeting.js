@@ -1,25 +1,26 @@
 const Meeting = require("../models/Meeting");
 const User = require("../models/user");
+const mongoose = require("mongoose");
 
 /**
  *  Fetch all meetings for the current user
  */
 const getAllMeetings = async (req, res) => {
   try {
-    let meetings = [];
+    let data = [];
 
-    // Check user role and fetch relevant meetings
     if (req.user.accountType === "Instructor") {
-      meetings = await Meeting.find({ host: req.user._id })
+      data = await Meeting.find({ host: req.user._id })
         .populate("host", "firstName lastName email")
-        .populate("participants.user", "firstName lastName email");
+        .select("-participants"); // استبعاد participants
     } else if (req.user.accountType === "Student") {
-      meetings = await Meeting.find({ "participants.user": req.user._id })
+      const userId = new mongoose.Types.ObjectId(req.user.id);
+      data = await Meeting.find({ "participants.user": userId })
         .populate("host", "firstName lastName email")
-        .populate("participants.user", "firstName lastName email");
+        .select("-participants"); // استبعاد participants
     }
 
-    res.status(200).json({ success: true, meetings });
+    res.status(200).json({ success: true, data });
   } catch (err) {
     console.error("Error fetching meetings:", err);
     res
@@ -61,12 +62,12 @@ const createMeeting = async (req, res) => {
     // إعادة جلب البيانات بعد الحفظ وضبط populate
     const populatedMeeting = await Meeting.findById(newMeeting._id)
       .populate("host", "firstName lastName email")
-      .populate("participants.user", "firstName lastName email");
+      .populate("participants.user", "firstName lastName email image");
 
     res.status(201).json({
       success: true,
       message: "Meeting created",
-      meeting: populatedMeeting,
+      data: populatedMeeting,
     });
   } catch (err) {
     console.error("Error creating meeting:", err);
@@ -105,19 +106,16 @@ const updateMeeting = async (req, res) => {
       .populate("host", "firstName lastName email")
       .populate("participants.user", "firstName lastName email");
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Meeting updated",
-        meeting: populatedMeeting,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Meeting updated",
+      meeting: populatedMeeting,
+    });
   } catch (err) {
     console.error("Error updating meeting:", err);
     res.status(500).json({ success: false, message: "Error updating meeting" });
   }
 };
-
 
 /**
  *  Update meeting minutes

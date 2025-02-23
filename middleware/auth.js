@@ -9,8 +9,14 @@ require('dotenv').config();
 exports.auth = (req, res, next) => {
     try {
         // extract token by anyone from this 3 ways
-        const token = req.body?.token || req.cookies.token || req.header('Authorization').replace('Bearer ', '');
+        // const token = req.body?.token || req.cookies.token || req.header('Authorization').replace('Bearer ', '');
+const authHeader = req.header("Authorization");
+const token =
+  authHeader && authHeader.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : null;
 
+        
         // if token is missing
         if (!token) {
             return res.status(401).json({
@@ -140,3 +146,79 @@ exports.isAdmin = (req, res, next) => {
 }
 
 
+// const jwt = require("jsonwebtoken");
+// require("dotenv").config();
+
+// exports.auth = (req, res, next) => {
+//   try {
+//     const authHeader = req.header("Authorization");
+//     const token =
+//       authHeader && authHeader.startsWith("Bearer ")
+//         ? authHeader.split(" ")[1]
+//         : null;
+
+//     if (!token) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "Unauthorized: Token is missing",
+//       });
+//     }
+
+//     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//       if (err) {
+//         console.error("Error verifying token:", err);
+//         return res.status(401).json({
+//           success: false,
+//           message: "Unauthorized: Invalid token",
+//         });
+//       }
+
+//       if (!decoded || !decoded.id) {
+//         return res.status(401).json({
+//           success: false,
+//           message: "Unauthorized: User not found in token",
+//         });
+//       }
+
+//       req.user = decoded;
+//       console.log("Authenticated User ID:", req.user.id);
+//       next();
+//     });
+//   } catch (error) {
+//     console.error("Error in auth middleware:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error in authentication",
+//     });
+//   }
+// };
+
+// exports.isStudent = (req, res, next) => {
+//   if (req.user?.accountType !== "Student") {
+//     return res.status(403).json({
+//       success: false,
+//       message: "Forbidden: Access restricted to students only",
+//     });
+//   }
+//   next();
+// };
+
+// exports.isInstructor = (req, res, next) => {
+//   if (req.user?.accountType !== "Instructor") {
+//     return res.status(403).json({
+//       success: false,
+//       message: "Forbidden: Access restricted to instructors only",
+//     });
+//   }
+//   next();
+// };
+
+// exports.isAdmin = (req, res, next) => {
+//   if (req.user?.accountType !== "Admin") {
+//     return res.status(403).json({
+//       success: false,
+//       message: "Forbidden: Access restricted to admins only",
+//     });
+//   }
+//   next();
+// };

@@ -5,17 +5,20 @@ const router = express.Router();
 
 // course controllers 
 const {
-    createCourse,
-    getCourseDetails,
-    getAllCourses,
-    getFullCourseDetails,
-    editCourse,
-    deleteCourse,
-    getInstructorCourses,
+  createCourse,
+  getCourseDetails,
+  getAllCourses,
+  getFullCourseDetails,
+  editCourse,
+  deleteCourse,
+  getInstructorWithCourses,
+} = require("../controllers/course");
 
-} = require('../controllers/course')
-
-const { updateCourseProgress } = require('../controllers/courseProgress')
+const {
+  updateCourseProgress,
+  getProgressPercentage,
+  getAllCoursesProgress,
+} = require("../controllers/courseProgress");
 
 // categories Controllers
 const {
@@ -87,7 +90,7 @@ router.get('/getAllCourses', getAllCourses);
 // get full course details
 router.post('/getFullCourseDetails', auth, getFullCourseDetails);
 // Get all Courses Under a Specific Instructor
-router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
+router.post("/getInstructorDetails", auth, getInstructorWithCourses);
 
 
 // Edit Course routes 
@@ -98,6 +101,8 @@ router.delete("/deleteCourse", auth, isInstructor, deleteCourse)
 
 // update Course Progress
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress)
+router.get("/getCourseProgress", auth, isStudent, getProgressPercentage);
+router.get("/getAllCoursesProgress", auth, isStudent, getAllCoursesProgress);
 
 
 
