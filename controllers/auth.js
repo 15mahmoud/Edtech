@@ -69,204 +69,400 @@ exports.sendOTP = async (req, res) => {
 }
 
 
-// ================ SIGNUP ================
-exports.signup = async (req, res) => {
-    try {
-      // extract data
-      const {
-        firstName,
-        lastName,
-        email,
-        password,
-        confirmPassword,
-        accountType,
-        contactNumber,
-        // otp,
-      } = req.body;
 
-      // validation
-      if (
-        !firstName ||
-        !lastName ||
-        !email ||
-        !password ||
-        !confirmPassword ||
-        !accountType 
-        // !otp
-      ) {
-        return res.status(401).json({
-          success: false,
-          message: "All fields are required..!",
-        });
-      }
 
-      // check both pass matches or not
-      if (password !== confirmPassword) {
-        return res.status(400).json({
-          success: false,
-          messgae:
-            "passowrd & confirm password does not match, Please try again..!",
-        });
-      }
 
-      // check user have registered already
-      const checkUserAlreadyExits = await User.findOne({ email });
 
-      // if yes ,then say to login
-      if (checkUserAlreadyExits) {
-        return res.status(400).json({
-          success: false,
-          message: "User registered already, go to Login Page",
-        });
-      }
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.query;
+    const user = await User.findOne({ verificationToken: token });
 
-      // find most recent otp stored for user in DB
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>commented>>>>>>>>>>>>>
-    //   const recentOtp = await OTP.findOne({ email }).sort({ createdAt: -1 }).limit(1);
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>commented>>>>>>>>>>>>>
-      // console.log('recentOtp ', recentOtp)
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired token" });
+    }
 
-      // .sort({ createdAt: -1 }):
-      // It's used to sort the results based on the createdAt field in descending order (-1 means descending).
-      // This way, the most recently created OTP will be returned first.
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    await user.save();
 
-      // .limit(1): It limits the number of documents returned to 1.
-
-      //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>commented>>>>>>>>>>>>>
-    //   // if otp not found
-    //   if (!recentOtp || recentOtp.length == 0) {
-    //       return res.status(400).json({
-    //           success: false,
-    //           message: 'Otp not found in DB, please try again'
-    //       });
-    //   } else if (otp !== recentOtp.otp) {
-    //       // otp invalid
-    //       return res.status(400).json({
-    //           success: false,
-    //           message: 'Invalid Otp'
-    //       })
-    //   }
-      //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>commented>>>>>>>>>>>>>
-      // hash - secure passoword
-      let hashedPassword = await bcrypt.hash(password, 10);
-
-      // additionDetails
-      const profileDetails = await Profile.create({
-        gender: null,
-        dateOfBirth: null,
-        about: null,
-        contactNumber: null,
-      });
-
-      let approved = "";
-      approved === "Instructor" ? (approved = false) : (approved = true);
-
-      // create entry in DB
-      const userData = await User.create({
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-        contactNumber,
-        accountType: accountType,
-        additionalDetails: profileDetails._id,
-        approved: approved,
-        // image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
-      });
-
-      // return success message
-      res.status(200).json({
+    res
+      .status(200)
+      .json({
         success: true,
-        message: "User Registered Successfully",
+        message: "Email verified successfully. You can now log in.",
+      });
+  } catch (error) {
+    console.log("Error verifying email");
+    console.log(error);
+    res.status(500).json({ success: false, message: "Error verifying email" });
+  }
+};
+
+
+// ================ SIGNUP ================
+const sendEmail = require("../utils/mailSender.js"); // استيراد دالة إرسال الإيميل
+const crypto = require("crypto"); // لإنشاء رمز التحقق العشوائي
+
+exports.signup = async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      accountType,
+      contactNumber,
+    } = req.body;
+
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !accountType
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: "All fields are required except contactNumber.",
       });
     }
 
-    catch (error) {
-        console.log('Error while registering user (signup)');
-        console.log(error)
-        res.status(401).json({
-            success: false,
-            error: error.message,
-            messgae: 'User cannot be registered , Please try again..!'
-        })
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Password & Confirm Password do not match, Please try again..!",
+      });
     }
-}
+
+    const checkUserAlreadyExits = await User.findOne({ email });
+
+    if (checkUserAlreadyExits) {
+      return res.status(400).json({
+        success: false,
+        message: "User registered already, go to Login Page",
+      });
+    }
+
+    let hashedPassword = await bcrypt.hash(password, 10);
+
+    const profileDetails = await Profile.create({
+      gender: null,
+      dateOfBirth: null,
+      about: null,
+      contactNumber: contactNumber || null, // الآن contactNumber ليس إجباريًا
+    });
+
+    let approved = accountType === "Instructor" ? false : true;
+
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
+    const userData = await User.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      contactNumber: contactNumber || null, // هنا أيضًا للتأكد
+      accountType,
+      additionalDetails: profileDetails._id,
+      approved,
+      verificationToken,
+      isVerified: false,
+    });
+
+    const verificationLink = `${process.env.CLIENT_URL}/api/v1/auth/verify-email?token=${verificationToken}`;
+
+    await sendEmail(
+      email,
+      "Verify Your Email",
+      `Click the link to verify your email: ${verificationLink}`
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "User Registered Successfully. Please verify your email.",
+    });
+  } catch (error) {
+    console.log("Error while registering user (signup)", error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "User cannot be registered, please try again..!",
+    });
+  }
+};
+
+
+
+// exports.signup = async (req, res) => {
+//     try {
+//       // extract data
+//       const {
+//         firstName,
+//         lastName,
+//         email,
+//         password,
+//         confirmPassword,
+//         accountType,
+//         contactNumber,
+//         // otp,
+//       } = req.body;
+
+//       // validation
+//       if (
+//         !firstName ||
+//         !lastName ||
+//         !email ||
+//         !password ||
+//         !confirmPassword ||
+//         !accountType 
+//         // !otp
+//       ) {
+//         return res.status(401).json({
+//           success: false,
+//           message: "All fields are required..!",
+//         });
+//       }
+
+//       // check both pass matches or not
+//       if (password !== confirmPassword) {
+//         return res.status(400).json({
+//           success: false,
+//           messgae:
+//             "passowrd & confirm password does not match, Please try again..!",
+//         });
+//       }
+
+//       // check user have registered already
+//       const checkUserAlreadyExits = await User.findOne({ email });
+
+//       // if yes ,then say to login
+//       if (checkUserAlreadyExits) {
+//         return res.status(400).json({
+//           success: false,
+//           message: "User registered already, go to Login Page",
+//         });
+//       }
+
+//       // find most recent otp stored for user in DB
+// //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>commented>>>>>>>>>>>>>
+//     //   const recentOtp = await OTP.findOne({ email }).sort({ createdAt: -1 }).limit(1);
+// //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>commented>>>>>>>>>>>>>
+//       // console.log('recentOtp ', recentOtp)
+
+//       // .sort({ createdAt: -1 }):
+//       // It's used to sort the results based on the createdAt field in descending order (-1 means descending).
+//       // This way, the most recently created OTP will be returned first.
+
+//       // .limit(1): It limits the number of documents returned to 1.
+
+//       //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>commented>>>>>>>>>>>>>
+//     //   // if otp not found
+//     //   if (!recentOtp || recentOtp.length == 0) {
+//     //       return res.status(400).json({
+//     //           success: false,
+//     //           message: 'Otp not found in DB, please try again'
+//     //       });
+//     //   } else if (otp !== recentOtp.otp) {
+//     //       // otp invalid
+//     //       return res.status(400).json({
+//     //           success: false,
+//     //           message: 'Invalid Otp'
+//     //       })
+//     //   }
+//       //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>commented>>>>>>>>>>>>>
+//       // hash - secure passoword
+//       let hashedPassword = await bcrypt.hash(password, 10);
+
+//       // additionDetails
+//       const profileDetails = await Profile.create({
+//         gender: null,
+//         dateOfBirth: null,
+//         about: null,
+//         contactNumber: null,
+//       });
+
+//       let approved = "";
+//       approved === "Instructor" ? (approved = false) : (approved = true);
+
+//       // create entry in DB
+//       const userData = await User.create({
+//         firstName,
+//         lastName,
+//         email,
+//         password: hashedPassword,
+//         contactNumber,
+//         accountType: accountType,
+//         additionalDetails: profileDetails._id,
+//         approved: approved,
+//         // image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
+//       });
+
+//       // return success message
+//       res.status(200).json({
+//         success: true,
+//         message: "User Registered Successfully",
+//       });
+//     }
+
+//     catch (error) {
+//         console.log('Error while registering user (signup)');
+//         console.log(error)
+//         res.status(401).json({
+//             success: false,
+//             error: error.message,
+//             messgae: 'User cannot be registered , Please try again..!'
+//         })
+//     }
+// }
 
 
 // ================ LOGIN ================
 exports.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-        // validation
-        if (!email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: 'All fields are required'
-            });
-        }
-
-        // check user is registered and saved data in DB
-        let user = await User.findOne({ email }).populate('additionalDetails');
-
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'You are not registered with us'
-            });
-        }
-
-
-        // comapare given password and saved password from DB
-        if (await bcrypt.compare(password, user.password)) {
-            const payload = {
-                email: user.email,
-                id: user._id,
-                accountType: user.accountType // This will help to check whether user have access to route, while authorzation
-            };
-
-            // Generate token 
-            const token = jwt.sign(payload, process.env.JWT_SECRET, {
-                expiresIn: "24h",
-            });
-
-            user = user.toObject();
-            user.token = token;
-            user.password = undefined; // we have remove password from object, not DB
-
-
-            // cookie
-            const cookieOptions = {
-                expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days
-                httpOnly: true
-            }
-
-            res.cookie('token', token, cookieOptions).status(200).json({
-                success: true,
-                data: user,
-                // token,
-                message: 'User logged in successfully'
-            });
-        }
-        // password not match
-        else {
-            return res.status(401).json({
-                success: false,
-                message: 'Password not matched'
-            });
-        }
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
     }
 
-    catch (error) {
-        console.log('Error while Login user');
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-            messgae: 'Error while Login user'
-        })
+    let user = await User.findOne({ email }).populate("additionalDetails");
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "You are not registered with us" });
     }
-}
+
+    if (!user.isVerified) {
+      return res
+        .status(401)
+        .json({
+          success: false,
+          message: "Please verify your email before logging in.",
+        });
+    }
+
+    if (await bcrypt.compare(password, user.password)) {
+      const payload = {
+        email: user.email,
+        id: user._id,
+        accountType: user.accountType,
+      };
+
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "24h",
+      });
+
+      user = user.toObject();
+      user.token = token;
+      user.password = undefined;
+
+      const cookieOptions = {
+        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        httpOnly: true,
+      };
+
+      res
+        .cookie("token", token, cookieOptions)
+        .status(200)
+        .json({
+          success: true,
+          data: user,
+          message: "User logged in successfully",
+        });
+    } else {
+      return res
+        .status(401)
+        .json({ success: false, message: "Password not matched" });
+    }
+  } catch (error) {
+    console.log("Error while Login user");
+    console.log(error);
+    res.status(500).json({ success: false, message: "Error while Login user" });
+  }
+};
+
+// exports.login = async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+
+//         // validation
+//         if (!email || !password) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: 'All fields are required'
+//             });
+//         }
+
+//         // check user is registered and saved data in DB
+//         let user = await User.findOne({ email }).populate('additionalDetails');
+
+//         if (!user) {
+//             return res.status(401).json({
+//                 success: false,
+//                 message: 'You are not registered with us'
+//             });
+//         }
+
+
+//         // comapare given password and saved password from DB
+//         if (await bcrypt.compare(password, user.password)) {
+//             const payload = {
+//                 email: user.email,
+//                 id: user._id,
+//                 accountType: user.accountType // This will help to check whether user have access to route, while authorzation
+//             };
+
+//             // Generate token 
+//             const token = jwt.sign(payload, process.env.JWT_SECRET, {
+//                 expiresIn: "24h",
+//             });
+
+//             user = user.toObject();
+//             user.token = token;
+//             user.password = undefined; // we have remove password from object, not DB
+
+
+//             // cookie
+//             const cookieOptions = {
+//                 expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days
+//                 httpOnly: true
+//             }
+
+//             res.cookie('token', token, cookieOptions).status(200).json({
+//                 success: true,
+//                 data: user,
+//                 // token,
+//                 message: 'User logged in successfully'
+//             });
+//         }
+//         // password not match
+//         else {
+//             return res.status(401).json({
+//                 success: false,
+//                 message: 'Password not matched'
+//             });
+//         }
+//     }
+
+//     catch (error) {
+//         console.log('Error while Login user');
+//         console.log(error);
+//         res.status(500).json({
+//             success: false,
+//             error: error.message,
+//             messgae: 'Error while Login user'
+//         })
+//     }
+// }
 
 
 // ================ CHANGE PASSWORD ================

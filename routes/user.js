@@ -3,11 +3,12 @@ const router = express.Router();
 
 // Controllers
 const {
-    signup,
-    login,
-    sendOTP,
-    changePassword
-} = require('../controllers/auth');
+  signup,
+  login,
+  sendOTP,
+  changePassword,
+  verifyEmail,
+} = require("../controllers/auth");
 
 // Resetpassword controllers
 const {
@@ -26,7 +27,7 @@ const { getAllStudents, getAllInstructors } = require('../controllers/profile');
 // ********************************************************************************************************
 //                                      Authentication routes
 // ********************************************************************************************************
-
+router.get("/verify-email", verifyEmail);
 // Route for user signup
 router.post('/signup', signup);
 

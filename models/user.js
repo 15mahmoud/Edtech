@@ -48,7 +48,8 @@ const userSchema = new mongoose.Schema(
     image: {
       type: String,
       required: true,
-      default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+      default:
+        "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
     },
     token: {
       type: String,
@@ -62,7 +63,9 @@ const userSchema = new mongoose.Schema(
         ref: "CourseProgress",
       },
     ],
-    savedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course"}],
+    savedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+    isVerified: { type: Boolean, default: false },
+    verificationToken: String,
   }, // Add timestamps for when the document is created and last modified
   { timestamps: true }
 );
