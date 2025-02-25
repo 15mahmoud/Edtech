@@ -2,9 +2,15 @@ package com.example.student_project.data.repo
 
 import coil.network.HttpException
 import com.example.student_project.data.db.StudentDatabaseDao
+import com.example.student_project.data.model.ChattingRoom
+import com.example.student_project.data.model.InboxChat
+import com.example.student_project.data.model.Message
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
 import com.example.student_project.data.network.ApiClient
+import com.example.student_project.data.network.request.ApiReqForChat
+import com.example.student_project.data.network.request.ApiReqForMessageInChat
+import com.example.student_project.data.network.request.ApiReqForSendingMessage
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.network.request.StudentUpdateRequest
 import javax.inject.Inject
@@ -31,6 +37,20 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
 
     suspend fun addUser(student: Student) {
         apiClient.addStudent(student)
+    }
+
+    suspend fun createChat(participantId: String): Result<ChattingRoom> {
+        return Result.runCatching { apiClient.createChat(ApiReqForChat(participantId)).data }
+    }
+
+    suspend fun getAllChat(): Result<List<InboxChat>> {
+        return Result.runCatching { apiClient.getAllChat().data }
+    }
+    suspend fun getMessage(chatId:String): Result<List<Message>> {
+        return Result.runCatching { apiClient.getMessages(ApiReqForMessageInChat(chatId)).data }
+    }
+    suspend fun sendMessage(chatId:String,content:String): Result<Message> {
+        return Result.runCatching { apiClient.sendMessage(ApiReqForSendingMessage(chatId,content)).data }
     }
 
     suspend fun updateProfile(student: StudentUpdateRequest): Result<User?> {
@@ -74,7 +94,7 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
         studentDatabaseDao.updateStudent(student)
     }
 
-    suspend fun deleteAllStudent(){
+    suspend fun deleteAllStudent() {
         studentDatabaseDao.deleteAllStudents()
     }
 }

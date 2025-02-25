@@ -7,9 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.student_project.DepContainer
-import com.example.student_project.ui.screen.InboxScreen
+import com.example.student_project.ui.screen.inbox.InboxScreen
 import com.example.student_project.ui.screen.mycourses.MyCoursesScreen
-import com.example.student_project.ui.screen.details.CourseDetailsScreen
+import com.example.student_project.ui.screen.details.course.CourseDetailsScreen
 import com.example.student_project.ui.screen.details.course.CourseLessonScreen
 import com.example.student_project.ui.screen.home.content.HomeScreen
 import com.example.student_project.ui.screen.home.filtering.filteration.CourseFilterScreen
@@ -18,9 +18,10 @@ import com.example.student_project.ui.screen.home.filtering.filterationresult.Co
 import com.example.student_project.ui.screen.home.filtering.filterationresult.MentorFilterResultScreen
 import com.example.student_project.ui.screen.SplashScreen
 import com.example.student_project.ui.screen.YourAiScreen
-import com.example.student_project.ui.screen.details.MentorDetailsScreen
+import com.example.student_project.ui.screen.details.mentor.MentorDetailsScreen
 import com.example.student_project.ui.screen.home.allcourses.AllCourseScreen
 import com.example.student_project.ui.screen.home.trendingcourses.TrendingCourseScreen
+import com.example.student_project.ui.screen.inbox.chat.InboxChatScreen
 import com.example.student_project.ui.screen.log.forgetpassword.EmailAndPhoneScreen
 import com.example.student_project.ui.screen.log.forgetpassword.NewPasswordScreen
 import com.example.student_project.ui.screen.log.forgetpassword.OtpTokenScreen
@@ -98,7 +99,8 @@ fun Navigation(depContainer: DepContainer) {
             MentorDetailsScreen(
                 navController = navController,
                 instructorId = backStackEntry.arguments?.getString("instructor_id"),
-                depContainer.instructorRepo
+                depContainer.instructorRepo,
+                depContainer.studentRepo
             )
 
         }
@@ -234,7 +236,18 @@ fun Navigation(depContainer: DepContainer) {
             YourAiScreen(navController = navController)
         }
         composable(Screens.InboxScreen.route) {
-            InboxScreen(navController = navController)
+            InboxScreen(navController = navController,depContainer.studentRepo)
+        }
+        composable(Screens.InboxChatScreen.route + "/{chat_id}" + "/{chat_name}",
+            arguments = listOf(
+                navArgument(name = "chat_id") { type = NavType.StringType },
+                navArgument(name = "chat_name"){ type = NavType.StringType}
+            )
+        ) {backStackEntry ->
+            InboxChatScreen(navController = navController,
+                backStackEntry.arguments?.getString("chat_id"),
+                backStackEntry.arguments?.getString("chat_name"),
+                depContainer.studentRepo)
         }
         composable(
             Screens.CourseLessonScreen.route + "/{video_url}",

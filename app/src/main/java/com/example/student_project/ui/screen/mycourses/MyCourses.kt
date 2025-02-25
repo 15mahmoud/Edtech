@@ -157,7 +157,7 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                 AnimatedVisibility(visible = ongoingButtonVisibilityState) {
                     LazyColumn {
                         courseList?.let { course ->
-                            items(course.filter { it.totalLessons != it.completedLessons }) {item->
+                            items(course.filter { it.totalLessons != it.completedLessons }) { item ->
                                 CourseProgressColumn(course = item, context = context) {
                                     navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
                                 }
@@ -169,7 +169,7 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                 AnimatedVisibility(visible = completedButtonVisibilityState) {
                     LazyColumn {
                         courseList?.let { course ->
-                            items(course.filter { it.totalLessons == it.completedLessons }) {item->
+                            items(course.filter { it.totalLessons == it.completedLessons }) { item ->
                                 CourseProgressColumn(course = item, context = context) {
                                     navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
                                 }
@@ -205,10 +205,11 @@ fun CourseProgressColumn(course: Course, context: Context, onClickListener: (Str
         Row(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
                 model = ImageRequest.Builder(context = context).crossfade(true)
-                    .data("").build(), contentDescription = "course image",
+                    .data(course.thumbnail).build(), contentDescription = "course image",
                 modifier = Modifier
                     .width(screenWidth * 37 / 100)
                     .height(screenHeight * 14 / 100)
+                    .padding(start = Constant.paddingComponentFromScreen, end = Constant.mediumPadding)
             )
             Column {
                 Text(
@@ -218,29 +219,40 @@ fun CourseProgressColumn(course: Course, context: Context, onClickListener: (Str
                     color = buttonColor,
                     modifier = Modifier.padding(
                         start = Constant.smallPadding,
-                        top = Constant.smallPadding,
-                        bottom = Constant.mediumPadding
+                        top = Constant.normalPadding,
+                        //bottom = Constant.mediumPadding
                     ),
                 )
-                Spacer(modifier = Modifier.height(30.dp))
-                    Text(
-                        text = course.completedLessons.toString() + "/" + course.totalLessons.toString(),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(5.dp).align(Alignment.CenterHorizontally),
-                        color = jopTitleColor,
-                       fontWeight = FontWeight(600)
-                    )
-                    LinearProgressIndicator(
+                Text(
+                    text = course.totalDuration,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(Constant.normalPadding)
+                        .align(Alignment.CenterHorizontally),
+                    color = jopTitleColor,
+                    fontWeight = FontWeight(400)
+                )
 
-                        modifier = Modifier.width(175.dp),
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        color =  if (course.progressPercentage!! >0 && course.progressPercentage <=50) progressBar else if (course.progressPercentage in 50.0..75.0) colorForProgressParFrom50To75 else if (course.progressPercentage in 75.0..100.0) colorForProgressParFrom75To100 else MaterialTheme.colorScheme.surfaceVariant,
-                        progress = {
-                            course.progressPercentage.toFloat()
-                        }
-                    )
+                Text(
+                    text = course.completedLessons.toString() + "/" + course.totalLessons.toString(),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .align(Alignment.CenterHorizontally),
+                    color = jopTitleColor,
+                    fontWeight = FontWeight(600)
+                )
+                LinearProgressIndicator(
 
+                    modifier = Modifier.width(175.dp),
+                    trackColor =MaterialTheme.colorScheme.surfaceVariant,
+                    color = if (course.progressPercentage!! > 0 && course.progressPercentage <= 50) progressBar else if (course.progressPercentage in 50.0..75.0) colorForProgressParFrom50To75 else if (course.progressPercentage in 75.0..100.0) colorForProgressParFrom75To100 else MaterialTheme.colorScheme.surfaceVariant,
+                            progress = {
+                        course.progressPercentage.toFloat()/100
+                    }
+                )
 
 
 //                HorizontalDivider()

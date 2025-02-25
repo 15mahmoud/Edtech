@@ -1,6 +1,5 @@
 package com.example.student_project.ui.theme
 
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -34,3 +33,4 @@ val addReviewTextColor = Color(0xFFF0F0F0)
 val cancelButton = Color(0xFFEBEFFE)
 val colorForProgressParFrom50To75 = Color(0xFFEBEFFE)
 val colorForProgressParFrom75To100 = Color(0xFFFF697E)
+val chatReceiverColor = Color(0xFFF5F5F5)

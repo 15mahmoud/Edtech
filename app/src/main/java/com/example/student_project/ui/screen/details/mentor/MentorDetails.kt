@@ -1,4 +1,4 @@
-package com.example.student_project.ui.screen.details
+package com.example.student_project.ui.screen.details.mentor
 
 import android.content.Context
 import android.util.Log
@@ -51,22 +51,28 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import com.example.student_project.data.model.ChattingRoom
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.model.Instructor
 import com.example.student_project.data.model.User
 import com.example.student_project.data.repo.InstructorRepo
+import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.editProfileTextColor
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.unselectedButton
 import com.example.student_project.util.Constant
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun MentorDetailsScreen(
     navController: NavController,
     instructorId: String?,
-    instructorRepo: InstructorRepo
+    instructorRepo: InstructorRepo,
+    studentRepo: StudentRepo
 ) {
     val scope = rememberCoroutineScope()
 
@@ -78,6 +84,10 @@ fun MentorDetailsScreen(
 
     var instructor by remember {
         mutableStateOf<Result<Instructor>?>(null)
+    }
+
+    var chattingRoomState by remember {
+        mutableStateOf<Result<ChattingRoom>?>(null)
     }
 
     var courseButtonState by remember {
@@ -214,7 +224,20 @@ fun MentorDetailsScreen(
 //                            .border(1.dp, buttonColor, RoundedCornerShape(120.dp))
                             .shadow(4.dp, RoundedCornerShape(100.dp)),
                         onClick = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                chattingRoomState = studentRepo.createChat(instructorId.toString())
+                            }
+                            chattingRoomState?.onSuccess { chat ->
+                                for (user in chat.users) {
+                                    if (user.id == instructorId) {
+                                        navController.navigate(Screens.InboxChatScreen.route + "/${chat.id}" + "/${user.firstName + " " + user.lastName}")
+                                    }
+                                }
 
+                            }?.onFailure {
+                                Toast.makeText(context, "chat already exist", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }, colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
                     ) {
                         Text(
