@@ -2,7 +2,6 @@ package com.example.student_project.data.model
 
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
@@ -24,6 +23,26 @@ data class User(
     var token: String?,
     val updatedAt: String,
 )
+
+data class ChattingRoom(
+    val users: List<User>,
+    @SerializedName("_id")
+    val id: String
+)
+
+data class Message(
+    val sender: User,
+    val content:String
+)
+
+data class InboxChat(
+    val user: User,
+    @SerializedName("_id")
+    val id: String,
+    val latestMessage:Message?
+)
+
+
 
 data class AdditionalDetails(
     @SerializedName("_id") val idForAdditionalDetails: String,

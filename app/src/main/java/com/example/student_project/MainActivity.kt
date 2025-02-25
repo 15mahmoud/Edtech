@@ -23,6 +23,7 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var instructorRepo: InstructorRepo
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

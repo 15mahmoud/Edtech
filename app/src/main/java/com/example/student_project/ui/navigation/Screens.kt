@@ -56,4 +56,6 @@ sealed class Screens(val route: String) {
     data object YourAiScreen : Screens("your_ai_screen")
 
     data object InboxScreen : Screens("inbox_screen")
+
+    data object InboxChatScreen : Screens("inbox_chat_screen")
 }

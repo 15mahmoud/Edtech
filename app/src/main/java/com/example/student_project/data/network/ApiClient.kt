@@ -1,10 +1,16 @@
 package com.example.student_project.data.network
 
 import com.example.student_project.data.model.Category
+import com.example.student_project.data.model.ChattingRoom
 import com.example.student_project.data.model.Course
+import com.example.student_project.data.model.InboxChat
 import com.example.student_project.data.model.Instructor
+import com.example.student_project.data.model.Message
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
+import com.example.student_project.data.network.request.ApiReqForChat
+import com.example.student_project.data.network.request.ApiReqForMessageInChat
+import com.example.student_project.data.network.request.ApiReqForSendingMessage
 import com.example.student_project.data.network.request.CapturePayment
 import com.example.student_project.data.network.request.CreateRatingReq
 import com.example.student_project.data.network.request.ApiRequestWithCourseId
@@ -34,7 +40,6 @@ interface ApiClient {
     @POST("course/getFullCourseDetails")
     suspend fun getFullCourseDetails(@Body courseId: ApiRequestWithCourseId): BaseResponse<Course>
 
-    // we need to test this first
     @PUT("profile/updateProfile")
     suspend fun updateProfile(@Body student: StudentUpdateRequest): BaseResponse<User>
 
@@ -52,9 +57,22 @@ interface ApiClient {
     @POST("profile/saveCourse")
     suspend fun saveCourse(@Body courseId: ApiRequestWithCourseId)
 
-    //this too
     @POST("course/getInstructorDetails")
     suspend fun getInstructorDetails(@Body instructorId: ApiRequestWithInstructorId): BaseResponse<Instructor>
+
+
+    @POST("course/createChat")
+    suspend fun createChat(@Body participantId: ApiReqForChat): BaseResponse<ChattingRoom>
+
+    @POST("course/sendMessage")
+    suspend fun sendMessage(@Body content:ApiReqForSendingMessage):BaseResponse<Message>
+
+    @GET("course/getAllChats")
+    suspend fun getAllChat(): BaseResponse<List<InboxChat>>
+
+    //this one has error
+    @GET("course/getMessages")
+    suspend fun getMessages(@Body chatId:ApiReqForMessageInChat): BaseResponse<List<Message>>
 
     //we will do it too
     @GET("profile/getSavedCourses")
