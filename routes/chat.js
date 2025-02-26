@@ -13,6 +13,6 @@ router.get("/getAllChats", auth, chatController.fetchAllChats);
 router.post("/sendMessage", auth, chatController.sendMessage);
 
 
-router.get("/getMessages/:chatId", auth, chatController.fetchMessages);
+router.post("/getMessages", auth, chatController.fetchMessages);
 
 module.exports = router;
