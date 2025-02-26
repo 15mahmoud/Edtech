@@ -32,7 +32,8 @@ data class ChattingRoom(
 
 data class Message(
     val sender: User,
-    val content:String
+    val content:String,
+    val createdAt:String,
 )
 
 data class InboxChat(
@@ -42,7 +43,13 @@ data class InboxChat(
     val latestMessage:Message?
 )
 
+data class Meeting(
+    val host:Instructor,
+    val date:String,
+    val url:String,
+    val isEnded:Boolean,
 
+)
 
 data class AdditionalDetails(
     @SerializedName("_id") val idForAdditionalDetails: String,

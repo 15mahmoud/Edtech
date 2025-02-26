@@ -106,11 +106,11 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                 isError =
                     if (
                         phoneNumber.isDigitsOnly() &&
-                            phoneNumber.length == 11 &&
-                            phoneNumber.startsWith("010") &&
-                            phoneNumber.startsWith("011") &&
-                            phoneNumber.startsWith("012") &&
-                            phoneNumber.startsWith("015")
+                            phoneNumber.length == 11
+//                            phoneNumber.startsWith("010") &&
+//                            phoneNumber.startsWith("011") &&
+//                            phoneNumber.startsWith("012") &&
+//                            phoneNumber.startsWith("015")
                     )
                         phoneNumberError
                     else !phoneNumberError,
@@ -152,11 +152,11 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                     // and then take response
                     if (
                         phoneNumber.isDigitsOnly() &&
-                            phoneNumber.length == 11 &&
-                            phoneNumber.startsWith("010") &&
-                            phoneNumber.startsWith("011") &&
-                            phoneNumber.startsWith("012") &&
-                            phoneNumber.startsWith("015")
+                            phoneNumber.length == 11
+//                            phoneNumber.startsWith("010") &&
+//                            phoneNumber.startsWith("011") &&
+//                            phoneNumber.startsWith("012") &&
+//                            phoneNumber.startsWith("015")
                     ) {
                         //                        studentUpdateRequestState =
                         // studentUpdateRequestState?.copy()

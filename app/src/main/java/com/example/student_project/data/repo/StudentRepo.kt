@@ -4,6 +4,7 @@ import coil.network.HttpException
 import com.example.student_project.data.db.StudentDatabaseDao
 import com.example.student_project.data.model.ChattingRoom
 import com.example.student_project.data.model.InboxChat
+import com.example.student_project.data.model.Meeting
 import com.example.student_project.data.model.Message
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
@@ -45,6 +46,9 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
 
     suspend fun getAllChat(): Result<List<InboxChat>> {
         return Result.runCatching { apiClient.getAllChat().data }
+    }
+    suspend fun getAllMeeting(): Result<List<Meeting>> {
+        return Result.runCatching { apiClient.getAllMeeting().data }
     }
     suspend fun getMessage(chatId:String): Result<List<Message>> {
         return Result.runCatching { apiClient.getMessages(ApiReqForMessageInChat(chatId)).data }

@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -43,6 +44,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,14 +54,21 @@ import com.example.student_project.data.model.Student
 import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.widgets.PopBackStackEntry
+import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.textFieldColor
+import com.example.student_project.util.Constant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun AdditionalInfoScreen(navController: NavController, email: String?, password: String?,studentRepo: StudentRepo) {
+fun AdditionalInfoScreen(
+    navController: NavController,
+    email: String?,
+    password: String?,
+    studentRepo: StudentRepo
+) {
 
 
     val configuration = LocalConfiguration.current
@@ -74,6 +83,8 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
     var emailState by remember { mutableStateOf("") }
     var phoneState by remember { mutableStateOf("") }
     var phoneEmptyError by remember { mutableStateOf(false) }
+    var verifyState by remember { mutableStateOf(false) }
+
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         Row(modifier = Modifier.padding(top = 50.dp)) {
@@ -87,11 +98,15 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
             horizontalArrangement = Arrangement.Center,
         ) {
             Card(
-                modifier = Modifier.size(150.dp).align(alignment = Alignment.CenterVertically),
+                modifier = Modifier
+                    .size(150.dp)
+                    .align(alignment = Alignment.CenterVertically),
                 shape = CircleShape,
                 colors = CardDefaults.cardColors(containerColor = Color.Transparent),
             ) {
@@ -109,15 +124,16 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
                 nameError = it.isEmpty()
             },
             modifier =
-                Modifier.width(screenWidth * 90 / 100)
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .padding(5.dp)
-                    .shadow(
-                        elevation = 6.dp,
-                        shape = MaterialTheme.shapes.small,
-                        ambientColor = Color.Gray,
-                        spotColor = Color.LightGray,
-                    ),
+            Modifier
+                .width(screenWidth * 90 / 100)
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(5.dp)
+                .shadow(
+                    elevation = 6.dp,
+                    shape = MaterialTheme.shapes.small,
+                    ambientColor = Color.Gray,
+                    spotColor = Color.LightGray,
+                ),
             label = {
                 Text(
                     text = "Full Name",
@@ -129,26 +145,27 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
             singleLine = true,
             // supporting text
             colors =
-                TextFieldDefaults.colors(
-                    unfocusedContainerColor = textFieldColor,
-                    focusedContainerColor = textFieldColor,
-                    unfocusedIndicatorColor = textFieldColor,
-                    focusedIndicatorColor = textFieldColor,
-                ),
+            TextFieldDefaults.colors(
+                unfocusedContainerColor = textFieldColor,
+                focusedContainerColor = textFieldColor,
+                unfocusedIndicatorColor = textFieldColor,
+                focusedIndicatorColor = textFieldColor,
+            ),
         )
         TextField(
             value = nicknameState,
             onValueChange = { nicknameState = it },
             modifier =
-                Modifier.width(screenWidth * 90 / 100)
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .padding(5.dp)
-                    .shadow(
-                        elevation = 6.dp,
-                        shape = MaterialTheme.shapes.small,
-                        ambientColor = Color.Gray,
-                        spotColor = Color.LightGray,
-                    ),
+            Modifier
+                .width(screenWidth * 90 / 100)
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(5.dp)
+                .shadow(
+                    elevation = 6.dp,
+                    shape = MaterialTheme.shapes.small,
+                    ambientColor = Color.Gray,
+                    spotColor = Color.LightGray,
+                ),
             label = {
                 Text(
                     text = "Nickname",
@@ -158,27 +175,28 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
             },
             singleLine = true,
             colors =
-                TextFieldDefaults.colors(
-                    unfocusedContainerColor = textFieldColor,
-                    focusedContainerColor = textFieldColor,
-                    unfocusedIndicatorColor = textFieldColor,
-                    focusedIndicatorColor = textFieldColor,
-                ),
+            TextFieldDefaults.colors(
+                unfocusedContainerColor = textFieldColor,
+                focusedContainerColor = textFieldColor,
+                unfocusedIndicatorColor = textFieldColor,
+                focusedIndicatorColor = textFieldColor,
+            ),
         )
         TextField(
             value = dateOfBirthState,
             onValueChange = { dateOfBirthState = it },
             modifier =
-                Modifier.width(screenWidth * 90 / 100)
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .padding(5.dp)
-                    // i need to add border
-                    .shadow(
-                        elevation = 6.dp,
-                        shape = MaterialTheme.shapes.small,
-                        ambientColor = Color.Gray,
-                        spotColor = Color.LightGray,
-                    ),
+            Modifier
+                .width(screenWidth * 90 / 100)
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(5.dp)
+                // i need to add border
+                .shadow(
+                    elevation = 6.dp,
+                    shape = MaterialTheme.shapes.small,
+                    ambientColor = Color.Gray,
+                    spotColor = Color.LightGray,
+                ),
             label = {
                 Text(
                     text = "Date of Birth",
@@ -188,27 +206,28 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
             },
             singleLine = true,
             colors =
-                TextFieldDefaults.colors(
-                    unfocusedContainerColor = textFieldColor,
-                    focusedContainerColor = textFieldColor,
-                    unfocusedIndicatorColor = textFieldColor,
-                    focusedIndicatorColor = textFieldColor,
-                ),
+            TextFieldDefaults.colors(
+                unfocusedContainerColor = textFieldColor,
+                focusedContainerColor = textFieldColor,
+                unfocusedIndicatorColor = textFieldColor,
+                focusedIndicatorColor = textFieldColor,
+            ),
         )
         TextField(
             value = emailState,
             onValueChange = { emailState = it },
             modifier =
-                Modifier.width(screenWidth * 90 / 100)
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .padding(5.dp)
-                    // i need to add border
-                    .shadow(
-                        elevation = 6.dp,
-                        shape = MaterialTheme.shapes.small,
-                        ambientColor = Color.Gray,
-                        spotColor = Color.LightGray,
-                    ),
+            Modifier
+                .width(screenWidth * 90 / 100)
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(5.dp)
+                // i need to add border
+                .shadow(
+                    elevation = 6.dp,
+                    shape = MaterialTheme.shapes.small,
+                    ambientColor = Color.Gray,
+                    spotColor = Color.LightGray,
+                ),
             label = {
                 Text(
                     text = "Email",
@@ -218,12 +237,12 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
             },
             singleLine = true,
             colors =
-                TextFieldDefaults.colors(
-                    unfocusedContainerColor = textFieldColor,
-                    focusedContainerColor = textFieldColor,
-                    unfocusedIndicatorColor = textFieldColor,
-                    focusedIndicatorColor = textFieldColor,
-                ),
+            TextFieldDefaults.colors(
+                unfocusedContainerColor = textFieldColor,
+                focusedContainerColor = textFieldColor,
+                unfocusedIndicatorColor = textFieldColor,
+                focusedIndicatorColor = textFieldColor,
+            ),
         )
         TextField(
             value = phoneState,
@@ -233,15 +252,16 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
                 phoneEmptyError = it.isEmpty()
             },
             modifier =
-                Modifier.width(screenWidth * 90 / 100)
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .padding(5.dp)
-                    .shadow(
-                        elevation = 6.dp,
-                        shape = MaterialTheme.shapes.small,
-                        ambientColor = Color.Gray,
-                        spotColor = Color.LightGray,
-                    ),
+            Modifier
+                .width(screenWidth * 90 / 100)
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(5.dp)
+                .shadow(
+                    elevation = 6.dp,
+                    shape = MaterialTheme.shapes.small,
+                    ambientColor = Color.Gray,
+                    spotColor = Color.LightGray,
+                ),
             label = {
                 Text(
                     text = "Phone Number",
@@ -250,11 +270,11 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
                 )
             },
             isError =
-                if (
-                    phoneEmptyError || (phoneState.length != 11 && phoneState.all { it.isLetter() })
-                )
-                    true
-                else phoneState.isEmpty(),
+            if (
+                phoneEmptyError || (phoneState.length != 11 && phoneState.all { it.isLetter() })
+            )
+                true
+            else phoneState.isEmpty(),
             singleLine = true,
             //            supportingText = {
             //                if (phoneEmptyError) {
@@ -269,24 +289,57 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
             //                }
             //            },
             colors =
-                TextFieldDefaults.colors(
-                    unfocusedContainerColor = textFieldColor,
-                    focusedContainerColor = textFieldColor,
-                    unfocusedIndicatorColor = textFieldColor,
-                    focusedIndicatorColor = textFieldColor,
-                ),
+            TextFieldDefaults.colors(
+                unfocusedContainerColor = textFieldColor,
+                focusedContainerColor = textFieldColor,
+                unfocusedIndicatorColor = textFieldColor,
+                focusedIndicatorColor = textFieldColor,
+            ),
         )
 
         // DropDown(navController)
-
+        if (verifyState) {
+            AlertDialog(
+                onDismissRequest = { verifyState = false },
+                title = {
+                    Text(
+                        text = "Go to your email and verify your account 😇😇",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight(600)
+                    )
+                },
+                confirmButton = {
+                    Button(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = Constant.paddingComponentFromScreen,
+                            end = Constant.paddingComponentFromScreen
+                        ),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = buttonColor
+                        ), onClick = {
+                            verifyState = false
+                            navController.navigate(Screens.LoginScreen.route)
+                        }) {
+                        Text(
+                            color = Color.White,
+                            text = "Ok",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(600)
+                        )
+                    }
+                })
+        }
         Button(
             onClick = {
                 // Handle sign-up logic here, including validation
                 if (
                     nameState.isNotEmpty() &&
-                        phoneState.isNotEmpty() &&
-                        phoneState.length == 11 &&
-                        phoneState.all { it.isDigit() }
+                    phoneState.isNotEmpty() &&
+                    phoneState.length == 11 &&
+                    phoneState.all { it.isDigit() }
                 ) {
                     val student =
                         Student(
@@ -300,7 +353,8 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
                     CoroutineScope(Dispatchers.IO).launch {
                         studentRepo.addUser(student)
                     }
-                    navController.navigate(Screens.LoginScreen.route)
+                    verifyState = true
+
                     // Proceed to next screen or perform sign-up actions
                     // this one will change
                 } else {
@@ -316,14 +370,15 @@ fun AdditionalInfoScreen(navController: NavController, email: String?, password:
             },
             shape = RoundedCornerShape(100.dp),
             modifier =
-                Modifier.padding(top = 40.dp)
-                    .align(alignment = Alignment.CenterHorizontally)
-                    //                .width(screenWidth * 90 / 100)
-                    .height(screenHeight * 6 / 100),
+            Modifier
+                .padding(top = 40.dp)
+                .align(alignment = Alignment.CenterHorizontally)
+                //                .width(screenWidth * 90 / 100)
+                .height(screenHeight * 6 / 100),
             colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.button_color)
-                ),
+            ButtonDefaults.buttonColors(
+                containerColor = colorResource(id = R.color.button_color)
+            ),
         ) {
             Text(
                 text = "Continue",
@@ -362,14 +417,15 @@ fun DropDown(navController: NavController) {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForUniversity)
                     },
                     colors =
-                        ExposedDropdownMenuDefaults.textFieldColors(
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                        ),
+                    ExposedDropdownMenuDefaults.textFieldColors(
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                    ),
                     modifier =
-                        Modifier.menuAnchor()
-                            .width(350.dp)
-                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                    Modifier
+                        .menuAnchor()
+                        .width(350.dp)
+                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     expanded = isExpandedForUniversity,
