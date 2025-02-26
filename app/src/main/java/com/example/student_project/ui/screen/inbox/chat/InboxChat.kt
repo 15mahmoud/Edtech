@@ -1,17 +1,17 @@
 package com.example.student_project.ui.screen.inbox.chat
 
-import android.content.Context
+import android.os.Build
 import android.util.Log
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
-import androidx.compose.material3.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -33,6 +32,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,12 +48,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.student_project.R
 import com.example.student_project.data.model.Message
 import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.theme.buttonColor
@@ -64,7 +62,11 @@ import com.example.student_project.util.Constant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun InboxChatScreen(
     navController: NavController,
@@ -76,7 +78,6 @@ fun InboxChatScreen(
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     var sendMessageTextField by remember {
         mutableStateOf("")
     }
@@ -89,8 +90,12 @@ fun InboxChatScreen(
     var messageState by remember {
         mutableStateOf<Result<Message>?>(null)
     }
+    var userSate by remember {
+        mutableStateOf<String?>(null)
+    }
     LaunchedEffect(scope) {
         chatState = studentRepo.getMessage(chatId.toString())
+        userSate = studentRepo.getCurrentStudent()?.id
     }
     Scaffold(
         topBar = {
@@ -178,7 +183,7 @@ fun InboxChatScreen(
                                 .height(screenHeight * 6 / 100)
                                 .width(screenWidth * 12 / 100),
                                 colors = IconButtonDefaults.iconButtonColors(
-                                    containerColor = buttonColor
+                                    containerColor = progressBar
                                 ),
                                 onClick = { /*TODO*/ }) {
                                 Icon(
@@ -197,17 +202,20 @@ fun InboxChatScreen(
                                 .height(screenHeight * 6 / 100)
                                 .width(screenWidth * 12 / 100),
                                 colors = IconButtonDefaults.iconButtonColors(
-                                    containerColor = buttonColor
+                                    containerColor = progressBar
                                 ),
                                 onClick = {
                                     //here for send message
                                     CoroutineScope(Dispatchers.IO).launch {
-                                       messageState =  studentRepo.sendMessage(chatId.toString(),sendMessageTextField)
+                                        messageState = studentRepo.sendMessage(
+                                            chatId.toString(),
+                                            sendMessageTextField
+                                        )
                                     }
                                     messageState?.onSuccess {
                                         sendMessageTextField = ""
                                     }?.onFailure {
-                                        Log.d("sendError",it.message.toString())
+                                        Log.d("sendError", it.message.toString())
                                     }
                                 }) {
                                 Icon(
@@ -228,103 +236,36 @@ fun InboxChatScreen(
             }
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .consumeWindowInsets(innerPadding)
                 .fillMaxSize()
-                .padding(
-                    top = 80.dp,
-                    end = Constant.paddingComponentFromScreen,
-                    start = Constant.paddingComponentFromScreen
-                ),
-            verticalArrangement = Arrangement.spacedBy(Constant.paddingComponentFromScreen)
-        ) {
-//            Box(
-//                modifier = Modifier
-//                    .width(screenWidth * 50 / 100)
-//                    .background(
-//                        chatReceiverColor,
-//                        RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-//                    )
-//            ) {
-//
-//                Surface(
-//                    color = chatReceiverColor,
-//                    modifier = Modifier
-//
-//                        .padding(Constant.smallPadding)
-//                        .clip(shape = RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp))
-//                ) {
-//                    Column(modifier = Modifier.padding(Constant.smallPadding)) {
-//
-//                        Text(
-//                            text = "Inbox Chat Inbox ",
-//                            style = MaterialTheme.typography.titleMedium,
-//                            fontSize = 11.sp,
-//                            modifier = Modifier.align(Alignment.Start),
-//                            color = buttonColor
-//                        )
-//                    }
-//                }
-//            }
-//            Box(
-//                modifier = Modifier
-//                    .width(screenWidth * 50 / 100)
-//                    .align(Alignment.End)
-//                    .background(
-//                        progressBar,
-//                        RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-//                    )
-//            ) {
-//
-//                Surface(
-//                    color = progressBar,
-//                    modifier = Modifier
-//                        .padding(Constant.smallPadding)
-//                        .clip(shape = RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp))
-//                ) {
-//                    Column(modifier = Modifier.padding(Constant.smallPadding)) {
-//
-//                        Text(
-//                            text = "Inbox Chat Inbox ",
-//                            style = MaterialTheme.typography.titleMedium,
-//                            fontSize = 11.sp,
-//                            modifier = Modifier.align(Alignment.End),
-//                            color = Color.White
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//            {
-//                "email": "frydhalqzaz8@gmail.com",
-//                "password": "SecurePassword123"
-//            }
-            LazyColumn {
-                chatState?.onSuccess { messageList ->
-                    messageList?.let { nonNullMessageList ->
-                        items(nonNullMessageList) { message ->
-                            MessageRow(
-                                message = message,
-                                context = context,
-                                studentRepo = studentRepo
-                            )
-                        }
-                    }
-                }?.onFailure {
-                  Log.d("error",it.message.toString())
-                }
-            }
+                .consumeWindowInsets(innerPadding)
+                .padding(top = 80.dp, bottom = 80.dp)
 
+        ) {
+            chatState?.onSuccess { messageList ->
+                messageList?.let { nonNullMessageList ->
+                    items(nonNullMessageList) { message ->
+                        MessageRow(
+                            message = message,
+                            studentRepo = studentRepo
+                        )
+
+                    }
+                }
+            }?.onFailure {
+                Log.d("error", it.message.toString())
+            }
         }
+
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MessageRow(message: Message, context: Context, studentRepo: StudentRepo) {
+fun MessageRow(message: Message, studentRepo: StudentRepo) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
-    val screenHeight = configuration.screenHeightDp.dp
     var idState by remember {
         mutableStateOf<String?>(null)
     }
@@ -333,39 +274,70 @@ fun MessageRow(message: Message, context: Context, studentRepo: StudentRepo) {
         idState = studentRepo.getCurrentStudent()?.id
     }
     if (message.sender.id == idState) {
-        Box(
-            modifier = Modifier
-                .width(screenWidth * 50 / 100)
-                .background(
-                    progressBar,
-                    RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-                )
-        ) {
-            Surface(
-                color = progressBar,
-                modifier = Modifier
-                    .padding(Constant.smallPadding)
-                    .clip(shape = RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp))
-            ) {
-                Column(modifier = Modifier.padding(Constant.smallPadding)) {
+        Column(modifier = Modifier.fillMaxWidth()) {
 
-                    Text(
-                        text = "Inbox Chat Inbox ",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontSize = 11.sp,
-                        modifier = Modifier.align(Alignment.End),
-                        color = Color.White
+            Box(
+                modifier = Modifier
+                    .padding(Constant.normalPadding)
+                    .align(Alignment.End)
+                    .width(screenWidth * 50 / 100)
+                    .background(
+                        progressBar,
+                        RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
                     )
+                    .shadow(
+                        2.dp,
+                        shape = RoundedCornerShape(
+                            topStart = 16.dp,
+                            bottomStart = 16.dp,
+                            bottomEnd = 16.dp
+                        )
+                    )
+            ) {
+                Surface(
+                    color = progressBar,
+                    modifier = Modifier
+                        .padding(Constant.smallPadding)
+                        .clip(shape = RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp))
+                ) {
+                    Column(modifier = Modifier.padding(Constant.smallPadding)) {
+
+                        Text(
+                            text = message.content,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = 11.sp,
+                            modifier = Modifier.align(Alignment.End),
+                            color = Color.White
+                        )
+                        Text(
+                            text = Instant.parse(message.createdAt).atZone(
+                                ZoneId.systemDefault()
+                            ).format(DateTimeFormatter.ofPattern("d MMM hh:mm")).toString(),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = 11.sp,
+                            modifier = Modifier,
+                            color = Color.White
+                        )
+                    }
                 }
             }
         }
     } else {
         Box(
             modifier = Modifier
+                .padding(bottom = Constant.normalPadding)
                 .width(screenWidth * 50 / 100)
                 .background(
                     chatReceiverColor,
                     RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
+                )
+                .shadow(
+                    2.dp,
+                    shape = RoundedCornerShape(
+                        topEnd = 16.dp,
+                        bottomStart = 16.dp,
+                        bottomEnd = 16.dp
+                    )
                 )
         ) {
 
@@ -379,10 +351,19 @@ fun MessageRow(message: Message, context: Context, studentRepo: StudentRepo) {
                 Column(modifier = Modifier.padding(Constant.smallPadding)) {
 
                     Text(
-                        text = "Inbox Chat Inbox ",
+                        text = message.content,
                         style = MaterialTheme.typography.titleMedium,
                         fontSize = 11.sp,
                         modifier = Modifier.align(Alignment.Start),
+                        color = buttonColor
+                    )
+                    Text(
+                        text = Instant.parse(message.createdAt).atZone(
+                            ZoneId.systemDefault()
+                        ).format(DateTimeFormatter.ofPattern("d MMM hh:mm")).toString(),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 11.sp,
+                        modifier = Modifier,
                         color = buttonColor
                     )
                 }

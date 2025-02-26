@@ -5,6 +5,7 @@ import com.example.student_project.data.model.ChattingRoom
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.model.InboxChat
 import com.example.student_project.data.model.Instructor
+import com.example.student_project.data.model.Meeting
 import com.example.student_project.data.model.Message
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
@@ -70,9 +71,11 @@ interface ApiClient {
     @GET("course/getAllChats")
     suspend fun getAllChat(): BaseResponse<List<InboxChat>>
 
-    //this one has error
-    @GET("course/getMessages")
+    @POST("course/getMessages")
     suspend fun getMessages(@Body chatId:ApiReqForMessageInChat): BaseResponse<List<Message>>
+
+    @GET("meeting/all")
+    suspend fun getAllMeeting(): BaseResponse<List<Meeting>>
 
     //we will do it too
     @GET("profile/getSavedCourses")
