@@ -12,4 +12,7 @@ object Constant {
     val veryLargePadding = 30.dp
     //    val padding = 5.dp
     //    val padding = 5.dp
+    val buttonRadios = 18.dp
+
+    val buttonTextSize = 16.dp
 }

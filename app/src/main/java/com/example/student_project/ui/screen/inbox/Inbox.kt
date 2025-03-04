@@ -394,5 +394,3 @@ fun ChatRow(
         }
     }
 }
-
-
