@@ -1,9 +1,11 @@
 package com.example.student_project
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.student_project.data.model.Instructor
 import com.example.student_project.data.repo.CourseRepo
@@ -22,6 +24,7 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var instructorRepo: InstructorRepo
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         installSplashScreen()

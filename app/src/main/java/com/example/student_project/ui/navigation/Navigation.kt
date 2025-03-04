@@ -1,5 +1,7 @@
 package com.example.student_project.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -26,8 +28,7 @@ import com.example.student_project.ui.screen.log.forgetpassword.EmailAndPhoneScr
 import com.example.student_project.ui.screen.log.forgetpassword.NewPasswordScreen
 import com.example.student_project.ui.screen.log.forgetpassword.OtpTokenScreen
 import com.example.student_project.ui.screen.log.login.LoginScreen
-import com.example.student_project.ui.screen.log.signup.AdditionalInfoScreen
-import com.example.student_project.ui.screen.log.signup.SignUpScreen
+import com.example.student_project.ui.screen.log.signup.SignupScreen
 import com.example.student_project.ui.screen.profile.ProfileScreen
 import com.example.student_project.ui.screen.profile.editprofile.EditProfileScreen
 import com.example.student_project.ui.screen.profile.helpcenter.HelpCenterScreen
@@ -37,28 +38,21 @@ import com.example.student_project.ui.screen.profile.payment.PaymentScreen
 import com.example.student_project.ui.screen.profile.privacypolicy.PrivacyPolicyScreen
 import com.example.student_project.ui.screen.profile.security.SecurityScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(depContainer: DepContainer) {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.HomeScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.NewPasswordScreen.route) {
         composable(Screens.SplashScreen.route) { SplashScreen(navController,depContainer.studentRepo) }
-        composable(Screens.SignupScreen.route) { SignUpScreen(navController) }
         composable(Screens.LoginScreen.route) {
             LoginScreen(navController, depContainer.studentRepo)
         }
         composable(
-            Screens.AdditionalInfoScreen.route + "/{email}" + "/{password}",
-            arguments =
-            listOf(
-                navArgument(name = "email") { type = NavType.StringType },
-                navArgument(name = "password") { type = NavType.StringType },
-            )
+            Screens.SignupScreen.route
         ) { backStackEntry ->
-            AdditionalInfoScreen(
+            SignupScreen(
                 navController = navController,
-                backStackEntry.arguments?.getString("email"),
-                backStackEntry.arguments?.getString("password"),
                 depContainer.studentRepo
             )
         }

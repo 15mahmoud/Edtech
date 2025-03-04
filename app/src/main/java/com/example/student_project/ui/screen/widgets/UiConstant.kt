@@ -128,7 +128,7 @@ fun CourseFilterScreenText(text: String) {
 fun PopBackStackEntry(navController: NavController) {
     IconButton(
         onClick = { navController.popBackStack() },
-        modifier = Modifier.padding(top = 20.dp),
+        modifier = Modifier.padding(top = Constant.normalPadding),
     ) {
         Icon(
             painter = painterResource(id = R.drawable.baseline_arrow_back_24),
