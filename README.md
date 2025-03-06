@@ -40,7 +40,27 @@ This repository contains the backend code for the Graduation Project. It is buil
 
    ```bash
    git clone https://github.com/15mahmoud/graduation-project-backend.git
-Navigate to the project directory:
-cd graduation-project-backend
+
+2. **Navigate to the project directory**:
+
+   ```bash
+  cd graduation-project-backend
+  
+3. **Install dependencies**:
+
+    ```bash
+   npm install
+    
+4. **Start the server**:
+ 
+   ```bash
+   npm run dev
+
+
+
+
+
+
+
 
    
