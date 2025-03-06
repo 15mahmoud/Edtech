@@ -44,7 +44,7 @@ This repository contains the backend code for the Graduation Project. It is buil
 2. **Navigate to the project directory**:
 
    ```bash
-  cd graduation-project-backend
+   cd graduation-project-backend
   
 3. **Install dependencies**:
 
@@ -55,9 +55,6 @@ This repository contains the backend code for the Graduation Project. It is buil
  
    ```bash
    npm run dev
-
-
-
 
 
 
