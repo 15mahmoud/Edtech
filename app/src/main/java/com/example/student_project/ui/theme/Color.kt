@@ -15,6 +15,8 @@ val lightOrange = Color(0xFFFFDDA0)
 val lightGray = Color(0xFFCBD5E1)
 val headLineColor = Color(0xFF212121)
 val textFieldColor = Color(0xFFF0F0F0)
+val borderOfTextFieldColor = Color(0xFFD8D8D8)
+
 val buttonColor = Color(0xFF1C1C1C)
 val borderButton = Color(0xFFEEEEEE)
 val cardColor = Color(0xFFEAEFFF)
