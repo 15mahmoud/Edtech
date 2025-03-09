@@ -1,5 +1,7 @@
 package com.example.student_project.ui.screen.details.course
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -68,6 +70,7 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.student_project.R
 import com.example.student_project.data.model.Course
+import com.example.student_project.data.network.request.CapturePayment
 import com.example.student_project.data.network.request.CreateRatingReq
 import com.example.student_project.data.repo.CourseRepo
 import com.example.student_project.ui.navigation.Screens
@@ -111,7 +114,6 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
     var paymentState by remember {
         mutableStateOf<Result<String?>?>(null)
     }
-
     var dialogKeyForPayment by remember {
         mutableStateOf(false)
     }
@@ -133,7 +135,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
             CoroutineScope(Dispatchers.IO).launch {
                 unLock = courseRepo.verifyPayment(listOf(course?.id.toString()))
             }
-            unLock?.onSuccess {
+            unLock?.onSuccess { it ->
                 it?.let { unLockState ->
                     lock = unLockState
                     Scaffold(
@@ -239,7 +241,8 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                             if (dialogKeyForReview) {
                                 Dialog(onDismissRequest = { dialogKeyForReview = false }) {
                                     Card(
-                                        modifier = Modifier.fillMaxSize(), colors = CardDefaults.cardColors(
+                                        modifier = Modifier.fillMaxSize(),
+                                        colors = CardDefaults.cardColors(
                                             containerColor = Color.White
                                         )
                                     ) {
@@ -338,7 +341,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         end = Constant.paddingComponentFromScreen,
                                                         bottom = Constant.normalPadding
                                                     )
-                                                    .shadow(elevation = 4.dp, RoundedCornerShape(100.dp)),
+                                                    .shadow(
+                                                        elevation = 4.dp,
+                                                        RoundedCornerShape(100.dp)
+                                                    ),
                                                 onClick = {
                                                     val studentReview = CreateRatingReq(
                                                         course?.id.toString(),
@@ -372,7 +378,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         end = Constant.paddingComponentFromScreen,
                                                         bottom = Constant.paddingComponentFromScreen
                                                     )
-                                                    .shadow(elevation = 4.dp, RoundedCornerShape(100.dp)),
+                                                    .shadow(
+                                                        elevation = 4.dp,
+                                                        RoundedCornerShape(100.dp)
+                                                    ),
                                                 onClick = {
                                                     dialogKeyForReview = false
                                                 }) {
@@ -415,16 +424,31 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                             modifier = Modifier
                                                 .align(Alignment.CenterHorizontally)
                                                 .padding(Constant.mediumPadding)
-                                                .shadow(elevation = 4.dp, RoundedCornerShape(100.dp)),
+                                                .shadow(
+                                                    elevation = 4.dp,
+                                                    RoundedCornerShape(100.dp)
+                                                ),
                                             colors = ButtonDefaults.buttonColors(
                                                 containerColor = buttonColor
                                             ),
                                             onClick = {
-                                                val courseIdList = listOf(course?.id.toString())
+
+                                                val capturePayment = CapturePayment(
+                                                    course?.price!!,
+                                                    courseId.toString()
+                                                )
                                                 CoroutineScope(Dispatchers.IO).launch {
-                                                    paymentState = courseRepo.capturePayment(courseIdList)
+                                                    paymentState = courseRepo.initiatePayment(
+                                                        capturePayment
+                                                    )
                                                 }
                                                 paymentState?.onSuccess {
+                                                    //intent to payment screen
+                                                    //and when he return to this screen
+                                                    //we will make get Transaction
+                                                    val intent =
+                                                        Intent(Intent.ACTION_VIEW, Uri.parse(it))
+                                                    context.startActivity(intent)
                                                     lock = !unLockState
                                                     dialogKeyForPayment = false
                                                 }?.onFailure {
@@ -434,6 +458,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         Toast.LENGTH_SHORT
                                                     ).show()
                                                 }
+
                                             }
                                         ) {
                                             Text(
@@ -460,7 +485,11 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                 Row(Modifier.fillMaxWidth()) {
                                     Text(
                                         modifier =
-                                        Modifier.padding(bottom = 15.dp, start = 15.dp, end = 15.dp),
+                                        Modifier.padding(
+                                            bottom = 15.dp,
+                                            start = 15.dp,
+                                            end = 15.dp
+                                        ),
                                         text = course?.courseName.toString(),
                                         fontSize = 26.sp,
                                         color = headLineColor,
@@ -474,7 +503,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     course?.let {
                                         items(it.tag) { item ->
                                             Card(
-                                                modifier = Modifier.padding(bottom = 15.dp, start = 15.dp),
+                                                modifier = Modifier.padding(
+                                                    bottom = 15.dp,
+                                                    start = 15.dp
+                                                ),
                                                 shape = RoundedCornerShape(6.dp),
                                                 colors =
                                                 CardDefaults.cardColors(
@@ -517,14 +549,22 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     Spacer(modifier = Modifier.width(30.dp))
                                     Icon(
                                         modifier =
-                                        Modifier.padding(start = 15.dp, bottom = 15.dp, top = 15.dp),
+                                        Modifier.padding(
+                                            start = 15.dp,
+                                            bottom = 15.dp,
+                                            top = 15.dp
+                                        ),
                                         imageVector = Icons.Filled.Star,
                                         tint = starFillingColor,
                                         contentDescription = "rating icon",
                                     )
                                     Text(
                                         modifier =
-                                        Modifier.padding(start = 7.5.dp, bottom = 15.dp, top = 20.dp),
+                                        Modifier.padding(
+                                            start = 7.5.dp,
+                                            bottom = 15.dp,
+                                            top = 20.dp
+                                        ),
                                         text = "4.5",
                                         color = editProfileTextColor,
                                         style = MaterialTheme.typography.titleMedium,
@@ -534,7 +574,11 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     Icon(
                                         modifier =
-                                        Modifier.padding(start = 15.dp, bottom = 15.dp, end = 7.5.dp),
+                                        Modifier.padding(
+                                            start = 15.dp,
+                                            bottom = 15.dp,
+                                            end = 7.5.dp
+                                        ),
                                         imageVector =
                                         ImageVector.vectorResource(id = R.drawable.add_friends),
                                         tint = buttonColor,
@@ -572,7 +616,11 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     )
                                 }
                                 HorizontalDivider(
-                                    modifier = Modifier.padding(start = 15.dp, end = 15.dp, bottom = 12.dp)
+                                    modifier = Modifier.padding(
+                                        start = 15.dp,
+                                        end = 15.dp,
+                                        bottom = 12.dp
+                                    )
                                 )
                                 Row(
                                     modifier = Modifier
@@ -653,20 +701,30 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     }
                                 }
                                 HorizontalDivider(
-                                    modifier = Modifier.padding(start = 15.dp, end = 15.dp, bottom = 15.dp)
+                                    modifier = Modifier.padding(
+                                        start = 15.dp,
+                                        end = 15.dp,
+                                        bottom = 15.dp
+                                    )
                                 )
 
                                 AnimatedVisibility(visible = aboutVisibilityState) {
                                     Column(modifier = Modifier) {
                                         Text(
-                                            modifier = Modifier.padding(start = 15.dp, bottom = 10.dp),
+                                            modifier = Modifier.padding(
+                                                start = 15.dp,
+                                                bottom = 10.dp
+                                            ),
                                             text = "Mentor",
                                             style = MaterialTheme.typography.titleMedium,
                                             fontSize = 20.sp,
                                             fontWeight = FontWeight(700),
                                         )
                                         Button(
-                                            modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+                                            modifier = Modifier.padding(
+                                                start = 10.dp,
+                                                bottom = 10.dp
+                                            ),
                                             colors =
                                             ButtonDefaults.buttonColors(
                                                 containerColor = Color.Transparent
@@ -704,7 +762,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         fontWeight = FontWeight(700),
                                                         fontSize = 18.sp,
                                                         modifier =
-                                                        Modifier.padding(start = 2.5.dp, bottom = 5.dp),
+                                                        Modifier.padding(
+                                                            start = 2.5.dp,
+                                                            bottom = 5.dp
+                                                        ),
                                                     )
                                                     Text(
                                                         text =
@@ -728,7 +789,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                             }
                                         }
                                         Text(
-                                            modifier = Modifier.padding(start = 15.dp, bottom = 15.dp),
+                                            modifier = Modifier.padding(
+                                                start = 15.dp,
+                                                bottom = 15.dp
+                                            ),
                                             text = "About Course",
                                             style = MaterialTheme.typography.titleMedium,
                                             fontSize = 20.sp,
@@ -828,7 +892,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         LazyColumn(modifier = Modifier.height(500.dp)) {
                                             course?.let { item ->
                                                 items(item.ratingAndReviews) { rate ->
-                                                    ReviewColumn(ratingAndReview = rate, context = context)
+                                                    ReviewColumn(
+                                                        ratingAndReview = rate,
+                                                        context = context
+                                                    )
                                                     HorizontalDivider(
                                                         modifier =
                                                         Modifier.padding(start = 15.dp, end = 15.dp)

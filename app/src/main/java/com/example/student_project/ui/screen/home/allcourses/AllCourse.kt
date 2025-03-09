@@ -65,7 +65,6 @@ fun AllCourseScreen(navController: NavController, courseRepo: CourseRepo) {
         courseState = courseRepo.getAllCourses()
         categoryState = courseRepo.showAllCategories()
     }
-
     Scaffold(
         topBar = {
             ScaffoldFilterScreenTopBar(navController = navController, text = "Top New Courses")

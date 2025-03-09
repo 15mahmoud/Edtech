@@ -20,8 +20,8 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
         }
     }
 
-    suspend fun capturePayment(courseId: List<String>): Result<String> {
-        return Result.runCatching { apiClient.capturePayment(CapturePayment(courseId)).data }
+    suspend fun initiatePayment(capturePayment: CapturePayment): Result<String> {
+        return Result.runCatching { apiClient.initiatePayment(capturePayment).data }
     }
 
     suspend fun verifyPayment(courseId: List<String>): Result<Boolean> {
