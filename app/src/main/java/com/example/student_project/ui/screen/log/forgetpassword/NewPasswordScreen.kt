@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
+import com.example.student_project.data.network.request.ApiBodyForResetPassword
+import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.widgets.PopBackStackEntry
 import com.example.student_project.ui.theme.ambientShadowColor
@@ -47,9 +49,12 @@ import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.spotShadowColor
 import com.example.student_project.ui.theme.textFieldColor
 import com.example.student_project.util.Constant
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-fun NewPasswordScreen(navController: NavController) {
+fun NewPasswordScreen(navController: NavController, otpToken: String?, studentRepo: StudentRepo) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -61,6 +66,10 @@ fun NewPasswordScreen(navController: NavController) {
     var confirmPasswordError by remember { mutableStateOf(false) }
     var showPassword by remember { mutableStateOf(false) }
     var showConfirmPassword by remember { mutableStateOf(false) }
+
+
+    //this will change
+    var changedPasswordState by remember { mutableStateOf<Result<String>?>(null) }
 
     Column(
         modifier = Modifier
@@ -239,9 +248,19 @@ fun NewPasswordScreen(navController: NavController) {
             onClick = {
                 // Handle sign-up logic here, including validation
                 if (password.isNotEmpty() && confirmPassword == password) {
-                    // send this password to the backend with email to modify it
-                    // and then back to login
-                    navController.navigate(Screens.LoginScreen.route)
+
+                    //this all will change
+                    val objectForChangingPassword =
+                        ApiBodyForResetPassword(otpToken.toString(), password, confirmPassword)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        changedPasswordState = studentRepo.resetPassword(objectForChangingPassword)
+                    }
+                    changedPasswordState?.onSuccess {
+                        navController.navigate(Screens.LoginScreen.route)
+                    }?.onFailure {
+                        Toast.makeText(context, "failed to change the password", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 } else {
                     Toast.makeText(context, "You insert invalid info", Toast.LENGTH_SHORT).show()
                     passwordError = true
@@ -251,9 +270,9 @@ fun NewPasswordScreen(navController: NavController) {
             shape = RoundedCornerShape(Constant.buttonRadios),
             modifier =
             Modifier
-                .padding(top = 40.dp , bottom = Constant.veryLargePadding)
+                .padding(top = 40.dp, bottom = Constant.veryLargePadding)
                 .align(alignment = Alignment.CenterHorizontally)
-                                .width(screenWidth * 90 / 100)
+                .width(screenWidth * 90 / 100)
                 .shadow(
                     elevation = 10.dp,
                     RoundedCornerShape(Constant.buttonRadios),

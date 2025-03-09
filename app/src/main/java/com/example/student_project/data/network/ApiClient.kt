@@ -9,6 +9,7 @@ import com.example.student_project.data.model.Meeting
 import com.example.student_project.data.model.Message
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
+import com.example.student_project.data.network.request.ApiBodyForResetPassword
 import com.example.student_project.data.network.request.ApiReqForChat
 import com.example.student_project.data.network.request.ApiReqForMessageInChat
 import com.example.student_project.data.network.request.ApiReqForSendingMessage
@@ -18,6 +19,7 @@ import com.example.student_project.data.network.request.ApiRequestWithCourseId
 import com.example.student_project.data.network.request.ApiRequestWithInstructorId
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.network.request.StudentUpdateRequest
+import com.example.student_project.data.network.request.TokenReq
 import com.example.student_project.data.network.response.BaseResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -95,7 +97,11 @@ interface ApiClient {
     @GET("course/showAllCategories")
     suspend fun showAllCategories(): BaseResponse<List<Category>>
 
-    // this one not used yet
-    //    @POST("auth/reset-password-token")
-    //    suspend fun resetPasswordToken(@Body email:TokenReq): BaseResponse1<String>
+    // this one need to change
+        @POST("auth/reset-password-token")
+        suspend fun resetPasswordToken(@Body email: TokenReq): BaseResponse<String>
+
+        //here we need some change too
+        @POST("auth/reset-password")
+        suspend fun resetPassword(@Body apiBodyForResetPassword: ApiBodyForResetPassword): BaseResponse<String>
 }
