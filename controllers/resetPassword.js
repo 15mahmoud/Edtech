@@ -73,7 +73,7 @@ exports.resetPasswordToken = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Token generated successfully",
-      token: token, 
+      data: token, 
     });
   } catch (error) {
     console.log("Error while creating token for reset password");

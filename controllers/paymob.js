@@ -99,9 +99,12 @@ exports.initiatePayment = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      paymentUrl: `${PAYMOB_IFRAME_URL.replace(/\?.*$/, "")}?payment_token=${
-        paymentKeyResponse.data.token
-      }`,
+      data: {
+        transactionId: transaction.transactionId,
+        paymentUrl: `${PAYMOB_IFRAME_URL.replace(/\?.*$/, "")}?payment_token=${
+          paymentKeyResponse.data.token
+        }`,
+      },
     });
   } catch (error) {
     console.error("Error initiating payment:", error);
@@ -151,3 +154,25 @@ exports.handleWebhook = async (req, res) => {
   }
 };
 
+
+exports.getTransactionStatus = async (req, res) => {
+  try {
+    const { transactionId } = req.body;
+    if (!transactionId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Transaction ID is required" });
+    }
+
+    const transaction = await Transaction.findOne({ transactionId });
+    if (!transaction) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Transaction not found" });
+    }
+
+    res.status(200).json({ success: true, data: transaction.status });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

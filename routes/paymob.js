@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   initiatePayment,
   handleWebhook,
+  getTransactionStatus,
 } = require("../controllers/paymob");
 const { auth, isStudent } = require("../middleware/auth");
 
@@ -11,5 +12,6 @@ router.post("/initiate-payment", auth, isStudent, initiatePayment);
 
 // Route to handle Paymob webhook
 router.post("/webhook", handleWebhook);
+router.post("/getTransactionStatus", getTransactionStatus);
 
 module.exports = router;
