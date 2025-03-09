@@ -44,7 +44,12 @@ fun Navigation(depContainer: DepContainer) {
     val navController = rememberNavController()
     // start from splash
     NavHost(navController = navController, startDestination = Screens.LoginScreen.route) {
-        composable(Screens.SplashScreen.route) { SplashScreen(navController,depContainer.studentRepo) }
+        composable(Screens.SplashScreen.route) {
+            SplashScreen(
+                navController,
+                depContainer.studentRepo
+            )
+        }
         composable(Screens.LoginScreen.route) {
             LoginScreen(navController, depContainer.studentRepo)
         }
@@ -64,11 +69,11 @@ fun Navigation(depContainer: DepContainer) {
                 depContainer.instructorRepo
             )
         }
-        composable (Screens.AllCourseScreen.route){
-            AllCourseScreen(navController = navController,depContainer.courseRepo)
+        composable(Screens.AllCourseScreen.route) {
+            AllCourseScreen(navController = navController, depContainer.courseRepo)
         }
-        composable (Screens.TrendingCourseScreen.route){
-            TrendingCourseScreen(navController = navController,depContainer.courseRepo)
+        composable(Screens.TrendingCourseScreen.route) {
+            TrendingCourseScreen(navController = navController, depContainer.courseRepo)
         }
         composable(
             Screens.CourseDetailScreen.route + "/{course_title}",
@@ -80,8 +85,18 @@ fun Navigation(depContainer: DepContainer) {
                 depContainer.courseRepo,
             )
         }
-        composable(Screens.LearningScreen.route) { MyCoursesScreen(navController = navController,depContainer.courseRepo) }
-        composable(Screens.ProfileScreen.route) { ProfileScreen(navController = navController,depContainer.studentRepo) }
+        composable(Screens.LearningScreen.route) {
+            MyCoursesScreen(
+                navController = navController,
+                depContainer.courseRepo
+            )
+        }
+        composable(Screens.ProfileScreen.route) {
+            ProfileScreen(
+                navController = navController,
+                depContainer.studentRepo
+            )
+        }
         composable(Screens.MentorFilterScreen.route) {
             // filled parcel object "FiltrationResult" and send it to search result screen
             MentorFilterScreen(navController)
@@ -168,8 +183,14 @@ fun Navigation(depContainer: DepContainer) {
                 backStackEntry.arguments?.getString("user_email"),
             )
         }
-        composable(Screens.NewPasswordScreen.route) {
-            NewPasswordScreen(navController = navController)
+        composable(Screens.NewPasswordScreen.route + "/{otp_token}", arguments = listOf(
+            navArgument(name = "otp_token") { type = NavType.StringType }
+        )) { backStackEntry ->
+            NewPasswordScreen(
+                navController = navController,
+                backStackEntry.arguments?.getString("otp_token"),
+                depContainer.studentRepo
+            )
         }
         composable(
             Screens.OtpTokenScreen.route + "/{user_email}",
@@ -181,6 +202,7 @@ fun Navigation(depContainer: DepContainer) {
             OtpTokenScreen(
                 navController = navController,
                 backStackEntry.arguments?.getString("user_email"),
+                depContainer.studentRepo
             )
         }
         composable(Screens.EditProfileScreen.route) {
@@ -230,18 +252,20 @@ fun Navigation(depContainer: DepContainer) {
             YourAiScreen(navController = navController)
         }
         composable(Screens.InboxScreen.route) {
-            InboxScreen(navController = navController,depContainer.studentRepo)
+            InboxScreen(navController = navController, depContainer.studentRepo)
         }
         composable(Screens.InboxChatScreen.route + "/{chat_id}" + "/{chat_name}",
             arguments = listOf(
                 navArgument(name = "chat_id") { type = NavType.StringType },
-                navArgument(name = "chat_name"){ type = NavType.StringType}
+                navArgument(name = "chat_name") { type = NavType.StringType }
             )
-        ) {backStackEntry ->
-            InboxChatScreen(navController = navController,
+        ) { backStackEntry ->
+            InboxChatScreen(
+                navController = navController,
                 backStackEntry.arguments?.getString("chat_id"),
                 backStackEntry.arguments?.getString("chat_name"),
-                depContainer.studentRepo)
+                depContainer.studentRepo
+            )
         }
         composable(
             Screens.CourseLessonScreen.route + "/{video_url}",

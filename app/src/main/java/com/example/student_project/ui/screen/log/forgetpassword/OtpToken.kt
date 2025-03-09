@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.student_project.R
+import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.widgets.PopBackStackEntry
 import com.example.student_project.ui.theme.ambientShadowColor
@@ -60,10 +61,13 @@ import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.spotShadowColor
 import com.example.student_project.ui.theme.textFieldColor
 import com.example.student_project.util.Constant
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
-fun OtpTokenScreen(navController: NavController, userEmail: String?) {
+fun OtpTokenScreen(navController: NavController, userEmail: String?, studentRepo: StudentRepo) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
@@ -86,7 +90,11 @@ fun OtpTokenScreen(navController: NavController, userEmail: String?) {
     var date by rememberSaveable {
         mutableIntStateOf(60)
     }
+    var tokenState by remember {
+        mutableStateOf<Result<String>?>(null)
+    }
     LaunchedEffect(date) {
+        tokenState = studentRepo.resetPasswordToken(userEmail.toString())
         if (date >= 1) {
             delay(1000)
             date--
@@ -120,6 +128,12 @@ fun OtpTokenScreen(navController: NavController, userEmail: String?) {
                 color = headLineColor,
                 modifier = Modifier.padding(top = 18.dp),
             )
+        }
+
+        tokenState?.onSuccess {
+            Text(text = "this code $it")
+        }?.onFailure {
+            Toast.makeText(context, "failed to load token", Toast.LENGTH_SHORT).show()
         }
 
 
@@ -158,8 +172,9 @@ fun OtpTokenScreen(navController: NavController, userEmail: String?) {
 
             Button(
                 onClick = {
-                    if (otpText == otpTextString) {
-                        navController.navigate(Screens.NewPasswordScreen.route)
+//                    tokenState.onSuccess {  }
+                    if (otpText == tokenState.toString()) {
+                        navController.navigate(Screens.NewPasswordScreen.route + "/$otpText")
                     } else {
                         Toast.makeText(context, "otp is incorrect", Toast.LENGTH_SHORT).show()
                     }
@@ -197,6 +212,9 @@ fun OtpTokenScreen(navController: NavController, userEmail: String?) {
             Button(
                 onClick = {
                     //resend to backend to get the new code
+                     CoroutineScope(Dispatchers.IO).launch{
+                        tokenState = studentRepo.resetPasswordToken(userEmail.toString())
+                    }
                     date = 60
                     resendButtonVisibility = false
                     verifyButtonVisibility = true
