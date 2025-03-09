@@ -12,6 +12,6 @@ router.post("/initiate-payment", auth, isStudent, initiatePayment);
 
 // Route to handle Paymob webhook
 router.post("/webhook", handleWebhook);
-router.post("/getTransactionStatus", getTransactionStatus);
+router.post("/getTransactionStatus",auth, getTransactionStatus);
 
 module.exports = router;
