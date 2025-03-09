@@ -28,8 +28,10 @@ exports.createNewChat = async (req, res) => {
     }).populate("users", "firstName lastName email");
 
     if (chatExists) {
+      //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
       return res.status(409).json({
         success: false,
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         message: "Chat already exists",
         data: chatExists,
       });

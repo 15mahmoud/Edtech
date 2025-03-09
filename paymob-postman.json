@@ -1,0 +1,61 @@
+{
+  "info": {
+    "name": "Paymob API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Auth Token",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "https://accept.paymob.com/api/auth/tokens",
+          "protocol": "https",
+          "host": ["accept", "paymob", "com"],
+          "path": ["api", "auth", "tokens"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"api_key\": \"ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TVRBeU9UZ3pNeXdpYm1GdFpTSTZJbWx1YVhScFlXd2lmUS5BTlUzXzRGUVhlZThnZkM3VHFoS1ByZm5qbG82ZllWZS1oS2NyUE5MZjNTejl2bHZrelRSWkJ3elBOVTRVSF95NmZkTmRIUDAxY3ZvelZ3LWxuUzdGZw==\"}"
+        }
+      }
+    },
+    {
+      "name": "Initiate Payment",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "http://localhost:5000/api/paymob/initiate-payment",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "paymob", "initiate-payment"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"amount\": 100, \"courseId\": \"67c0cf37a3243937f6d1eea8\" }"
+        }
+      }
+    },
+    {
+      "name": "Handle Webhook",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "http://localhost:5000/api/paymob/webhook",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "paymob", "webhook"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"obj\": { \"id\": 12345, \"order\": { \"id\": 67890 }, \"success\": true } }"
+        }
+      }
+    }
+  ]
+}

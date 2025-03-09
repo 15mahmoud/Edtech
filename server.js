@@ -18,6 +18,9 @@ const paymentRoutes = require('./routes/payments');
 const courseRoutes = require('./routes/course');
 const meetingRoutes = require('./routes/meeting');
 const chatRoutes = require('./routes/chat');
+const chatAiRoutes = require('./routes/chatAi');
+const openAiRoutes = require("./routes/openAi");
+const paymob = require("./routes/paymob");
 
 
 // middleware 
@@ -55,6 +58,9 @@ app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/course', courseRoutes);
 app.use("/api/v1/meeting", meetingRoutes);
 app.use("/api/v1/course", chatRoutes);
+app.use("/api/v1/Ai", chatAiRoutes);
+app.use("/api/v1/openAi", openAiRoutes);
+app.use("/api/v1/paymob", paymob);
 
 
 
