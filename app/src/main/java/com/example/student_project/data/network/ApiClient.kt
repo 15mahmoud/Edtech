@@ -46,8 +46,9 @@ interface ApiClient {
     @PUT("profile/updateProfile")
     suspend fun updateProfile(@Body student: StudentUpdateRequest): BaseResponse<User>
 
-    @POST("payment/capturePayment")
-    suspend fun capturePayment(@Body courseId: CapturePayment): BaseResponse<String>
+
+    @POST("paymob/initiate-payment")
+    suspend fun initiatePayment(@Body capturePayment: CapturePayment): BaseResponse<String>
 
 
     @POST("payment/verifyPayment")
@@ -68,13 +69,13 @@ interface ApiClient {
     suspend fun createChat(@Body participantId: ApiReqForChat): BaseResponse<ChattingRoom>
 
     @POST("course/sendMessage")
-    suspend fun sendMessage(@Body content:ApiReqForSendingMessage):BaseResponse<Message>
+    suspend fun sendMessage(@Body content: ApiReqForSendingMessage): BaseResponse<Message>
 
     @GET("course/getAllChats")
     suspend fun getAllChat(): BaseResponse<List<InboxChat>>
 
     @POST("course/getMessages")
-    suspend fun getMessages(@Body chatId:ApiReqForMessageInChat): BaseResponse<List<Message>>
+    suspend fun getMessages(@Body chatId: ApiReqForMessageInChat): BaseResponse<List<Message>>
 
     @GET("meeting/all")
     suspend fun getAllMeeting(): BaseResponse<List<Meeting>>
@@ -98,10 +99,10 @@ interface ApiClient {
     suspend fun showAllCategories(): BaseResponse<List<Category>>
 
     // this one need to change
-        @POST("auth/reset-password-token")
-        suspend fun resetPasswordToken(@Body email: TokenReq): BaseResponse<String>
+    @POST("auth/reset-password-token")
+    suspend fun resetPasswordToken(@Body email: TokenReq): BaseResponse<String>
 
-        //here we need some change too
-        @POST("auth/reset-password")
-        suspend fun resetPassword(@Body apiBodyForResetPassword: ApiBodyForResetPassword): BaseResponse<String>
+    //here we need some change too
+    @POST("auth/reset-password")
+    suspend fun resetPassword(@Body apiBodyForResetPassword: ApiBodyForResetPassword): BaseResponse<String>
 }
