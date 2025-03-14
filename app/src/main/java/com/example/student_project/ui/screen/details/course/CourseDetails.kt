@@ -8,9 +8,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,10 +26,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.sharp.Star
@@ -39,6 +39,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -56,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -125,47 +127,27 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
         mutableStateOf("")
     }
     var unLock by remember { mutableStateOf<Result<Boolean?>?>(null) }
+
+    var getTransaction by remember { mutableStateOf<Result<String?>?>(null) }
+
     var lock by remember { mutableStateOf(false) }
+
     LaunchedEffect(scope) {
         val courseDetails = courseRepo.getFullCourseDetails(courseId.toString())
         courseDetailsState = courseDetails
     }
+
     courseDetailsState
         ?.onSuccess { course ->
             CoroutineScope(Dispatchers.IO).launch {
-                unLock = courseRepo.verifyPayment(listOf(course?.id.toString()))
+                //there is a problem here
+                getTransaction = courseRepo.getTransactionState(course?.id.toString())
             }
-            unLock?.onSuccess { it ->
+            getTransaction?.onSuccess { it ->
+
                 it?.let { unLockState ->
-                    lock = unLockState
+                    lock = unLockState == "paid"
                     Scaffold(
-                        topBar = {
-                            TopAppBar(
-                                modifier = Modifier.padding(top = 10.dp),
-                                title = {
-                                    IconButton(onClick = { navController.popBackStack() }) {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                            contentDescription = "Arrow Back",
-                                        )
-                                    }
-                                },
-                                actions = {
-                                    IconButton(
-                                        onClick = {
-                                            // here we save this course
-                                        }
-                                    ) {
-                                        Icon(
-                                            modifier = Modifier,
-                                            imageVector = Icons.Default.Add,
-                                            contentDescription = "we do it latter",
-                                        )
-                                    }
-                                },
-                                backgroundColor = Color.Transparent,
-                            )
-                        },
                         bottomBar = {
                             AnimatedVisibility(visible = lock) {
                                 BottomAppBar(containerColor = Color.White) {
@@ -173,17 +155,20 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         onClick = {
                                             dialogKeyForReview = true
                                         },
-                                        shape = RoundedCornerShape(100.dp),
+                                        shape = RoundedCornerShape(Constant.buttonRadios),
                                         modifier =
                                         Modifier
                                             .fillMaxWidth()
-                                            .padding(start = 15.dp, end = 15.dp)
+                                            .padding(
+                                                start = Constant.normalPadding,
+                                                end = Constant.normalPadding
+                                            )
                                             // .clip(RoundedCornerShape(100.dp))
                                             // .border(width = 1.dp, color = buttonColor, shape =
                                             // RoundedCornerShape(99.dp))
                                             .shadow(
                                                 elevation = 10.dp,
-                                                RoundedCornerShape(100.dp),
+                                                RoundedCornerShape(Constant.buttonRadios),
                                                 spotColor = spotShadowColor.copy(alpha = 0.4f),
                                                 ambientColor = ambientShadowColor.copy(alpha = 0.35f),
                                             ),
@@ -205,17 +190,20 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         onClick = {
                                             dialogKeyForPayment = true
                                         },
-                                        shape = RoundedCornerShape(100.dp),
+                                        shape = RoundedCornerShape(Constant.buttonRadios),
                                         modifier =
                                         Modifier
                                             .fillMaxWidth()
-                                            .padding(start = 15.dp, end = 15.dp)
+                                            .padding(
+                                                start = Constant.normalPadding,
+                                                end = Constant.normalPadding
+                                            )
                                             // .clip(RoundedCornerShape(100.dp))
                                             // .border(width = 1.dp, color = buttonColor, shape =
                                             // RoundedCornerShape(99.dp))
                                             .shadow(
                                                 elevation = 10.dp,
-                                                RoundedCornerShape(100.dp),
+                                                RoundedCornerShape(Constant.buttonRadios),
                                                 spotColor = spotShadowColor.copy(alpha = 0.4f),
                                                 ambientColor = ambientShadowColor.copy(alpha = 0.35f),
                                             ),
@@ -233,8 +221,11 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                             }
                         },
                     ) { innerPadding ->
+
+
                         Column(
                             modifier = Modifier
+                                .consumeWindowInsets(innerPadding)
                                 .fillMaxSize()
                                 .verticalScroll(rememberScrollState())
                         ) {
@@ -315,35 +306,35 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                     unfocusedContainerColor = addReviewTextColor
                                                 ),
                                                 textStyle = MaterialTheme.typography.titleMedium,
-                                                shape = RoundedCornerShape(12.dp),
+                                                shape = RoundedCornerShape(Constant.buttonRadios),
                                                 modifier = Modifier
                                                     .padding(
                                                         top = Constant.normalPadding,
-                                                        start = Constant.paddingComponentFromScreen,
-                                                        end = Constant.paddingComponentFromScreen,
+                                                        start = Constant.normalPadding,
+                                                        end = Constant.normalPadding,
                                                         bottom = Constant.normalPadding
                                                     )
                                                     .border(
                                                         2.dp,
                                                         color = buttonColor,
-                                                        RoundedCornerShape(12.dp)
+                                                        RoundedCornerShape(Constant.buttonRadios)
                                                     )
                                             )
                                             Button(
-                                                shape = RoundedCornerShape(100.dp),
+                                                shape = RoundedCornerShape(Constant.buttonRadios),
                                                 colors = ButtonDefaults.buttonColors(
                                                     containerColor = buttonColor
                                                 ),
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .padding(
-                                                        start = Constant.paddingComponentFromScreen,
-                                                        end = Constant.paddingComponentFromScreen,
+                                                        start = Constant.normalPadding,
+                                                        end = Constant.normalPadding,
                                                         bottom = Constant.normalPadding
                                                     )
                                                     .shadow(
                                                         elevation = 4.dp,
-                                                        RoundedCornerShape(100.dp)
+                                                        RoundedCornerShape(Constant.buttonRadios)
                                                     ),
                                                 onClick = {
                                                     val studentReview = CreateRatingReq(
@@ -367,20 +358,20 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                 )
                                             }
 
-                                            Button(shape = RoundedCornerShape(100.dp),
+                                            Button(shape = RoundedCornerShape(Constant.buttonRadios),
                                                 colors = ButtonDefaults.buttonColors(
                                                     containerColor = addReviewTextColor
                                                 ),
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .padding(
-                                                        start = Constant.paddingComponentFromScreen,
-                                                        end = Constant.paddingComponentFromScreen,
-                                                        bottom = Constant.paddingComponentFromScreen
+                                                        start = Constant.normalPadding,
+                                                        end = Constant.normalPadding,
+                                                        bottom = Constant.normalPadding
                                                     )
                                                     .shadow(
                                                         elevation = 4.dp,
-                                                        RoundedCornerShape(100.dp)
+                                                        RoundedCornerShape(Constant.buttonRadios)
                                                     ),
                                                 onClick = {
                                                     dialogKeyForReview = false
@@ -420,13 +411,13 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     onDismissRequest = { dialogKeyForPayment = false },
                                     buttons = {
                                         Button(
-                                            shape = RoundedCornerShape(100.dp),
+                                            shape = RoundedCornerShape(Constant.buttonRadios),
                                             modifier = Modifier
                                                 .align(Alignment.CenterHorizontally)
                                                 .padding(Constant.mediumPadding)
                                                 .shadow(
                                                     elevation = 4.dp,
-                                                    RoundedCornerShape(100.dp)
+                                                    RoundedCornerShape(Constant.buttonRadios)
                                                 ),
                                             colors = ButtonDefaults.buttonColors(
                                                 containerColor = buttonColor
@@ -447,10 +438,36 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                     //and when he return to this screen
                                                     //we will make get Transaction
                                                     val intent =
-                                                        Intent(Intent.ACTION_VIEW, Uri.parse(it))
+                                                        Intent(
+                                                            Intent.ACTION_VIEW,
+                                                            Uri.parse(it)
+                                                        )
                                                     context.startActivity(intent)
-                                                    lock = !unLockState
-                                                    dialogKeyForPayment = false
+
+                                                    CoroutineScope(Dispatchers.IO).launch {
+                                                        getTransaction =
+                                                            courseRepo.getTransactionState(
+                                                                course.id
+                                                            )
+                                                    }
+                                                    getTransaction?.onSuccess { transaction ->
+                                                        if (transaction == "paid") {
+                                                            lock = true
+                                                            dialogKeyForPayment = false
+                                                        } else {
+                                                            Toast.makeText(
+                                                                context,
+                                                                "your payment faild",
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
+                                                        }
+                                                    }?.onFailure {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "can't verify payment",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
                                                 }?.onFailure {
                                                     Toast.makeText(
                                                         context,
@@ -472,23 +489,49 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
 
                                     })
                             }
-                            AsyncImage(
-                                modifier = Modifier
-                                    .width(screenWidth)
-                                    .height(screenHeight * 34 / 100),
-                                // this will change course?.thumbnail
-                                model = ImageRequest.Builder(context).crossfade(true)
-                                    .data(course?.thumbnail.toString()).build(),
-                                contentDescription = "course image",
-                            )
-                            Column(modifier = Modifier.padding(innerPadding)) {
+                            Box() {
+
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .width(screenWidth)
+                                        .height(screenHeight * 40 / 100),
+                                    //this one is so important
+                                    contentScale = ContentScale.Crop,
+                                    // this will change course?.thumbnail
+                                    model = ImageRequest.Builder(context).crossfade(true)
+                                        .data(course?.thumbnail.toString()).build(),
+                                    contentDescription = "course image",
+                                )
+                                IconButton(
+                                    onClick = { navController.popBackStack() },
+                                    modifier = Modifier
+                                        .align(Alignment.TopStart)
+                                        .padding(
+                                            top = Constant.veryLargePadding,
+                                            start = Constant.normalPadding
+                                        ), colors = IconButtonDefaults.iconButtonColors(
+                                        containerColor = buttonColor
+                                    )
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                                        modifier = Modifier
+                                            .width(screenWidth * 8 / 100)
+                                            .height(screenHeight * 8 / 100),
+                                        tint = Color.White,
+                                        contentDescription = "Arrow Back",
+                                    )
+                                }
+                            }
+                            Column(modifier = Modifier.padding()) {
                                 Row(Modifier.fillMaxWidth()) {
                                     Text(
                                         modifier =
                                         Modifier.padding(
-                                            bottom = 15.dp,
-                                            start = 15.dp,
-                                            end = 15.dp
+                                            top = Constant.normalPadding,
+                                            bottom = Constant.paddingComponentFromScreen,
+                                            start = Constant.normalPadding,
+                                            end = Constant.normalPadding
                                         ),
                                         text = course?.courseName.toString(),
                                         fontSize = 26.sp,
@@ -497,15 +540,18 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         fontWeight = FontWeight(700),
                                     )
                                     Spacer(modifier = Modifier.width(20.dp))
+                                    //here we will put icon
                                 }
 
                                 LazyRow(modifier = Modifier.fillMaxWidth()) {
                                     course?.let {
                                         items(it.tag) { item ->
                                             Card(
-                                                modifier = Modifier.padding(
-                                                    bottom = 15.dp,
-                                                    start = 15.dp
+                                                modifier = Modifier
+//                                                    .height(screenHeight * 6/100)
+                                                    .padding(
+                                                    bottom = Constant.paddingComponentFromScreen,
+                                                    start = Constant.normalPadding
                                                 ),
                                                 shape = RoundedCornerShape(6.dp),
                                                 colors =
@@ -515,16 +561,16 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                             ) {
                                                 Text(
                                                     modifier =
-                                                    Modifier.padding(
-                                                        top = 6.dp,
-                                                        bottom = 6.dp,
-                                                        start = 10.dp,
-                                                        end = 10.dp,
+                                                    Modifier.align(Alignment.CenterHorizontally).padding(
+//                                                        top = Constant.verySmallPadding,
+//                                                        bottom = Constant.verySmallPadding,
+                                                        start = Constant.mediumPadding,
+                                                        end = Constant.mediumPadding,
                                                     ),
                                                     text = item,
                                                     color = buttonColor,
-                                                    fontSize = 15.sp,
-                                                    style = MaterialTheme.typography.headlineMedium,
+                                                    fontSize = 10.sp,
+                                                    style = MaterialTheme.typography.titleLarge,
                                                     fontWeight = FontWeight(600),
                                                 )
                                             }
@@ -540,19 +586,19 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         fontWeight = FontWeight(700),
                                         modifier =
                                         Modifier.padding(
-                                            top = 7.5.dp,
-                                            bottom = 10.dp,
-                                            start = 15.dp,
-                                            end = 15.dp,
+//                                            top = Constant.mediumPadding,
+                                            bottom = Constant.normalPadding,
+                                            start = Constant.normalPadding,
+                                            end = Constant.normalPadding,
                                         ),
                                     )
                                     Spacer(modifier = Modifier.width(30.dp))
                                     Icon(
                                         modifier =
                                         Modifier.padding(
-                                            start = 15.dp,
-                                            bottom = 15.dp,
-                                            top = 15.dp
+                                            start = Constant.normalPadding,
+                                            bottom = Constant.paddingComponentFromScreen,
+                                            top = Constant.smallPadding
                                         ),
                                         imageVector = Icons.Filled.Star,
                                         tint = starFillingColor,
@@ -561,11 +607,11 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     Text(
                                         modifier =
                                         Modifier.padding(
-                                            start = 7.5.dp,
-                                            bottom = 15.dp,
-                                            top = 20.dp
+                                            start = Constant.mediumPadding,
+                                            bottom = Constant.paddingComponentFromScreen,
+                                            top = Constant.normalPadding
                                         ),
-                                        text = "4.5",
+                                        text = (course?.averageRating?:0.0).toString(),
                                         color = editProfileTextColor,
                                         style = MaterialTheme.typography.titleMedium,
                                         fontSize = 16.sp,
@@ -575,9 +621,9 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     Icon(
                                         modifier =
                                         Modifier.padding(
-                                            start = 15.dp,
-                                            bottom = 15.dp,
-                                            end = 7.5.dp
+                                            start = Constant.normalPadding,
+                                            bottom = Constant.paddingComponentFromScreen,
+                                            end = Constant.mediumPadding
                                         ),
                                         imageVector =
                                         ImageVector.vectorResource(id = R.drawable.add_friends),
@@ -591,34 +637,40 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight(500),
                                         modifier = Modifier.padding(
-                                            top = 5.dp,
-                                            bottom = 15.dp,
-                                            end = 15.dp
+                                            top = Constant.smallPadding,
+                                            bottom = Constant.paddingComponentFromScreen,
+                                            end = Constant.normalPadding
                                         ),
                                     )
-                                    // this icon need to change
                                     Icon(
-                                        modifier = Modifier.padding(bottom = 15.dp, end = 7.5.dp),
-                                        imageVector = Icons.Filled.AddCircle,
+                                        modifier = Modifier.padding(
+                                            start = Constant.paddingComponentFromScreen,
+                                            top = Constant.smallPadding,
+                                            bottom = Constant.mediumPadding,
+                                            end = Constant.mediumPadding
+                                        ),
+                                        imageVector =
+                                        ImageVector.vectorResource(id = R.drawable.watch),
+                                        tint = buttonColor,
                                         contentDescription = "time icon",
                                     )
                                     Text(
-                                        text = course?.totalDuration.toString() + " Hours",
+                                        text = course?.totalDuration.toString(),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = editProfileTextColor,
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight(500),
                                         modifier = Modifier.padding(
-                                            top = 2.dp,
-                                            bottom = 17.dp,
-                                            end = 15.dp
+                                            top = Constant.smallPadding,
+                                            bottom = Constant.paddingComponentFromScreen,
+                                            end = Constant.normalPadding
                                         ),
                                     )
                                 }
                                 HorizontalDivider(
                                     modifier = Modifier.padding(
-                                        start = 15.dp,
-                                        end = 15.dp,
+                                        start = Constant.normalPadding,
+                                        end = Constant.normalPadding,
                                         bottom = 12.dp
                                     )
                                 )
@@ -628,7 +680,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         .padding(bottom = 12.dp),
                                     horizontalArrangement =
                                     Arrangement.spacedBy(
-                                        10.dp,
+                                        Constant.normalPadding,
                                         alignment = Alignment.CenterHorizontally,
                                     ),
                                 ) {
@@ -678,13 +730,19 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     }
                                     Button(
                                         onClick = {
-                                            if (!reviewsVisibilityState) {
-                                                aboutVisibilityState = false
-                                                lessonVisibilityState = false
-                                                reviewsVisibilityState = true
-                                            } else {
-                                                lessonVisibilityState = false
-                                                aboutVisibilityState = false
+
+                                            if ((course?.averageRating?:0.0).toString() != "0.0") {
+
+                                                if (!reviewsVisibilityState) {
+                                                    aboutVisibilityState = false
+                                                    lessonVisibilityState = false
+                                                    reviewsVisibilityState = true
+                                                } else {
+                                                    lessonVisibilityState = false
+                                                    aboutVisibilityState = false
+                                                }
+                                            }else{
+                                                Toast.makeText(context, "no reviews", Toast.LENGTH_SHORT).show()
                                             }
                                         },
                                         colors =
@@ -702,9 +760,9 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                 }
                                 HorizontalDivider(
                                     modifier = Modifier.padding(
-                                        start = 15.dp,
-                                        end = 15.dp,
-                                        bottom = 15.dp
+                                        start = Constant.normalPadding,
+                                        end = Constant.normalPadding,
+                                        bottom = Constant.paddingComponentFromScreen
                                     )
                                 )
 
@@ -712,8 +770,8 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     Column(modifier = Modifier) {
                                         Text(
                                             modifier = Modifier.padding(
-                                                start = 15.dp,
-                                                bottom = 10.dp
+                                                start = Constant.normalPadding,
+                                                bottom = Constant.normalPadding
                                             ),
                                             text = "Mentor",
                                             style = MaterialTheme.typography.titleMedium,
@@ -722,8 +780,8 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         )
                                         Button(
                                             modifier = Modifier.padding(
-                                                start = 10.dp,
-                                                bottom = 10.dp
+                                                start = Constant.normalPadding,
+                                                bottom = Constant.normalPadding
                                             ),
                                             colors =
                                             ButtonDefaults.buttonColors(
@@ -741,12 +799,14 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         // this will be photo
                                                         // course?.instructor?.image.toString()
                                                         .data(course?.instructor?.image.toString())
-                                                        .transformations(CircleCropTransformation())
+                                                        .transformations(
+                                                            CircleCropTransformation()
+                                                        )
                                                         .build(),
                                                     contentDescription = "mentor image",
                                                     modifier =
                                                     Modifier
-                                                        .padding(end = 7.5.dp)
+                                                        .padding(end = Constant.mediumPadding)
                                                         .align(Alignment.CenterVertically)
                                                         .width(screenWidth * 14 / 100)
                                                         .height(screenHeight * 7 / 100),
@@ -763,8 +823,8 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         fontSize = 18.sp,
                                                         modifier =
                                                         Modifier.padding(
-                                                            start = 2.5.dp,
-                                                            bottom = 5.dp
+                                                            start = Constant.verySmallPadding,
+                                                            bottom = Constant.smallPadding
                                                         ),
                                                     )
                                                     Text(
@@ -783,15 +843,15 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         //                                          overflow
                                                         // = TextOverflow.Ellipsis,
                                                         //  softWrap = true,
-                                                        modifier = Modifier.padding(start = 2.5.dp),
+                                                        modifier = Modifier.padding(start = Constant.verySmallPadding),
                                                     )
                                                 }
                                             }
                                         }
                                         Text(
                                             modifier = Modifier.padding(
-                                                start = 15.dp,
-                                                bottom = 15.dp
+                                                start = Constant.normalPadding,
+                                                bottom = Constant.paddingComponentFromScreen
                                             ),
                                             text = "About Course",
                                             style = MaterialTheme.typography.titleMedium,
@@ -802,7 +862,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                             text = course?.courseDescription.toString(),
                                             style = MaterialTheme.typography.headlineSmall,
                                             fontSize = 14.sp,
-                                            modifier = Modifier.padding(start = 15.dp, end = 15.dp),
+                                            modifier = Modifier.padding(
+                                                start = Constant.normalPadding,
+                                                end = Constant.paddingComponentFromScreen
+                                            ),
                                         )
                                     }
                                 }
@@ -816,7 +879,12 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                             color = headLineColor,
                                             fontWeight = FontWeight(700),
                                             fontSize = 20.sp,
-                                            modifier = Modifier.padding(15.dp),
+                                            modifier = Modifier.padding(
+                                                top = Constant.paddingComponentFromScreen,
+                                                bottom = Constant.paddingComponentFromScreen,
+                                                start = Constant.normalPadding,
+                                                end = Constant.normalPadding
+                                            ),
                                         )
 
                                         LazyColumn(modifier = Modifier.height(500.dp)) {
@@ -835,7 +903,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         fontSize = 18.sp,
                                                         modifier =
                                                         Modifier.padding(
-                                                            start = 15.dp,
+                                                            start = Constant.normalPadding,
                                                             bottom = 12.5.dp,
                                                         ),
                                                     )
@@ -874,16 +942,16 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         Row(
                                             modifier = Modifier
                                                 .fillMaxWidth()
-                                                .padding(15.dp)
+                                                .padding(top = Constant.paddingComponentFromScreen, bottom = Constant.paddingComponentFromScreen, start = Constant.normalPadding, end =Constant.normalPadding )
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Default.Star,
                                                 tint = starFillingColor,
                                                 contentDescription = "rating icon",
-                                                modifier = Modifier.padding(end = 5.dp),
+                                                modifier = Modifier.padding(end = Constant.smallPadding),
                                             )
                                             Text(
-                                                text = course?.averageRating.toString(),
+                                                text = (course?.averageRating?:0.0).toString(),
                                                 style = MaterialTheme.typography.titleLarge,
                                                 fontWeight = FontWeight(700),
                                                 color = buttonColor,
@@ -898,7 +966,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                     )
                                                     HorizontalDivider(
                                                         modifier =
-                                                        Modifier.padding(start = 15.dp, end = 15.dp)
+                                                        Modifier.padding(
+                                                            start = Constant.normalPadding,
+                                                            end = Constant.normalPadding
+                                                        )
                                                     )
                                                 }
                                             }
@@ -909,6 +980,9 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                         }
                     }
                 }
+            }?.onFailure {
+                Toast.makeText(context, "failed to verify payment", Toast.LENGTH_SHORT).show()
+                Log.d("details", it.message.toString())
             }
         }
         ?.onFailure {

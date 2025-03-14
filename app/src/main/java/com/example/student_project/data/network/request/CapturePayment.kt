@@ -5,3 +5,6 @@ data class CapturePayment(
     val amount:Double,
     val courseId: String
 )
+data class VerifyPayment(
+    val courseId: String
+)
