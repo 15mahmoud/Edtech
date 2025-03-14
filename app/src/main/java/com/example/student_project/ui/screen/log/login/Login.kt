@@ -1,6 +1,7 @@
 package com.example.student_project.ui.screen.log.login
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -43,6 +45,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.example.student_project.R
 import com.example.student_project.data.model.User
@@ -71,6 +75,7 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
     var passwordState by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf(false) }
     var showPassword by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
 
 
     Scaffold(modifier = Modifier
@@ -84,6 +89,14 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
+            AnimatedVisibility(visible = isLoading) {
+                Dialog( onDismissRequest = { isLoading = false }) {
+                    CircularProgressIndicator()
+
+                }
+            }
+
+
             Text(
                 text = "Login to your Account",
                 style = MaterialTheme.typography.headlineLarge,
@@ -155,7 +168,7 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                 TextField(
                     modifier =
                     Modifier
-                        .padding(10.dp)
+                        .padding(Constant.normalPadding)
                         .width(screenWidth * 90 / 100)
                         .align(alignment = Alignment.CenterHorizontally)
                         .shadow(
@@ -231,8 +244,9 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
 
                             val user = StudentLogin(emailState, passwordState)
                             CoroutineScope(Dispatchers.IO).launch {
-                                val result = studentRepo.checkUser(user)
-                                resultState = result
+                                isLoading = true
+                                 resultState = studentRepo.checkUser(user)
+                                isLoading = false
                             }
                             resultState
                                 ?.onSuccess {

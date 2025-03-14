@@ -20,6 +20,7 @@ import com.example.student_project.data.network.request.ApiRequestWithInstructor
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.network.request.StudentUpdateRequest
 import com.example.student_project.data.network.request.TokenReq
+import com.example.student_project.data.network.request.VerifyPayment
 import com.example.student_project.data.network.response.BaseResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -51,8 +52,8 @@ interface ApiClient {
     suspend fun initiatePayment(@Body capturePayment: CapturePayment): BaseResponse<String>
 
 
-    @POST("payment/verifyPayment")
-    suspend fun verifyPayment(@Body courseId: CapturePayment): BaseResponse<Boolean>
+    @POST("paymob/getTransactionStatus")
+    suspend fun getTransactionState(@Body courseId: VerifyPayment): BaseResponse<String>
 
     @POST("course/createRating")
     suspend fun createRating(@Body ratingReq: CreateRatingReq)

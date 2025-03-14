@@ -6,6 +6,7 @@ import com.example.student_project.data.network.ApiClient
 import com.example.student_project.data.network.request.CapturePayment
 import com.example.student_project.data.network.request.CreateRatingReq
 import com.example.student_project.data.network.request.ApiRequestWithCourseId
+import com.example.student_project.data.network.request.VerifyPayment
 import javax.inject.Inject
 
 class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
@@ -24,8 +25,8 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
         return Result.runCatching { apiClient.initiatePayment(capturePayment).data }
     }
 
-    suspend fun verifyPayment(courseId: List<String>): Result<Boolean> {
-        return Result.runCatching { apiClient.verifyPayment(CapturePayment(courseId)).data }
+    suspend fun getTransactionState(courseId: String): Result<String> {
+        return Result.runCatching { apiClient.getTransactionState(VerifyPayment(courseId)).data }
     }
 
     suspend fun createRating(ratingReq: CreateRatingReq) {
