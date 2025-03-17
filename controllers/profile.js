@@ -15,7 +15,7 @@ const { convertSecondsToDuration } = require('../utils/secToDuration')
 exports.updateProfile = async (req, res) => {
     try {
         // extract data
-        const { gender = '', dateOfBirth = "", about = "", contactNumber = '', firstName, lastName } = req.body;
+        const { gender = '', dateOfBirth = "", about = "", contactNumber = '',Linkedin = "", firstName, lastName } = req.body;
 
         // extract userId
         const userId = req.user.id;
@@ -37,6 +37,7 @@ exports.updateProfile = async (req, res) => {
         profileDetails.dateOfBirth = dateOfBirth;
         profileDetails.about = about;
         profileDetails.contactNumber = contactNumber;
+        profileDetails.Linkedin = Linkedin;
 
         // save data to DB
         await profileDetails.save();

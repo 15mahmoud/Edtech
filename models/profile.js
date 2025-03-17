@@ -14,6 +14,10 @@ const profileSchema = new mongoose.Schema({
     contactNumber: {
         type: String,
         trim: true
+    },
+    Linkedin: {
+        type: String,
+        trim: true
     }
 
 });

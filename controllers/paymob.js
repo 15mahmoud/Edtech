@@ -162,8 +162,8 @@ exports.handleWebhook = async (req, res) => {
 
 exports.getTransactionStatus = async (req, res) => {
   try {
-    const { courseId } = req.body; // أخذ الـ courseId من body
-    const userId = req.user.id; // استخراج userId من الطلب
+    const { courseId } = req.body; 
+    const userId = req.user.id; 
 
     const transaction = await Transaction.findOne({
       user: userId,
