@@ -6,7 +6,7 @@ This repository contains the backend code for the Graduation Project. It is buil
 
 Below is the ER diagram representing the database structure of this project:
 
-![ER Diagram]([https://raw.githubusercontent.com/USERNAME/REPO/main/docs/erd.png](https://github.com/15mahmoud/graduation-project-backend/blob/main/uml/ERD.png))
+![ER Diagram](https://raw.githubusercontent.com/USERNAME/REPO/main/docs/erd.png](https://github.com/15mahmoud/graduation-project-backend/blob/main/uml/ERD.png)
 
 ## Features
 
