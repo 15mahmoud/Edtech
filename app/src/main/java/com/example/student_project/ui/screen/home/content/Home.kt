@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -58,11 +60,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -78,8 +85,15 @@ import com.example.student_project.data.repo.InstructorRepo
 import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.home.uidata.BottomNavItem
+import com.example.student_project.ui.theme.addReviewTextColor
+import com.example.student_project.ui.theme.buttonColor
+import com.example.student_project.ui.theme.darkerGrayColor
 import com.example.student_project.ui.theme.lightGray
 import com.example.student_project.ui.theme.starFillingColor
+import com.example.student_project.util.Constant
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -186,7 +200,7 @@ fun HomeScreen(
         ) {
             Column(
                 Modifier
-                    .padding(19.dp)
+                    .padding(Constant.paddingComponentFromScreen)
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
@@ -304,23 +318,32 @@ fun HomeScreen(
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Trending Courses",
-                        fontSize = 15.sp,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(top = 15.dp),
+                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight(600),
+                        modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
                     )
-
                     Button(
-                        modifier = Modifier.align(alignment = Alignment.CenterEnd),
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(
+                                top = Constant.smallPadding
+                            ),
                         onClick = {
                             // here we write code to navigate to all subject
                             navController.navigate(Screens.TrendingCourseScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     ) {
-                        Row {
-                            Text(text = "All subject", fontSize = 10.sp, color = Color.Blue)
+
+                            Text(
+                                text = "All subject",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontSize = 14.sp,
+                                color = darkerGrayColor
+                            )
                             // here we put image for a right arrow
-                        }
+
                     }
                 }
 
@@ -349,13 +372,39 @@ fun HomeScreen(
                                 .show()
                         }
                 }
-
+                Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    modifier = Modifier.padding(bottom = 5.dp),
                     text = "Weekly TopLive Tutors ",
-                    fontSize = 15.sp,
-                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 20.sp,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight(600),
+                    modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
                 )
+
+                    Button(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(
+                                top = Constant.smallPadding
+                            ),
+                        onClick = {
+                            // here we write code to navigate to all mentor
+                            navController.navigate(Screens.TrendingCourseScreen.route)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    ) {
+
+                        Text(
+                            text = "All mentor",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = 14.sp,
+                            color = darkerGrayColor
+                        )
+                        // here we put image for a right arrow
+
+                    }
+                }
+
                 //here there are button for show all instructor
                 LazyRow(
                     modifier = Modifier
@@ -382,24 +431,35 @@ fun HomeScreen(
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Top New Courses",
-                        fontSize = 15.sp,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(top = 15.dp, start = 7.dp),
+                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight(600),
+                        modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
                     )
-
                     Button(
-                        modifier = Modifier.align(alignment = Alignment.CenterEnd),
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(
+                                top = Constant.smallPadding
+                            ),
                         onClick = {
-                           navController.navigate(Screens.AllCourseScreen.route)
+                            // here we write code to navigate to all subject
+                            navController.navigate(Screens.TrendingCourseScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     ) {
-                        Row {
-                            Text(text = "All subject", fontSize = 10.sp, color = Color.Blue)
-                            // here we put image for a right arrow
-                        }
+
+                        Text(
+                            text = "All subject",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = 14.sp,
+                            color = darkerGrayColor
+                        )
+                        // here we put image for a right arrow
+
                     }
                 }
+
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -467,12 +527,14 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
                 route = "your_ai_screen",
                 selectedIcon = Icons.Filled.Person,
                 unselectedIcon = Icons.Outlined.Person,
-                label = "Your AI"),
+                label = "Your AI"
+            ),
             BottomNavItem(
                 route = "inbox_screen",
                 selectedIcon = Icons.Filled.Person,
                 unselectedIcon = Icons.Outlined.Person,
-                label = "Inbox"),
+                label = "Inbox"
+            ),
 
             BottomNavItem(
                 route = "profile_screen",
@@ -491,7 +553,7 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
                     selectedItemIndex = index
                     navController.navigate(bottomNavItem.route)
                 },
-                label = { Text(text = bottomNavItem.label, ) },
+                label = { Text(text = bottomNavItem.label) },
                 icon = {
                     Icon(
                         imageVector =
@@ -509,68 +571,131 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
 // here we will make lazy row for courses
 // here we make it clickable and send a list of courses to the next screen
 @Composable
-fun CourseRaw(course: Course, context: Context, onCLickListener: (Course) -> Unit) {
+fun CourseRaw(
+    course: Course,
+    context: Context,
+    onCLickListener: (Course) -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Column(
         modifier =
         Modifier
-            .width(screenWidth * 47 / 100)
-            .height(screenHeight * 3 / 10)
-            .padding(2.dp)
+            .height(220.dp)
+            .width(230.dp)
+            .padding(end = Constant.normalPadding)
             .clip(RoundedCornerShape(15.dp))
             .clickable { onCLickListener(course) }
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context).crossfade(true).data(course.thumbnail).build(),
-            contentDescription = "course image",
+        Card(
             modifier = Modifier
-                .width(screenWidth * 47 / 100)
-                .height(screenHeight * 14 / 100)
-                .padding(5.dp),
-        )
-//        Image(
-//            // we will change it after we get one
-//            painter = rememberAsyncImagePainter(course.thumbnail),
-//            contentDescription = "course image",
-//            modifier =
-//                Modifier.width(screenWidth * 47 / 100).height(screenHeight * 14 / 100).padding(5.dp),
-//        )
+                .width(230.dp)
+                .height(120.dp)
+                .padding(bottom = Constant.smallPadding)
+        ) {
+
+//                IconButton(
+//                    modifier = Modifier.align(Alignment.TopEnd),
+//                    onClick = {
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        savedCourseState = courseRepo.savedCourse(course.id)
+//                    }
+//
+//                }) {
+//                    savedCourseState?.onSuccess {
+//                        savedCourseBooleanState = true
+//                    }?.onFailure {
+//                        Toast.makeText(context, "Failed to save course", Toast.LENGTH_SHORT).show()
+//                    }
+//                    if (course.isSaved) {
+//                        Icon(
+//                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_bookmark_24),
+//                            tint = buttonColor,
+//                            contentDescription = "bookmark"
+//                        )
+//                    } else {
+//                        Icon(
+//                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_bookmark_border_24),
+//                            tint = buttonColor,
+//                            contentDescription = "bookmark"
+//                        )
+//                    }
+//                }
+            AsyncImage(
+                model = ImageRequest.Builder(context).crossfade(true).data(course.thumbnail)
+                    .build(),
+                contentDescription = "course image",
+                modifier = Modifier,
+                contentScale = ContentScale.Crop
+            )
+
+        }
+
+
         Text(
             text = course.courseName,
-            style = MaterialTheme.typography.headlineLarge,
-            fontSize = 13.sp,
-            modifier = Modifier.padding(start = 7.dp),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight(600),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            fontSize = 16.sp,
+            modifier = Modifier
+
         )
         Text(
-            modifier = Modifier.padding(start = 7.dp, top = 5.dp, bottom = 5.dp),
+            modifier = Modifier.padding(
+                top = Constant.smallPadding,
+                bottom = Constant.mediumPadding
+            ),
             text = course.instructor.firstName + " ${course.instructor.lastName}",
             style = MaterialTheme.typography.titleMedium,
             color = Color(0xFF334155),
         )
         HorizontalDivider()
-        Row(modifier = Modifier.padding(top = 5.dp)) {
-            Text(
-                modifier = Modifier.padding(top = 5.dp),
-                text = "$" + course.price.toString(),
-                style = MaterialTheme.typography.titleMedium,
-            )
-            Spacer(modifier = Modifier.width(60.dp))
 
-            Icon(
-                imageVector = Icons.Filled.Star,
-                tint = starFillingColor,
-                contentDescription = null,
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Constant.smallPadding)
+        ) {
 
             Text(
-                // we need to change this
-                text = course.averageRating.toString(),
-                fontSize = 12.sp,
-                modifier = Modifier.padding(start = 4.dp, top = 1.dp),
+                modifier = Modifier.padding(),
+                text =
+                        AnnotatedString(
+                    "EGP ", spanStyle = SpanStyle(color = Color(0xFF334155), fontSize = 16.sp),
+                        )
+                        +
+                        AnnotatedString(
+                            course.price.toString(),
+                            SpanStyle(
+                                fontSize = 16.sp,
+                                fontStyle = FontStyle.Normal,
+                                fontWeight = FontWeight(600)
+                            )
+                        ),
+//                    style = MaterialTheme.typography.titleLarge,
             )
+
+            Row(modifier = Modifier.align(Alignment.CenterEnd)) {
+
+                Icon(
+                    imageVector = Icons.Filled.Star,
+                    tint = starFillingColor,
+                    contentDescription = "Avg rating",
+                )
+
+                Text(
+                    // we need to change this
+                    //to make number 2 point
+                    text = ("%.2f".format(course.averageRating)),
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = Constant.smallPadding, top = 1.dp),
+                )
+            }
         }
+
     }
 }
 

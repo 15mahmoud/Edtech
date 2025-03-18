@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -51,6 +52,7 @@ import com.example.student_project.data.model.Course
 import com.example.student_project.data.repo.CourseRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.home.content.BottomNavBar
+import com.example.student_project.ui.screen.widgets.CourseColumn
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.colorForProgressParFrom50To75
 import com.example.student_project.ui.theme.colorForProgressParFrom75To100
@@ -59,6 +61,9 @@ import com.example.student_project.ui.theme.jopTitleColor
 import com.example.student_project.ui.theme.progressBar
 import com.example.student_project.ui.theme.unselectedButton
 import com.example.student_project.util.Constant
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
@@ -72,8 +77,14 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
     var courseState by remember {
         mutableStateOf<Result<List<Course>?>?>(null)
     }
+    var savedCourseState by remember {
+        mutableStateOf<Result<List<Course>?>?>(null)
+    }
     var ongoingButtonVisibilityState by remember {
         mutableStateOf(true)
+    }
+    var savesButtonVisibilityState by remember {
+        mutableStateOf(false)
     }
     var completedButtonVisibilityState by remember {
         mutableStateOf(false)
@@ -81,6 +92,7 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
 
     LaunchedEffect(scope) {
         courseState = courseRepo.getAllCourseProgress()
+
     }
     Scaffold(
         Modifier
@@ -122,6 +134,7 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                 ), onClick = {
                     ongoingButtonVisibilityState = true
                     completedButtonVisibilityState = false
+                    savesButtonVisibilityState = false
                 }) {
                     Text(
                         text = "Ongoing",
@@ -136,6 +149,7 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                 ), onClick = {
                     ongoingButtonVisibilityState = false
                     completedButtonVisibilityState = true
+                    savesButtonVisibilityState = false
                 }) {
                     Text(
                         text = "Completed",
@@ -145,7 +159,28 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                         color = if (completedButtonVisibilityState) buttonColor else unselectedButton
                     )
                 }
+                Button(colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                ), onClick = {
+                    ongoingButtonVisibilityState = false
+                    completedButtonVisibilityState = false
+                    savesButtonVisibilityState = true
+                    CoroutineScope(Dispatchers.IO).launch {
+                        savedCourseState = courseRepo.getSavedCourses()
+                    }
+                }) {
+                    Text(
+                        text = "Saved",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(600),
+                        color = if (savesButtonVisibilityState) buttonColor else unselectedButton
+                    )
+                }
             }
+
             HorizontalDivider(
                 modifier = Modifier.padding(
                     start = Constant.paddingComponentFromScreen,
@@ -153,7 +188,6 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                 )
             )
             courseState?.onSuccess { courseList ->
-
                 AnimatedVisibility(visible = ongoingButtonVisibilityState) {
                     LazyColumn {
                         courseList?.let { course ->
@@ -177,10 +211,27 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                         }
                     }
                 }
+
             }?.onFailure {
                 Toast.makeText(context, "Failed to load data", Toast.LENGTH_SHORT).show()
             }
+            savedCourseState?.onSuccess { courseList ->
 
+                //here
+                AnimatedVisibility(visible = savesButtonVisibilityState) {
+                    LazyColumn {
+                        courseList?.let { course ->
+                            items(course.filter { it.totalLessons == it.completedLessons }) { item ->
+                                CourseColumn(course = item, context = context) {
+                                    navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
+                                }
+                            }
+                        }
+                    }
+                }
+            }?.onFailure {
+                Toast.makeText(context, "Failed to load saved courses", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

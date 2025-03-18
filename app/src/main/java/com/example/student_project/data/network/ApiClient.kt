@@ -60,7 +60,7 @@ interface ApiClient {
 
     //we will made it
     @POST("profile/saveCourse")
-    suspend fun saveCourse(@Body courseId: ApiRequestWithCourseId)
+    suspend fun saveCourse(@Body courseId: ApiRequestWithCourseId):BaseResponse<String>
 
     @POST("course/getInstructorDetails")
     suspend fun getInstructorDetails(@Body instructorId: ApiRequestWithInstructorId): BaseResponse<Instructor>
