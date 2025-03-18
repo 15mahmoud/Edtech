@@ -46,8 +46,8 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
     suspend fun getEnrolledCourses():Result<List<Course>?>{
         return Result.runCatching { apiClient.getEnrolledCourses().data }
     }
-    suspend fun savedCourse(courseId:String){
-         Result.runCatching { apiClient.saveCourse(ApiRequestWithCourseId(courseId)) }
+    suspend fun savedCourse(courseId:String):Result<String>{
+       return  Result.runCatching { apiClient.saveCourse(ApiRequestWithCourseId(courseId)).data }
     }
 
     suspend fun getAllCourseProgress():Result<List<Course>?>{

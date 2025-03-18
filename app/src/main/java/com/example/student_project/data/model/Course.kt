@@ -26,7 +26,8 @@ data class Course(
     val thumbnail: String,
     val totalDuration: String,
     val completedVideos: List<Any>,
-    val averageRating:Double?
+    val averageRating:Double?,
+    val isSaved: Boolean,
 )
 
 
