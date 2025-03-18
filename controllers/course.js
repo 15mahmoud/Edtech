@@ -4,7 +4,7 @@ const Category = require('../models/category');
 const Section = require('../models/section')
 const SubSection = require('../models/subSection')
 const CourseProgress = require('../models/courseProgress')
-
+const mongoose = require("mongoose");
 const { uploadImageToCloudinary, deleteResourceFromCloudinary } = require('../utils/imageUploader');
 const { convertSecondsToDuration } = require("../utils/secToDuration")
 
@@ -100,95 +100,10 @@ exports.createCourse = async (req, res) => {
 };
 
 // ================ Show All Courses================
-
-// exports.getAllCourses = async (req, res) => {
-//   try {
-//     const allCourses = await Course.aggregate([
-//       {
-//         $lookup: {
-//           from: "ratingandreviews", // تأكد من صحة اسم المجموعة
-//           localField: "_id",
-//           foreignField: "course",
-//           as: "ratings",
-//         },
-//       },
-//       {
-//         $addFields: {
-//           averageRating: { $avg: "$ratings.rating" }, // حساب متوسط التقييم
-//         },
-//       },
-//       {
-//         $project: {
-//           courseName: 1,
-//           courseDescription: 1,
-//           price: 1,
-//           thumbnail: 1,
-//           instructor: 1,
-//           studentsEnrolled: 1,
-//           averageRating: { $ifNull: ["$averageRating", 0] }, // إذا لم يوجد تقييم، يكون 0
-//         },
-//       },
-//     ]);
-
-//     // **populate instructor** (لجلب بيانات المدرب بعد التجميع)
-//     await Course.populate(allCourses, {
-//       path: "instructor",
-//       select: "firstName lastName email image",
-//     });
-
-//     return res.status(200).json({
-//       success: true,
-//       data: allCourses,
-//       message: "Data for all courses fetched successfully",
-//     });
-//   } catch (error) {
-//     console.log("Error while fetching data of all courses", error);
-//     res.status(500).json({
-//       success: false,
-//       error: error.message,
-//       message: "Error while fetching data of all courses",
-//     });
-//   }
-// };
-
-
-// exports.getAllCourses = async (req, res) => {
-//     try {
-//         const allCourses = await Course.find(
-//           {},
-//           {
-//             courseName: 1,
-//             courseDescription: 1,
-//             price: 1,
-//             thumbnail: 1,
-//             instructor: 1,
-//           // ratingAndReviews: 1,
-//             studentsEnrolled: 1
-//           }
-//         )
-//           .populate({
-//             path: "instructor",
-//             select: "firstName lastName email image",
-//           })
-//           .exec();
-
-//         return res.status(200).json({
-//             success: true,
-//             data: allCourses,
-//             message: "Data for all courses fetched successfully"
-//         });
-
-//     } catch (error) {
-//         console.log("Error while fetching data of all courses", error);
-//         res.status(500).json({
-//             success: false,
-//             error: error.message,
-//             message: "Error while fetching data of all courses",
-//         });
-//     }
-// };
 exports.getAllCourses = async (req, res) => {
   try {
+    const userId = req.user ? new mongoose.Types.ObjectId(req.user.id) : null;
+
     const allCourses = await Course.aggregate([
       {
         $lookup: {
@@ -217,10 +132,7 @@ exports.getAllCourses = async (req, res) => {
           as: "instructor",
         },
       },
-      {
-        $unwind: "$instructor",
-      },
-      //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      { $unwind: "$instructor" },
       {
         $lookup: {
           from: "categories",
@@ -235,7 +147,40 @@ exports.getAllCourses = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
-      //........>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      // >>>>>>>>>>>>>>>>>>>> إضافة التحقق من الكورسات المحفوظة للمستخدم
+      userId
+        ? {
+            $lookup: {
+              from: "users",
+              pipeline: [
+                { $match: { _id: userId } },
+                { $project: { savedCourses: 1 } },
+              ],
+              as: "userData",
+            },
+          }
+        : { $addFields: { userData: [] } },
+      {
+        $addFields: {
+          isSaved: {
+            $cond: {
+              if: {
+                $in: [
+                  "$_id",
+                  {
+                    $ifNull: [
+                      { $arrayElemAt: ["$userData.savedCourses", 0] },
+                      [],
+                    ],
+                  },
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
       {
         $project: {
           courseName: 1,
@@ -244,17 +189,16 @@ exports.getAllCourses = async (req, res) => {
           thumbnail: 1,
           studentsEnrolled: 1,
           averageRating: 1,
-          //>>>>>>>>>>>>>>>>>>>>>>>
           category: {
             _id: "$category._id",
             name: "$category.name",
             description: "$category.description",
           },
-          //>>>>>>>>>>>>>>>>>>>>>>>
           "instructor.firstName": 1,
           "instructor.lastName": 1,
           "instructor.email": 1,
           "instructor.image": 1,
+          isSaved: 1,
         },
       },
     ]);
@@ -265,7 +209,7 @@ exports.getAllCourses = async (req, res) => {
       message: "Data for all courses fetched successfully",
     });
   } catch (error) {
-    console.log("Error while fetching data of all courses", error);
+    console.error("Error while fetching data of all courses", error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -273,6 +217,92 @@ exports.getAllCourses = async (req, res) => {
     });
   }
 };
+// exports.getAllCourses = async (req, res) => {
+//   try {
+//     const allCourses = await Course.aggregate([
+//       {
+//         $lookup: {
+//           from: "ratingandreviews",
+//           localField: "_id",
+//           foreignField: "course",
+//           as: "ratings",
+//         },
+//       },
+//       {
+//         $addFields: {
+//           averageRating: {
+//             $cond: {
+//               if: { $gt: [{ $size: "$ratings" }, 0] },
+//               then: { $avg: "$ratings.rating" },
+//               else: 0,
+//             },
+//           },
+//         },
+//       },
+//       {
+//         $lookup: {
+//           from: "users",
+//           localField: "instructor",
+//           foreignField: "_id",
+//           as: "instructor",
+//         },
+//       },
+//       {
+//         $unwind: "$instructor",
+//       },
+//       //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//       {
+//         $lookup: {
+//           from: "categories",
+//           localField: "category",
+//           foreignField: "_id",
+//           as: "category",
+//         },
+//       },
+//       {
+//         $unwind: {
+//           path: "$category",
+//           preserveNullAndEmptyArrays: true,
+//         },
+//       },
+//       //........>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//       {
+//         $project: {
+//           courseName: 1,
+//           courseDescription: 1,
+//           price: 1,
+//           thumbnail: 1,
+//           studentsEnrolled: 1,
+//           averageRating: 1,
+//           //>>>>>>>>>>>>>>>>>>>>>>>
+//           category: {
+//             _id: "$category._id",
+//             name: "$category.name",
+//             description: "$category.description",
+//           },
+//           //>>>>>>>>>>>>>>>>>>>>>>>
+//           "instructor.firstName": 1,
+//           "instructor.lastName": 1,
+//           "instructor.email": 1,
+//           "instructor.image": 1,
+//         },
+//       },
+//     ]);
+
+//     return res.status(200).json({
+//       success: true,
+//       data: allCourses,
+//       message: "Data for all courses fetched successfully",
+//     });
+//   } catch (error) {
+//     console.log("Error while fetching data of all courses", error);
+//     res.status(500).json({
+//       success: false,
+//       error: error.message,
+//       message: "Error while fetching data of all courses",
+//     });
+//   }
+// };
 
 
 

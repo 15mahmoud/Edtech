@@ -86,7 +86,7 @@ router.post('/deleteSubSection', auth, isInstructor, deleteSubSection);
 // Get Details for a Specific Courses
 router.post('/getCourseDetails', getCourseDetails);
 // Get all Courses
-router.get('/getAllCourses', getAllCourses);
+router.get('/getAllCourses',auth, getAllCourses);
 // get full course details
 router.post('/getFullCourseDetails', auth, getFullCourseDetails);
 // Get all Courses Under a Specific Instructor

@@ -494,7 +494,7 @@ exports.saveCourse = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Course saved successfully",
+      data: "Course saved successfully",
     });
   } catch (error) {
     return res.status(500).json({
