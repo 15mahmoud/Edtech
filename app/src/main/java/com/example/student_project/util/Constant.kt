@@ -8,6 +8,7 @@ object Constant {
     val normalPadding = 10.dp
     val paddingComponentFromScreen = 15.dp
     val paddingTextFromText = 20.dp
+    val paddingTextFromImage = 25.dp
     val verySmallPadding = 2.5.dp
     val veryLargePadding = 30.dp
     //    val padding = 5.dp

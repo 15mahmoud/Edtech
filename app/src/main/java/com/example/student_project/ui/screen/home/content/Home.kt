@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +36,7 @@ import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -137,8 +139,8 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Column(modifier = Modifier) {
-                        Row(modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.clickable { navController.navigate(Screens.ProfileScreen.route) }) {
+                        Row(modifier = Modifier.fillMaxSize()) {
                             AsyncImage(
                                 ImageRequest.Builder(context)
                                     .data(studentState?.image.toString())
@@ -147,16 +149,12 @@ fun HomeScreen(
                                     .build(),
                                 contentDescription = "Profile Image",
                                 Modifier
-                                    .padding(10.dp)
+                                    .padding(end = Constant.normalPadding)
                                     .size(50.dp)
                                     .border(2.dp, color = Color.White, shape = CircleShape),
                             )
-                            Column {
-                                Spacer(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(15.dp)
-                                )
+                            Column (modifier = Modifier.align(Alignment.CenterVertically)){
+
                                 Text(
                                     text = "Hello",
                                     style = MaterialTheme.typography.headlineSmall,
@@ -196,7 +194,8 @@ fun HomeScreen(
         Box(
             Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
+                .padding(top = screenHeight * 12/100)
         ) {
             Column(
                 Modifier
@@ -209,7 +208,7 @@ fun HomeScreen(
                         modifier =
                         Modifier.border(
                             width = 3.dp,
-                            color = Color.White,
+                            color = Color.Black,
                             shape = RoundedCornerShape(10.dp),
                         ),
                         value = searchState,
@@ -237,15 +236,15 @@ fun HomeScreen(
                     )
                     // this is filter button
                     // we will need to modify this
-                    Button(
-                        onClick = { navController.navigate(Screens.MentorFilterScreen.route) },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.move_to_filter),
-                            contentDescription = null,
-                        )
-                    }
+//                    Button(
+//                        onClick = { navController.navigate(Screens.MentorFilterScreen.route) },
+//                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+//                    ) {
+//                        Image(
+//                            painter = painterResource(id = R.drawable.move_to_filter),
+//                            contentDescription = null,
+//                        )
+//                    }
                 }
                 Spacer(
                     modifier = Modifier
@@ -336,13 +335,13 @@ fun HomeScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     ) {
 
-                            Text(
-                                text = "All subject",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontSize = 14.sp,
-                                color = darkerGrayColor
-                            )
-                            // here we put image for a right arrow
+                        Text(
+                            text = "All subject",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = 14.sp,
+                            color = darkerGrayColor
+                        )
+                        // here we put image for a right arrow
 
                     }
                 }
@@ -373,20 +372,17 @@ fun HomeScreen(
                         }
                 }
                 Box(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Weekly TopLive Tutors ",
-                    fontSize = 20.sp,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight(600),
-                    modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
-                )
+                    Text(
+                        text = "Weekly TopLive Tutors ",
+                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight(600),
+                        modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
+                    )
 
                     Button(
                         modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(
-                                top = Constant.smallPadding
-                            ),
+                            .align(Alignment.CenterEnd),
                         onClick = {
                             // here we write code to navigate to all mentor
                             navController.navigate(Screens.TrendingCourseScreen.route)
@@ -438,10 +434,7 @@ fun HomeScreen(
                     )
                     Button(
                         modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(
-                                top = Constant.smallPadding
-                            ),
+                            .align(Alignment.CenterEnd),
                         onClick = {
                             // here we write code to navigate to all subject
                             navController.navigate(Screens.TrendingCourseScreen.route)
@@ -663,9 +656,9 @@ fun CourseRaw(
             Text(
                 modifier = Modifier.padding(),
                 text =
-                        AnnotatedString(
+                AnnotatedString(
                     "EGP ", spanStyle = SpanStyle(color = Color(0xFF334155), fontSize = 16.sp),
-                        )
+                )
                         +
                         AnnotatedString(
                             course.price.toString(),
@@ -701,56 +694,72 @@ fun CourseRaw(
 
 @Composable
 fun InstructorRow(instructor: Instructor, onClick: (String) -> (Unit)) {
-    Box(
-        modifier =
-        Modifier
-            .width(140.dp)
-            .height(136.dp)
-            .padding(top = 5.dp, bottom = 5.dp)
-            .clip(RoundedCornerShape(15.dp))
-            .border(
-                width = 2.dp,
-                color = lightGray,
-                shape = RoundedCornerShape(14.dp),
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    Card(colors = CardDefaults.cardColors(containerColor = Color.White), modifier =
+    Modifier
+        .width(140.dp)
+        .height(136.dp)
+        .padding(end = Constant.normalPadding)
+        .clip(RoundedCornerShape(15.dp))
+        .border(
+            width = 2.dp,
+            color = lightGray,
+            shape = RoundedCornerShape(14.dp),
+        ), onClick = { onClick(instructor.id) }) {
+
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            AsyncImage(
+                model =
+                ImageRequest.Builder(LocalContext.current)
+                    .data(instructor.image)
+                    .crossfade(true)
+                    .transformations(CircleCropTransformation())
+                    .build(),
+                contentDescription = "mentor image",
+                modifier =
+                Modifier
+                    .width(70.dp)
+                    .height(70.dp)
+                    .padding(
+                        top = Constant.paddingComponentFromScreen,
+                        bottom = Constant.normalPadding
+                    )
+                    .align(alignment = Alignment.TopCenter),
             )
-            .background(Color.White)
-            .clickable {
-                onClick(instructor.id)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = Constant.paddingComponentFromScreen),
+            ) {
+
+
+                Text(
+                    text = instructor.firstName + " " + instructor.lastName,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight(600),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 16.sp,
+                    modifier =
+                    Modifier.align(Alignment.CenterHorizontally)
+
+                )
+                Text(
+                    modifier =
+                    Modifier.align(Alignment.CenterHorizontally),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    text = instructor.additionalDetails.about.toString(),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.Gray,
+                )
             }
-    ) {
-        AsyncImage(
-            model =
-            ImageRequest.Builder(LocalContext.current)
-                .data(instructor.image)
-                .crossfade(true)
-                .transformations(CircleCropTransformation())
-                .build(),
-            contentDescription = "mentor image",
-            modifier =
-            Modifier
-                .width(60.dp)
-                .height(60.dp)
-                .padding(top = 10.dp, bottom = 10.dp)
-                .align(alignment = Alignment.TopCenter),
-        )
-        Text(
-            text = instructor.firstName + " " + instructor.lastName,
-            style = MaterialTheme.typography.headlineLarge,
-            fontSize = 15.sp,
-            modifier =
-            Modifier
-                .padding(top = 25.dp)
-                .align(alignment = Alignment.Center),
-        )
-        Text(
-            modifier =
-            Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 25.dp),
-            text = instructor.additionalDetails.about.toString(),
-            style = MaterialTheme.typography.titleMedium,
-            color = Color.Gray,
-        )
+        }
     }
 }
 
