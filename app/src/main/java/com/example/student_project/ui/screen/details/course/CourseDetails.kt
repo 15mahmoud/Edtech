@@ -10,6 +10,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -44,6 +46,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -198,9 +201,6 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                 start = Constant.normalPadding,
                                                 end = Constant.normalPadding
                                             )
-                                            // .clip(RoundedCornerShape(100.dp))
-                                            // .border(width = 1.dp, color = buttonColor, shape =
-                                            // RoundedCornerShape(99.dp))
                                             .shadow(
                                                 elevation = 10.dp,
                                                 RoundedCornerShape(Constant.buttonRadios),
@@ -222,273 +222,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                         },
                     ) { innerPadding ->
 
-
-                        Column(
-                            modifier = Modifier
-                                .consumeWindowInsets(innerPadding)
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            if (dialogKeyForReview) {
-                                Dialog(onDismissRequest = { dialogKeyForReview = false }) {
-                                    Card(
-                                        modifier = Modifier.fillMaxSize(),
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = Color.White
-                                        )
-                                    ) {
-
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(top = Constant.paddingComponentFromScreen),
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.Center
-                                        ) {
-
-                                            Image(
-                                                painter = painterResource(id = R.drawable.add_review),
-                                                contentDescription = "add_review_img",
-                                                modifier = Modifier
-                                                    .padding(top = Constant.paddingComponentFromScreen)
-                                                    .width(screenWidth * 44 / 100)
-                                                    .height(screenHeight * 21 / 100)
-                                            )
-                                            Text(
-                                                text = "Course Completed!",
-                                                style = MaterialTheme.typography.titleMedium,
-                                                fontWeight = FontWeight(700),
-                                                fontSize = 27.sp,
-                                                color = buttonColor,
-                                                modifier = Modifier.padding(
-                                                    top = Constant.normalPadding,
-                                                    bottom = Constant.normalPadding
-                                                )
-                                            )
-                                            Text(
-                                                text = "please leave a review for your course",
-                                                style = MaterialTheme.typography.titleMedium,
-                                                fontWeight = FontWeight(400),
-                                                fontSize = 20.sp,
-                                                color = headLineColor,
-                                                modifier = Modifier.padding(
-                                                    bottom = Constant.normalPadding
-                                                )
-                                            )
-                                            Row(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(
-                                                        start = 25.dp,
-                                                        end = Constant.paddingComponentFromScreen
-                                                    )
-                                            ) {
-                                                (1..5).forEach { number ->
-                                                    IconButton(onClick = {
-                                                        rateNumber = number.toDouble()
-                                                    }) {
-                                                        Icon(
-                                                            //here we need to add green border
-                                                            imageVector = if (number.toDouble() <= rateNumber) Icons.Sharp.Star else Icons.Default.Star,
-                                                            tint = anotherColorForFillingStar,
-                                                            contentDescription = "rating icon"
-                                                        )
-                                                    }
-                                                }
-                                            }
-                                            OutlinedTextField(
-                                                value = rateTextState,
-                                                onValueChange = {
-                                                    rateTextState = it
-                                                },
-                                                colors = TextFieldDefaults.colors(
-                                                    focusedContainerColor = addReviewTextColor,
-                                                    unfocusedContainerColor = addReviewTextColor
-                                                ),
-                                                textStyle = MaterialTheme.typography.titleMedium,
-                                                shape = RoundedCornerShape(Constant.buttonRadios),
-                                                modifier = Modifier
-                                                    .padding(
-                                                        top = Constant.normalPadding,
-                                                        start = Constant.normalPadding,
-                                                        end = Constant.normalPadding,
-                                                        bottom = Constant.normalPadding
-                                                    )
-                                                    .border(
-                                                        2.dp,
-                                                        color = buttonColor,
-                                                        RoundedCornerShape(Constant.buttonRadios)
-                                                    )
-                                            )
-                                            Button(
-                                                shape = RoundedCornerShape(Constant.buttonRadios),
-                                                colors = ButtonDefaults.buttonColors(
-                                                    containerColor = buttonColor
-                                                ),
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(
-                                                        start = Constant.normalPadding,
-                                                        end = Constant.normalPadding,
-                                                        bottom = Constant.normalPadding
-                                                    )
-                                                    .shadow(
-                                                        elevation = 4.dp,
-                                                        RoundedCornerShape(Constant.buttonRadios)
-                                                    ),
-                                                onClick = {
-                                                    val studentReview = CreateRatingReq(
-                                                        course?.id.toString(),
-                                                        rateNumber.toInt(),
-                                                        rateTextState
-                                                    )
-                                                    CoroutineScope(Dispatchers.IO).launch {
-                                                        courseRepo.createRating(studentReview)
-                                                        //here we need to handle exception
-                                                        //to save app from crashing
-                                                    }
-                                                    dialogKeyForReview = false
-                                                }) {
-                                                Text(
-                                                    text = "Write Review",
-                                                    style = MaterialTheme.typography.titleLarge,
-                                                    fontWeight = FontWeight(700),
-                                                    fontSize = 16.sp,
-                                                    color = Color.White
-                                                )
-                                            }
-
-                                            Button(shape = RoundedCornerShape(Constant.buttonRadios),
-                                                colors = ButtonDefaults.buttonColors(
-                                                    containerColor = addReviewTextColor
-                                                ),
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(
-                                                        start = Constant.normalPadding,
-                                                        end = Constant.normalPadding,
-                                                        bottom = Constant.normalPadding
-                                                    )
-                                                    .shadow(
-                                                        elevation = 4.dp,
-                                                        RoundedCornerShape(Constant.buttonRadios)
-                                                    ),
-                                                onClick = {
-                                                    dialogKeyForReview = false
-                                                }) {
-                                                Text(
-                                                    text = "Cancel",
-                                                    style = MaterialTheme.typography.titleLarge,
-                                                    fontWeight = FontWeight(700),
-                                                    fontSize = 16.sp,
-                                                    color = buttonColor
-                                                )
-                                            }
-
-                                        }
-                                    }
-                                }
-                            }
-                            if (dialogKeyForPayment) {
-                                AlertDialog(
-                                    title = {
-                                        Text(
-                                            text = "continue payment",
-                                            style = MaterialTheme.typography.titleLarge,
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight(600),
-                                            color = buttonColor
-                                        )
-                                    },
-                                    text = {
-                                        Text(
-                                            text = "click here to end payment process",
-                                            style = MaterialTheme.typography.titleMedium,
-                                            fontSize = 15.sp,
-                                            fontWeight = FontWeight(500)
-                                        )
-                                    },
-                                    onDismissRequest = { dialogKeyForPayment = false },
-                                    buttons = {
-                                        Button(
-                                            shape = RoundedCornerShape(Constant.buttonRadios),
-                                            modifier = Modifier
-                                                .align(Alignment.CenterHorizontally)
-                                                .padding(Constant.mediumPadding)
-                                                .shadow(
-                                                    elevation = 4.dp,
-                                                    RoundedCornerShape(Constant.buttonRadios)
-                                                ),
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = buttonColor
-                                            ),
-                                            onClick = {
-
-                                                val capturePayment = CapturePayment(
-                                                    course?.price!!,
-                                                    courseId.toString()
-                                                )
-                                                CoroutineScope(Dispatchers.IO).launch {
-                                                    paymentState = courseRepo.initiatePayment(
-                                                        capturePayment
-                                                    )
-                                                }
-                                                paymentState?.onSuccess {
-                                                    //intent to payment screen
-                                                    //and when he return to this screen
-                                                    //we will make get Transaction
-                                                    val intent =
-                                                        Intent(
-                                                            Intent.ACTION_VIEW,
-                                                            Uri.parse(it)
-                                                        )
-                                                    context.startActivity(intent)
-
-                                                    CoroutineScope(Dispatchers.IO).launch {
-                                                        getTransaction =
-                                                            courseRepo.getTransactionState(
-                                                                course.id
-                                                            )
-                                                    }
-                                                    getTransaction?.onSuccess { transaction ->
-                                                        if (transaction == "paid") {
-                                                            lock = true
-                                                            dialogKeyForPayment = false
-                                                        } else {
-                                                            Toast.makeText(
-                                                                context,
-                                                                "your payment faild",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
-                                                        }
-                                                    }?.onFailure {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "can't verify payment",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
-                                                }?.onFailure {
-                                                    Toast.makeText(
-                                                        context,
-                                                        "failed on your data",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                }
-
-                                            }
-                                        ) {
-                                            Text(
-                                                text = "Submit",
-                                                fontSize = 22.sp,
-                                                fontWeight = FontWeight(600),
-                                                style = MaterialTheme.typography.titleMedium,
-                                                color = Color.White
-                                            )
-                                        }
-
-                                    })
-                            }
+                        Column {
                             Box() {
 
                                 AsyncImage(
@@ -523,410 +257,687 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     )
                                 }
                             }
-                            Column(modifier = Modifier.padding()) {
-                                Row(Modifier.fillMaxWidth()) {
-                                    Text(
-                                        modifier =
-                                        Modifier.padding(
-                                            top = Constant.normalPadding,
-                                            bottom = Constant.paddingComponentFromScreen,
-                                            start = Constant.normalPadding,
-                                            end = Constant.normalPadding
-                                        ),
-                                        text = course?.courseName.toString(),
-                                        fontSize = 26.sp,
-                                        color = headLineColor,
-                                        style = MaterialTheme.typography.headlineLarge,
-                                        fontWeight = FontWeight(700),
+                            Row(Modifier.fillMaxWidth()) {
+                                Text(
+                                    modifier =
+                                    Modifier.padding(
+                                        top = Constant.normalPadding,
+                                        bottom = Constant.paddingComponentFromScreen,
+                                        start = Constant.normalPadding,
+                                        end = Constant.normalPadding
+                                    ),
+                                    text = course?.courseName.toString(),
+                                    fontSize = 26.sp,
+                                    color = headLineColor,
+                                    style = MaterialTheme.typography.headlineLarge,
+                                    fontWeight = FontWeight(700),
+                                )
+                                Spacer(modifier = Modifier.width(20.dp))
+                                //here we will put icon
+                            }
+                            HorizontalDivider(
+                                modifier = Modifier.padding()
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .consumeWindowInsets(innerPadding)
+                                    .padding(
+                                        paddingValues = PaddingValues(
+                                            bottom = innerPadding.calculateBottomPadding()
+                                        )
                                     )
-                                    Spacer(modifier = Modifier.width(20.dp))
-                                    //here we will put icon
-                                }
+                                    .fillMaxSize()
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                if (dialogKeyForReview) {
+                                    Dialog(onDismissRequest = { dialogKeyForReview = false }) {
+                                        Card(
+                                            modifier = Modifier.fillMaxSize(),
+                                            colors = CardDefaults.cardColors(
+                                                containerColor = Color.White
+                                            )
+                                        ) {
 
-                                LazyRow(modifier = Modifier.fillMaxWidth()) {
-                                    course?.let {
-                                        items(it.tag) { item ->
-                                            Card(
+                                            Column(
                                                 modifier = Modifier
-//                                                    .height(screenHeight * 6/100)
-                                                    .padding(
-                                                    bottom = Constant.paddingComponentFromScreen,
-                                                    start = Constant.normalPadding
+                                                    .fillMaxSize()
+                                                    .padding(top = Constant.paddingComponentFromScreen),
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.Center
+                                            ) {
+
+                                                Image(
+                                                    painter = painterResource(id = R.drawable.add_review),
+                                                    contentDescription = "add_review_img",
+                                                    modifier = Modifier
+                                                        .padding(top = Constant.paddingComponentFromScreen)
+                                                        .width(screenWidth * 44 / 100)
+                                                        .height(screenHeight * 21 / 100)
+                                                )
+                                                Text(
+                                                    text = "Course Completed!",
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    fontWeight = FontWeight(700),
+                                                    fontSize = 27.sp,
+                                                    color = buttonColor,
+                                                    modifier = Modifier.padding(
+                                                        top = Constant.normalPadding,
+                                                        bottom = Constant.normalPadding
+                                                    )
+                                                )
+                                                Text(
+                                                    text = "please leave a review for your course",
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    fontWeight = FontWeight(400),
+                                                    fontSize = 20.sp,
+                                                    color = headLineColor,
+                                                    modifier = Modifier.padding(
+                                                        bottom = Constant.normalPadding
+                                                    )
+                                                )
+                                                Row(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(
+                                                            start = 25.dp,
+                                                            end = Constant.paddingComponentFromScreen
+                                                        )
+                                                ) {
+                                                    (1..5).forEach { number ->
+                                                        IconButton(onClick = {
+                                                            rateNumber = number.toDouble()
+                                                        }) {
+                                                            Icon(
+                                                                //here we need to add green border
+                                                                imageVector = if (number.toDouble() <= rateNumber) Icons.Sharp.Star else Icons.Default.Star,
+                                                                tint = anotherColorForFillingStar,
+                                                                contentDescription = "rating icon"
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                OutlinedTextField(
+                                                    value = rateTextState,
+                                                    onValueChange = {
+                                                        rateTextState = it
+                                                    },
+                                                    colors = TextFieldDefaults.colors(
+                                                        focusedContainerColor = addReviewTextColor,
+                                                        unfocusedContainerColor = addReviewTextColor
+                                                    ),
+                                                    textStyle = MaterialTheme.typography.titleMedium,
+                                                    shape = RoundedCornerShape(Constant.buttonRadios),
+                                                    modifier = Modifier
+                                                        .padding(
+                                                            top = Constant.normalPadding,
+                                                            start = Constant.normalPadding,
+                                                            end = Constant.normalPadding,
+                                                            bottom = Constant.normalPadding
+                                                        )
+                                                        .border(
+                                                            2.dp,
+                                                            color = buttonColor,
+                                                            RoundedCornerShape(Constant.buttonRadios)
+                                                        )
+                                                )
+                                                Button(
+                                                    shape = RoundedCornerShape(Constant.buttonRadios),
+                                                    colors = ButtonDefaults.buttonColors(
+                                                        containerColor = buttonColor
+                                                    ),
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(
+                                                            start = Constant.normalPadding,
+                                                            end = Constant.normalPadding,
+                                                            bottom = Constant.normalPadding
+                                                        )
+                                                        .shadow(
+                                                            elevation = 4.dp,
+                                                            RoundedCornerShape(Constant.buttonRadios)
+                                                        ),
+                                                    onClick = {
+                                                        val studentReview = CreateRatingReq(
+                                                            course?.id.toString(),
+                                                            rateNumber.toInt(),
+                                                            rateTextState
+                                                        )
+                                                        CoroutineScope(Dispatchers.IO).launch {
+                                                            courseRepo.createRating(studentReview)
+                                                            //here we need to handle exception
+                                                            //to save app from crashing
+                                                        }
+                                                        dialogKeyForReview = false
+                                                    }) {
+                                                    Text(
+                                                        text = "Write Review",
+                                                        style = MaterialTheme.typography.titleLarge,
+                                                        fontWeight = FontWeight(700),
+                                                        fontSize = 16.sp,
+                                                        color = Color.White
+                                                    )
+                                                }
+
+                                                Button(shape = RoundedCornerShape(Constant.buttonRadios),
+                                                    colors = ButtonDefaults.buttonColors(
+                                                        containerColor = addReviewTextColor
+                                                    ),
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(
+                                                            start = Constant.normalPadding,
+                                                            end = Constant.normalPadding,
+                                                            bottom = Constant.normalPadding
+                                                        )
+                                                        .shadow(
+                                                            elevation = 4.dp,
+                                                            RoundedCornerShape(Constant.buttonRadios)
+                                                        ),
+                                                    onClick = {
+                                                        dialogKeyForReview = false
+                                                    }) {
+                                                    Text(
+                                                        text = "Cancel",
+                                                        style = MaterialTheme.typography.titleLarge,
+                                                        fontWeight = FontWeight(700),
+                                                        fontSize = 16.sp,
+                                                        color = buttonColor
+                                                    )
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                                if (dialogKeyForPayment) {
+                                    AlertDialog(
+                                        title = {
+                                            Text(
+                                                text = "continue payment",
+                                                style = MaterialTheme.typography.titleLarge,
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight(600),
+                                                color = buttonColor
+                                            )
+                                        },
+                                        text = {
+                                            Text(
+                                                text = "click here to end payment process",
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontSize = 15.sp,
+                                                fontWeight = FontWeight(500)
+                                            )
+                                        },
+                                        onDismissRequest = { dialogKeyForPayment = false },
+                                        buttons = {
+                                            Button(
+                                                shape = RoundedCornerShape(Constant.buttonRadios),
+                                                modifier = Modifier
+                                                    .align(Alignment.CenterHorizontally)
+                                                    .padding(Constant.mediumPadding)
+                                                    .shadow(
+                                                        elevation = 4.dp,
+                                                        RoundedCornerShape(Constant.buttonRadios)
+                                                    ),
+                                                colors = ButtonDefaults.buttonColors(
+                                                    containerColor = buttonColor
                                                 ),
-                                                shape = RoundedCornerShape(6.dp),
-                                                colors =
-                                                CardDefaults.cardColors(
-                                                    containerColor = cardContainerColor
-                                                ),
+                                                onClick = {
+
+                                                    val capturePayment = CapturePayment(
+                                                        course?.price!!,
+                                                        courseId.toString()
+                                                    )
+                                                    CoroutineScope(Dispatchers.IO).launch {
+                                                        paymentState = courseRepo.initiatePayment(
+                                                            capturePayment
+                                                        )
+                                                    }
+                                                    paymentState?.onSuccess {
+                                                        //intent to payment screen
+                                                        //and when he return to this screen
+                                                        //we will make get Transaction
+                                                        val intent =
+                                                            Intent(
+                                                                Intent.ACTION_VIEW,
+                                                                Uri.parse(it)
+                                                            )
+                                                        context.startActivity(intent)
+
+                                                        CoroutineScope(Dispatchers.IO).launch {
+                                                            getTransaction =
+                                                                courseRepo.getTransactionState(
+                                                                    course.id
+                                                                )
+                                                        }
+                                                        getTransaction?.onSuccess { transaction ->
+                                                            if (transaction == "paid") {
+                                                                lock = true
+                                                                dialogKeyForPayment = false
+                                                            } else {
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    "your payment faild",
+                                                                    Toast.LENGTH_SHORT
+                                                                ).show()
+                                                            }
+                                                        }?.onFailure {
+                                                            Toast.makeText(
+                                                                context,
+                                                                "can't verify payment",
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
+                                                        }
+                                                    }?.onFailure {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "failed on your data",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+
+                                                }
                                             ) {
                                                 Text(
-                                                    modifier =
-                                                    Modifier.align(Alignment.CenterHorizontally).padding(
+                                                    text = "Submit",
+                                                    fontSize = 22.sp,
+                                                    fontWeight = FontWeight(600),
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    color = Color.White
+                                                )
+                                            }
+
+                                        })
+                                }
+
+                                Column(modifier = Modifier.padding()) {
+
+
+                                    LazyRow(modifier = Modifier.fillMaxWidth().padding(top = Constant.normalPadding)) {
+                                        course?.let {
+                                            items(it.tag) { item ->
+                                                Card(
+                                                    modifier = Modifier
+//                                                    .height(screenHeight * 6/100)
+                                                        .padding(
+                                                            bottom = Constant.mediumPadding,
+                                                            start = Constant.normalPadding
+                                                        ),
+                                                    shape = RoundedCornerShape(6.dp),
+                                                    colors =
+                                                    CardDefaults.cardColors(
+                                                        containerColor = cardContainerColor
+                                                    ),
+                                                ) {
+                                                    Text(
+                                                        modifier =
+                                                        Modifier
+                                                            .align(Alignment.CenterHorizontally)
+                                                            .padding(
 //                                                        top = Constant.verySmallPadding,
 //                                                        bottom = Constant.verySmallPadding,
-                                                        start = Constant.mediumPadding,
-                                                        end = Constant.mediumPadding,
-                                                    ),
-                                                    text = item,
-                                                    color = buttonColor,
-                                                    fontSize = 10.sp,
-                                                    style = MaterialTheme.typography.titleLarge,
-                                                    fontWeight = FontWeight(600),
-                                                )
+                                                                start = Constant.mediumPadding,
+                                                                end = Constant.mediumPadding,
+                                                            ),
+                                                        text = item,
+                                                        color = buttonColor,
+                                                        fontSize = 10.sp,
+                                                        style = MaterialTheme.typography.titleLarge,
+                                                        fontWeight = FontWeight(600),
+                                                    )
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                Row(modifier = Modifier.fillMaxWidth()) {
-                                    Text(
-                                        text = "$" + course?.price.toString(),
-                                        style = MaterialTheme.typography.headlineLarge,
-                                        fontSize = 32.sp,
-                                        color = buttonColor,
-                                        fontWeight = FontWeight(700),
-                                        modifier =
-                                        Modifier.padding(
+                                    Row(modifier = Modifier.fillMaxWidth()) {
+                                        Text(
+                                            //this will change later
+                                            text = "EGP " + course?.price.toString(),
+                                            style = MaterialTheme.typography.headlineLarge,
+                                            fontSize = 32.sp,
+                                            color = buttonColor,
+                                            fontWeight = FontWeight(700),
+                                            modifier =
+                                            Modifier.padding(
 //                                            top = Constant.mediumPadding,
-                                            bottom = Constant.normalPadding,
-                                            start = Constant.normalPadding,
-                                            end = Constant.normalPadding,
-                                        ),
-                                    )
-                                    Spacer(modifier = Modifier.width(30.dp))
-                                    Icon(
-                                        modifier =
-                                        Modifier.padding(
-                                            start = Constant.normalPadding,
-                                            bottom = Constant.paddingComponentFromScreen,
-                                            top = Constant.smallPadding
-                                        ),
-                                        imageVector = Icons.Filled.Star,
-                                        tint = starFillingColor,
-                                        contentDescription = "rating icon",
-                                    )
-                                    Text(
-                                        modifier =
-                                        Modifier.padding(
-                                            start = Constant.mediumPadding,
-                                            bottom = Constant.paddingComponentFromScreen,
-                                            top = Constant.normalPadding
-                                        ),
-                                        text = (course?.averageRating?:0.0).toString(),
-                                        color = editProfileTextColor,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontSize = 16.sp,
-                                    )
-                                }
-                                Row(modifier = Modifier.fillMaxWidth()) {
-                                    Icon(
-                                        modifier =
-                                        Modifier.padding(
-                                            start = Constant.normalPadding,
-                                            bottom = Constant.paddingComponentFromScreen,
-                                            end = Constant.mediumPadding
-                                        ),
-                                        imageVector =
-                                        ImageVector.vectorResource(id = R.drawable.add_friends),
-                                        tint = buttonColor,
-                                        contentDescription = "participant",
-                                    )
-                                    Text(
-                                        text = course?.studentsEnrolled?.size.toString() + " students",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = editProfileTextColor,
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight(500),
-                                        modifier = Modifier.padding(
-                                            top = Constant.smallPadding,
-                                            bottom = Constant.paddingComponentFromScreen,
-                                            end = Constant.normalPadding
-                                        ),
-                                    )
-                                    Icon(
-                                        modifier = Modifier.padding(
-                                            start = Constant.paddingComponentFromScreen,
-                                            top = Constant.smallPadding,
-                                            bottom = Constant.mediumPadding,
-                                            end = Constant.mediumPadding
-                                        ),
-                                        imageVector =
-                                        ImageVector.vectorResource(id = R.drawable.watch),
-                                        tint = buttonColor,
-                                        contentDescription = "time icon",
-                                    )
-                                    Text(
-                                        text = course?.totalDuration.toString(),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = editProfileTextColor,
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight(500),
-                                        modifier = Modifier.padding(
-                                            top = Constant.smallPadding,
-                                            bottom = Constant.paddingComponentFromScreen,
-                                            end = Constant.normalPadding
-                                        ),
-                                    )
-                                }
-                                HorizontalDivider(
-                                    modifier = Modifier.padding(
-                                        start = Constant.normalPadding,
-                                        end = Constant.normalPadding,
-                                        bottom = 12.dp
-                                    )
-                                )
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 12.dp),
-                                    horizontalArrangement =
-                                    Arrangement.spacedBy(
-                                        Constant.normalPadding,
-                                        alignment = Alignment.CenterHorizontally,
-                                    ),
-                                ) {
-                                    Button(
-                                        onClick = {
-                                            if (!aboutVisibilityState) {
-                                                aboutVisibilityState = true
-                                                lessonVisibilityState = false
-                                                reviewsVisibilityState = false
-                                            } else {
-                                                lessonVisibilityState = false
-                                                reviewsVisibilityState = false
-                                            }
-                                        },
-                                        colors =
-                                        ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                                    ) {
+//                                            bottom = Constant.mediumPadding,
+                                                start = Constant.normalPadding,
+                                                end = Constant.normalPadding,
+                                            ),
+                                        )
+                                        Spacer(modifier = Modifier.width(30.dp))
+                                        Icon(
+                                            modifier =
+                                            Modifier
+                                                .size(30.dp)
+                                                .padding(
+                                                    start = Constant.normalPadding,
+//                                            bottom = Constant.mediumPadding,
+                                                    top = Constant.smallPadding
+                                                ),
+                                            imageVector = Icons.Filled.Star,
+                                            tint = starFillingColor,
+                                            contentDescription = "rating icon",
+                                        )
                                         Text(
-                                            text = "About",
-                                            fontSize = 18.sp,
+                                            modifier =
+                                            Modifier.padding(
+                                                start = Constant.mediumPadding,
+//                                            bottom = Constant.paddingComponentFromScreen,
+                                                top = Constant.normalPadding
+                                            ),
+                                            text = (course?.averageRating ?: 0.0).toString(),
+                                            color = editProfileTextColor,
                                             style = MaterialTheme.typography.titleMedium,
-                                            color =
-                                            if (aboutVisibilityState) buttonColor else unselectedButton,
+                                            fontSize = 16.sp,
                                         )
                                     }
-                                    Button(
-                                        onClick = {
-                                            if (!lessonVisibilityState) {
-                                                aboutVisibilityState = false
-                                                lessonVisibilityState = true
-                                                reviewsVisibilityState = false
-                                            } else {
-                                                aboutVisibilityState = false
-                                                reviewsVisibilityState = false
-                                            }
-                                        },
-                                        colors =
-                                        ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                                    ) {
-                                        Text(
-                                            text = "Lessons",
-                                            fontSize = 18.sp,
-                                            style = MaterialTheme.typography.titleMedium,
-                                            color =
-                                            if (lessonVisibilityState) buttonColor else unselectedButton,
-                                        )
-                                    }
-                                    Button(
-                                        onClick = {
-
-                                            if ((course?.averageRating?:0.0).toString() != "0.0") {
-
-                                                if (!reviewsVisibilityState) {
-                                                    aboutVisibilityState = false
-                                                    lessonVisibilityState = false
-                                                    reviewsVisibilityState = true
-                                                } else {
-                                                    lessonVisibilityState = false
-                                                    aboutVisibilityState = false
-                                                }
-                                            }else{
-                                                Toast.makeText(context, "no reviews", Toast.LENGTH_SHORT).show()
-                                            }
-                                        },
-                                        colors =
-                                        ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                                    ) {
-                                        Text(
-                                            text = "Reviews",
-                                            fontSize = 18.sp,
-                                            style = MaterialTheme.typography.titleMedium,
-                                            color =
-                                            if (reviewsVisibilityState) buttonColor
-                                            else unselectedButton,
-                                        )
-                                    }
-                                }
-                                HorizontalDivider(
-                                    modifier = Modifier.padding(
-                                        start = Constant.normalPadding,
-                                        end = Constant.normalPadding,
-                                        bottom = Constant.paddingComponentFromScreen
-                                    )
-                                )
-
-                                AnimatedVisibility(visible = aboutVisibilityState) {
-                                    Column(modifier = Modifier) {
-                                        Text(
-                                            modifier = Modifier.padding(
+                                    Row(modifier = Modifier.fillMaxWidth()) {
+                                        Icon(
+                                            modifier =
+                                            Modifier.padding(
                                                 start = Constant.normalPadding,
-                                                bottom = Constant.normalPadding
+                                                bottom = Constant.normalPadding,
+                                                end = Constant.mediumPadding
                                             ),
-                                            text = "Mentor",
-                                            style = MaterialTheme.typography.titleMedium,
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight(700),
-                                        )
-                                        Button(
-                                            modifier = Modifier.padding(
-                                                start = Constant.normalPadding,
-                                                bottom = Constant.normalPadding
-                                            ),
-                                            colors =
-                                            ButtonDefaults.buttonColors(
-                                                containerColor = Color.Transparent
-                                            ),
-                                            onClick = {
-                                                // this will move us to mentor page
-                                            },
-                                        ) {
-                                            Row(modifier = Modifier.fillMaxWidth()) {
-                                                AsyncImage(
-                                                    model =
-                                                    ImageRequest.Builder(context)
-                                                        .crossfade(true)
-                                                        // this will be photo
-                                                        // course?.instructor?.image.toString()
-                                                        .data(course?.instructor?.image.toString())
-                                                        .transformations(
-                                                            CircleCropTransformation()
-                                                        )
-                                                        .build(),
-                                                    contentDescription = "mentor image",
-                                                    modifier =
-                                                    Modifier
-                                                        .padding(end = Constant.mediumPadding)
-                                                        .align(Alignment.CenterVertically)
-                                                        .width(screenWidth * 14 / 100)
-                                                        .height(screenHeight * 7 / 100),
-                                                )
-                                                Column(modifier = Modifier) {
-                                                    Text(
-                                                        text =
-                                                        course?.instructor?.firstName.toString() +
-                                                                " " +
-                                                                course?.instructor?.lastName.toString(),
-                                                        style = MaterialTheme.typography.titleMedium,
-                                                        color = headLineColor,
-                                                        fontWeight = FontWeight(700),
-                                                        fontSize = 18.sp,
-                                                        modifier =
-                                                        Modifier.padding(
-                                                            start = Constant.verySmallPadding,
-                                                            bottom = Constant.smallPadding
-                                                        ),
-                                                    )
-                                                    Text(
-                                                        text =
-                                                        course
-                                                            ?.instructor
-                                                            ?.additionalDetails
-                                                            ?.about
-                                                            .toString(),
-                                                        color = jopTitleColor,
-                                                        style = MaterialTheme.typography.titleMedium,
-                                                        fontSize = 14.sp,
-                                                        fontWeight = FontWeight(500),
-                                                        //                                          maxLines
-                                                        // = 2,
-                                                        //                                          overflow
-                                                        // = TextOverflow.Ellipsis,
-                                                        //  softWrap = true,
-                                                        modifier = Modifier.padding(start = Constant.verySmallPadding),
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        Text(
-                                            modifier = Modifier.padding(
-                                                start = Constant.normalPadding,
-                                                bottom = Constant.paddingComponentFromScreen
-                                            ),
-                                            text = "About Course",
-                                            style = MaterialTheme.typography.titleMedium,
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight(700),
+                                            imageVector =
+                                            ImageVector.vectorResource(id = R.drawable.add_friends),
+                                            tint = buttonColor,
+                                            contentDescription = "participant",
                                         )
                                         Text(
-                                            text = course?.courseDescription.toString(),
-                                            style = MaterialTheme.typography.headlineSmall,
-                                            fontSize = 14.sp,
-                                            modifier = Modifier.padding(
-                                                start = Constant.normalPadding,
-                                                end = Constant.paddingComponentFromScreen
-                                            ),
-                                        )
-                                    }
-                                }
-                                AnimatedVisibility(visible = lessonVisibilityState) {
-                                    Column {
-                                        // size -> no of section
-                                        Text(
-                                            text =
-                                            course?.courseContent?.size.toString() + " " + "Sections",
+                                            text = course?.studentsEnrolled?.size.toString() + " students",
                                             style = MaterialTheme.typography.titleMedium,
-                                            color = headLineColor,
-                                            fontWeight = FontWeight(700),
-                                            fontSize = 20.sp,
+                                            color = editProfileTextColor,
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight(500),
                                             modifier = Modifier.padding(
-                                                top = Constant.paddingComponentFromScreen,
+                                                top = Constant.smallPadding,
                                                 bottom = Constant.paddingComponentFromScreen,
-                                                start = Constant.normalPadding,
                                                 end = Constant.normalPadding
                                             ),
                                         )
+                                        Icon(
+                                            modifier = Modifier.padding(
+                                                start = Constant.paddingComponentFromScreen,
+                                                top = Constant.smallPadding,
+                                                bottom = Constant.mediumPadding,
+                                                end = Constant.mediumPadding
+                                            ),
+                                            imageVector =
+                                            ImageVector.vectorResource(id = R.drawable.watch),
+                                            tint = buttonColor,
+                                            contentDescription = "time icon",
+                                        )
+                                        Text(
+                                            text = course?.totalDuration.toString(),
+                                            style = MaterialTheme.typography.titleMedium,
+                                            color = editProfileTextColor,
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight(500),
+                                            modifier = Modifier.padding(
+                                                top = Constant.smallPadding,
+                                                bottom = Constant.paddingComponentFromScreen,
+                                                end = Constant.normalPadding
+                                            ),
+                                        )
+                                    }
+                                    HorizontalDivider()
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(
+//                                            bottom = 12.dp
+                                            ),
+                                        horizontalArrangement =
+                                        Arrangement.spacedBy(
+                                            Constant.normalPadding,
+                                            alignment = Alignment.CenterHorizontally,
+                                        ),
+                                    ) {
+                                        Button(
+                                            onClick = {
+                                                if (!aboutVisibilityState) {
+                                                    aboutVisibilityState = true
+                                                    lessonVisibilityState = false
+                                                    reviewsVisibilityState = false
+                                                } else {
+                                                    lessonVisibilityState = false
+                                                    reviewsVisibilityState = false
+                                                }
+                                            },
+                                            colors =
+                                            ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                                        ) {
+                                            Text(
+                                                text = "About",
+                                                fontSize = 18.sp,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                color =
+                                                if (aboutVisibilityState) buttonColor else unselectedButton,
+                                            )
+                                        }
+                                        Button(
+                                            onClick = {
+                                                if (!lessonVisibilityState) {
+                                                    aboutVisibilityState = false
+                                                    lessonVisibilityState = true
+                                                    reviewsVisibilityState = false
+                                                } else {
+                                                    aboutVisibilityState = false
+                                                    reviewsVisibilityState = false
+                                                }
+                                            },
+                                            colors =
+                                            ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                                        ) {
+                                            Text(
+                                                text = "Lessons",
+                                                fontSize = 18.sp,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                color =
+                                                if (lessonVisibilityState) buttonColor else unselectedButton,
+                                            )
+                                        }
+                                        Button(
+                                            onClick = {
 
-                                        LazyColumn(modifier = Modifier.height(500.dp)) {
-                                            course?.let { courses ->
-                                                itemsIndexed(courses.courseContent) { index, item ->
-                                                    Text(
-                                                        text =
-                                                        "Section" +
-                                                                " " +
-                                                                (index + 1).toString() +
-                                                                " " +
-                                                                item.sectionName,
-                                                        style = MaterialTheme.typography.titleMedium,
-                                                        color = jopTitleColor,
-                                                        fontWeight = FontWeight(700),
-                                                        fontSize = 18.sp,
+                                                if ((course?.averageRating
+                                                        ?: 0.0).toString() != "0.0"
+                                                ) {
+
+                                                    if (!reviewsVisibilityState) {
+                                                        aboutVisibilityState = false
+                                                        lessonVisibilityState = false
+                                                        reviewsVisibilityState = true
+                                                    } else {
+                                                        lessonVisibilityState = false
+                                                        aboutVisibilityState = false
+                                                    }
+                                                } else {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "no reviews",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            },
+                                            colors =
+                                            ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                                        ) {
+                                            Text(
+                                                text = "Reviews",
+                                                fontSize = 18.sp,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                color =
+                                                if (reviewsVisibilityState) buttonColor
+                                                else unselectedButton,
+                                            )
+                                        }
+                                    }
+                                    HorizontalDivider(
+                                        modifier = Modifier.padding(
+                                            bottom = Constant.normalPadding
+                                        )
+                                    )
+                                    AnimatedVisibility(visible = aboutVisibilityState) {
+                                        Column(modifier = Modifier) {
+                                            Text(
+                                                modifier = Modifier.padding(
+                                                    start = Constant.normalPadding
+                                                ),
+                                                text = "Mentor",
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight(700),
+                                            )
+                                            TextButton(
+                                                colors =
+                                                ButtonDefaults.buttonColors(
+                                                    containerColor = Color.Transparent
+                                                ),
+                                                onClick = {
+                                                    navController.navigate(Screens.MentorDetailsScreen.route + "/${course?.instructor?.id}")
+                                                },
+                                            ) {
+                                                Row(modifier = Modifier.fillMaxWidth()) {
+                                                    AsyncImage(
+                                                        model =
+                                                        ImageRequest.Builder(context)
+                                                            .crossfade(true)
+                                                            // this will be photo
+                                                            // course?.instructor?.image.toString()
+                                                            .data(course?.instructor?.image.toString())
+                                                            .transformations(
+                                                                CircleCropTransformation()
+                                                            )
+                                                            .build(),
+                                                        contentDescription = "mentor image",
                                                         modifier =
-                                                        Modifier.padding(
-                                                            start = Constant.normalPadding,
-                                                            bottom = 12.5.dp,
-                                                        ),
+                                                        Modifier
+                                                            .padding(end = Constant.mediumPadding)
+                                                            .align(Alignment.CenterVertically)
+                                                            .width(screenWidth * 14 / 100)
+                                                            .height(screenHeight * 7 / 100),
                                                     )
-                                                    LazyColumn(modifier = Modifier.height(250.dp)) {
-                                                        itemsIndexed(item.subSection) { subsectionIndex,
-                                                                                        subSection ->
-                                                            Card(onClick = {}) {
-                                                                LessonsColumn(
-                                                                    subSection = subSection,
-                                                                    index = subsectionIndex,
-                                                                    lock = !lock,
-                                                                    context = context,
-                                                                ) {
-                                                                    val encodedUrl =
-                                                                        URLEncoder.encode(
-                                                                            subSection.videoUrl,
-                                                                            StandardCharsets.UTF_8
-                                                                                .toString(),
+                                                    Column(modifier = Modifier) {
+                                                        Text(
+                                                            text =
+                                                            course?.instructor?.firstName.toString() +
+                                                                    " " +
+                                                                    course?.instructor?.lastName.toString(),
+                                                            style = MaterialTheme.typography.titleMedium,
+                                                            color = headLineColor,
+                                                            fontWeight = FontWeight(700),
+                                                            fontSize = 18.sp,
+                                                            modifier =
+                                                            Modifier.padding(
+                                                                start = Constant.verySmallPadding,
+                                                                bottom = Constant.smallPadding
+                                                            ),
+                                                        )
+                                                        Text(
+                                                            text =
+                                                            course
+                                                                ?.instructor
+                                                                ?.additionalDetails
+                                                                ?.about
+                                                                .toString(),
+                                                            color = jopTitleColor,
+                                                            style = MaterialTheme.typography.titleMedium,
+                                                            fontSize = 14.sp,
+                                                            fontWeight = FontWeight(500),
+                                                            //                                          maxLines
+                                                            // = 2,
+                                                            //                                          overflow
+                                                            // = TextOverflow.Ellipsis,
+                                                            //  softWrap = true,
+                                                            modifier = Modifier.padding(start = Constant.verySmallPadding),
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                            Text(
+                                                modifier = Modifier.padding(
+                                                    start = Constant.normalPadding,
+                                                    bottom = Constant.mediumPadding
+                                                ),
+                                                text = "About Course",
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight(700),
+                                            )
+                                            Text(
+                                                text = course?.courseDescription.toString(),
+                                                style = MaterialTheme.typography.headlineSmall,
+                                                fontSize = 14.sp,
+                                                modifier = Modifier.padding(
+                                                    start = Constant.normalPadding,
+                                                    end = Constant.paddingComponentFromScreen,
+                                                    bottom = Constant.paddingComponentFromScreen
+                                                ),
+                                            )
+                                        }
+                                    }
+                                    AnimatedVisibility(visible = lessonVisibilityState) {
+                                        Column {
+                                            // size -> no of section
+                                            Text(
+                                                text =
+                                                course?.courseContent?.size.toString() + " " + "Sections",
+                                                style = MaterialTheme.typography.titleMedium,
+                                                color = headLineColor,
+                                                fontWeight = FontWeight(700),
+                                                fontSize = 20.sp,
+                                                modifier = Modifier.padding(
+                                                    top = Constant.paddingComponentFromScreen,
+                                                    bottom = Constant.paddingComponentFromScreen,
+                                                    start = Constant.normalPadding,
+                                                    end = Constant.normalPadding
+                                                ),
+                                            )
+
+                                            LazyColumn(modifier = Modifier.height(500.dp)) {
+                                                course?.let { courses ->
+                                                    itemsIndexed(courses.courseContent) { index, item ->
+                                                        Text(
+                                                            text =
+                                                            "Section" +
+                                                                    " " +
+                                                                    (index + 1).toString() +
+                                                                    " " +
+                                                                    item.sectionName,
+                                                            style = MaterialTheme.typography.titleMedium,
+                                                            color = jopTitleColor,
+                                                            fontWeight = FontWeight(700),
+                                                            fontSize = 18.sp,
+                                                            modifier =
+                                                            Modifier.padding(
+                                                                start = Constant.normalPadding,
+                                                                bottom = 12.5.dp,
+                                                            ),
+                                                        )
+                                                        LazyColumn(modifier = Modifier.height(250.dp)) {
+                                                            itemsIndexed(item.subSection) { subsectionIndex,
+                                                                                            subSection ->
+                                                                Card(onClick = {}) {
+                                                                    LessonsColumn(
+                                                                        subSection = subSection,
+                                                                        index = subsectionIndex,
+                                                                        lock = !lock,
+                                                                        context = context,
+                                                                    ) {
+                                                                        val encodedUrl =
+                                                                            URLEncoder.encode(
+                                                                                subSection.videoUrl,
+                                                                                StandardCharsets.UTF_8
+                                                                                    .toString(),
+                                                                            )
+                                                                        navController.navigate(
+                                                                            Screens.CourseLessonScreen.route +
+                                                                                    "/${encodedUrl}"
                                                                         )
-                                                                    navController.navigate(
-                                                                        Screens.CourseLessonScreen.route +
-                                                                                "/${encodedUrl}"
-                                                                    )
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -935,42 +946,48 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                             }
                                         }
                                     }
-                                }
 
-                                AnimatedVisibility(visible = reviewsVisibilityState) {
-                                    Column {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(top = Constant.paddingComponentFromScreen, bottom = Constant.paddingComponentFromScreen, start = Constant.normalPadding, end =Constant.normalPadding )
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Star,
-                                                tint = starFillingColor,
-                                                contentDescription = "rating icon",
-                                                modifier = Modifier.padding(end = Constant.smallPadding),
-                                            )
-                                            Text(
-                                                text = (course?.averageRating?:0.0).toString(),
-                                                style = MaterialTheme.typography.titleLarge,
-                                                fontWeight = FontWeight(700),
-                                                color = buttonColor,
-                                            )
-                                        }
-                                        LazyColumn(modifier = Modifier.height(500.dp)) {
-                                            course?.let { item ->
-                                                items(item.ratingAndReviews) { rate ->
-                                                    ReviewColumn(
-                                                        ratingAndReview = rate,
-                                                        context = context
+                                    AnimatedVisibility(visible = reviewsVisibilityState) {
+                                        Column {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(
+                                                        top = Constant.paddingComponentFromScreen,
+                                                        bottom = Constant.paddingComponentFromScreen,
+                                                        start = Constant.normalPadding,
+                                                        end = Constant.normalPadding
                                                     )
-                                                    HorizontalDivider(
-                                                        modifier =
-                                                        Modifier.padding(
-                                                            start = Constant.normalPadding,
-                                                            end = Constant.normalPadding
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Star,
+                                                    tint = starFillingColor,
+                                                    contentDescription = "rating icon",
+                                                    modifier = Modifier.padding(end = Constant.smallPadding),
+                                                )
+                                                Text(
+                                                    text = (course?.averageRating
+                                                        ?: 0.0).toString(),
+                                                    style = MaterialTheme.typography.titleLarge,
+                                                    fontWeight = FontWeight(700),
+                                                    color = buttonColor,
+                                                )
+                                            }
+                                            LazyColumn(modifier = Modifier.height(500.dp)) {
+                                                course?.let { item ->
+                                                    items(item.ratingAndReviews) { rate ->
+                                                        ReviewColumn(
+                                                            ratingAndReview = rate,
+                                                            context = context
                                                         )
-                                                    )
+                                                        HorizontalDivider(
+                                                            modifier =
+                                                            Modifier.padding(
+                                                                start = Constant.normalPadding,
+                                                                end = Constant.normalPadding
+                                                            )
+                                                        )
+                                                    }
                                                 }
                                             }
                                         }

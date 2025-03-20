@@ -1,6 +1,7 @@
 package com.example.student_project.ui.screen.widgets
 
 import android.content.Context
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -25,6 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -53,6 +55,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -77,6 +80,7 @@ import com.example.student_project.util.Constant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.annotation.meta.When
 
 // we will change this to lambda fun that will take string and will return -> string
 // then take the returning string and put it in a a list
@@ -226,15 +230,25 @@ fun CourseColumn(
     var savedCourseState by remember {
         mutableStateOf<Result<String>?>(null)
     }
+    var bookmarkState by remember {
+        mutableStateOf(course.isSaved)
+    }
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Card(
         modifier =
         Modifier
-            .padding(Constant.normalPadding)
+            .padding(
+                start = Constant.normalPadding,
+                end = Constant.normalPadding,
+                bottom = Constant.mediumPadding
+            )
             .fillMaxWidth()
-            .height(screenHeight * 23 / 100)
+//            .height(screenHeight * 18 / 100)
             .shadow(
                 8.dp,
                 RoundedCornerShape(Constant.buttonRadios),
@@ -244,25 +258,26 @@ fun CourseColumn(
             // .height(screenHeight * 15/100)
             .clickable { onClickListener(course.id) }, colors = CardDefaults.cardColors(
             containerColor = Color.White
-        )
-        , shape = RoundedCornerShape(32.dp)
+        ), shape = RoundedCornerShape(20.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
 //                    top = Constant.mediumPadding,
-                    start = Constant.paddingComponentFromScreen,
+                    start = Constant.normalPadding,
                     end = Constant.smallPadding
                 )
         ) {
             Card(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .width(screenWidth * 35 / 100)
-                    .height(screenHeight * 18 / 100),
+
+                    .width(screenWidth * 30 / 100)
+                    .height(screenHeight * 15 / 100)
+                    .padding(top = Constant.smallPadding, bottom = Constant.smallPadding),
 //                    .padding(bottom = Constant.normalPadding),
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(15.dp)
 
             ) {
                 AsyncImage(
@@ -277,15 +292,14 @@ fun CourseColumn(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding()
+                        .padding(top = Constant.smallPadding)
                 ) {
-
                     Card(
                         modifier = Modifier
                             .align(Alignment.CenterStart)
 //                                                    .height(screenHeight * 6/100)
                             .padding(
-//                                top = Constant.normalPadding,
+                                top = Constant.smallPadding,
 //                                bottom = Constant.normalPadding,
                                 start = Constant.normalPadding
                             ),
@@ -315,38 +329,46 @@ fun CourseColumn(
                     IconButton(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
+                            .width(screenWidth * 8 / 100)
+                            .height(screenHeight * 4 / 100)
                             .padding(top = Constant.smallPadding),
                         onClick = {
                             CoroutineScope(Dispatchers.IO).launch {
+                                isLoading = true
                                 savedCourseState = courseRepo.savedCourse(course.id)
                             }
 
                         }) {
                         savedCourseState?.onSuccess {
-                            Toast.makeText(
-                                context,
-                                "Course saved successfully",
-                                Toast.LENGTH_SHORT
-
-                            ).show()
+                            isLoading = false
+                            bookmarkState = true
                         }?.onFailure {
                             Toast.makeText(context, "Failed to save course", Toast.LENGTH_SHORT)
                                 .show()
                         }
-                        if (course.isSaved) {
-                            Icon(
+
+                        when{
+                            course.isSaved || bookmarkState -> Icon(
                                 modifier = Modifier
-                                    .width(screenWidth * 8 / 100)
-                                    .height(screenHeight * 6 / 100),
+//                                    .width(screenWidth * 8 / 100)
+////                                    .height(screenHeight * 6 / 100)
+                                ,
                                 imageVector = ImageVector.vectorResource(id = R.drawable.baseline_bookmark_24),
                                 tint = buttonColor,
                                 contentDescription = "bookmark"
                             )
-                        } else {
-                            Icon(
+
+                            isLoading -> CircularProgressIndicator(
+                                modifier = Modifier.width(64.dp),
+                                color = MaterialTheme.colorScheme.secondary,
+                                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                            )
+
+                            else -> Icon(
                                 modifier = Modifier
-                                    .width(screenWidth * 8 / 100)
-                                    .height(screenHeight * 6 / 100),
+//                                    .width(screenWidth * 8 / 100)
+//                                    .height(screenHeight * 6 / 100)
+                                ,
                                 imageVector = ImageVector.vectorResource(id = R.drawable.baseline_bookmark_border_24),
                                 tint = buttonColor,
                                 contentDescription = "bookmark"
@@ -361,6 +383,7 @@ fun CourseColumn(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontSize = 17.sp,
+//                    lineHeight = (-5).sp,
                     modifier = Modifier.padding(
                         start = Constant.normalPadding,
 //                        top = Constant.smallPadding
@@ -369,7 +392,7 @@ fun CourseColumn(
                 Text(
                     modifier = Modifier.padding(
                         start = Constant.normalPadding,
-                        top = Constant.smallPadding
+//                        top = Constant.smallPadding
                     ),
                     text =
                     AnnotatedString(
@@ -390,7 +413,8 @@ fun CourseColumn(
                 Row(
                     modifier = Modifier.padding(
                         start = Constant.mediumPadding,
-                        top = Constant.verySmallPadding
+                        bottom = Constant.normalPadding
+//                        top = Constant.verySmallPadding
                     )
                 ) {
 
@@ -399,12 +423,17 @@ fun CourseColumn(
                         imageVector = Icons.Filled.Star,
                         contentDescription = "rating star",
                         tint = starFillingColor,
+                        modifier = Modifier.size(Constant.starSize)
+//                        padding(bottom = 33.dp)
                     )
                     Text(
-                        text = ("%.2f".format(course.averageRating)),
+                        text = ("%.1f".format(course.averageRating)),
                         style = MaterialTheme.typography.titleMedium,
                         fontSize = 15.sp,
-                        modifier = Modifier.padding(5.dp),
+                        modifier = Modifier.padding(
+                            start = Constant.smallPadding,
+//                            top = Constant.smallPadding
+                        ),
                         color = buttonColor,
                     )
 

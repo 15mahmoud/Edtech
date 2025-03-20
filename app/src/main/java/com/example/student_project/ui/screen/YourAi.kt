@@ -13,14 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.example.student_project.ui.screen.home.content.BottomNavBar
-import com.example.student_project.ui.screen.home.content.ScaffoldTopAppBar
 
 @Composable
 fun YourAiScreen(navController: NavController) {
     val selectedItemIndex by rememberSaveable { mutableStateOf(2) }
     Scaffold(
         Modifier.fillMaxSize().background(Color.White),
-        topBar = { ScaffoldTopAppBar() },
+        topBar = {  },
         bottomBar = { BottomNavBar(selectedItemIndex, navController) },
     ) { innerPadding ->
         Column(Modifier.padding(innerPadding)) {}

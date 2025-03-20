@@ -15,6 +15,7 @@ object Constant {
     //    val padding = 5.dp
     //    val padding = 5.dp
     val buttonRadios = 18.dp
+    val starSize = 18.dp
 
     val buttonTextSize = 16.dp
 }
