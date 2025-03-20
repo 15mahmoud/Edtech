@@ -2,6 +2,12 @@
 
 This repository contains the backend code for the Graduation Project. It is built using Node.js and Express.js, providing APIs and services to support the project's functionalities.
 
+## Entity-Relationship Diagram (ERD)
+
+Below is the ER diagram representing the database structure of this project:
+
+![ER Diagram](uml/ERD.png)
+
 ## Features
 
 - **User Authentication**: Secure login and registration using JWT tokens.
