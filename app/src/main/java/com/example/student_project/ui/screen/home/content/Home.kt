@@ -384,7 +384,8 @@ fun HomeScreen(
 
                     Button(
                         modifier = Modifier
-                            .align(Alignment.CenterEnd),
+                            .align(Alignment.CenterEnd)
+                            .padding(top = Constant.smallPadding),
                         onClick = {
                             // here we write code to navigate to all mentor
                             navController.navigate(Screens.TrendingCourseScreen.route)
@@ -436,7 +437,8 @@ fun HomeScreen(
                     )
                     Button(
                         modifier = Modifier
-                            .align(Alignment.CenterEnd),
+                            .align(Alignment.CenterEnd)
+                            .padding(top = Constant.smallPadding),
                         onClick = {
                             // here we write code to navigate to all subject
                             navController.navigate(Screens.AllCourseScreen.route)
