@@ -222,7 +222,7 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                     LazyColumn {
                         courseList?.let { course ->
                             items(course.filter { it.totalLessons == it.completedLessons }) { item ->
-                                CourseColumn(course = item, context = context) {
+                                CourseColumn(courseRepo = courseRepo,course = item, context = context) {
                                     navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
                                 }
                             }
