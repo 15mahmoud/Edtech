@@ -440,6 +440,9 @@ exports.getAllInstructors = async (req, res) => {
     });
   }
 };
+
+
+
 //  exports.getAllInstructors = async (req, res) => {
 //    try {
 //      const allInstructorsDetails = await User.find({
@@ -469,16 +472,17 @@ exports.getAllInstructors = async (req, res) => {
 
 
 
-// حفظ كورس معين للطالب
+
+
 exports.saveCourse = async (req, res) => {
   try {
     const userId = req.user.id;
     const { courseId } = req.body;
 
-    // التحقق من وجود المستخدم والكورس
+    
     const user = await User.findById(userId);
     const course = await Course.findById(courseId);
-    
+
     if (!user || !course) {
       return res.status(404).json({
         success: false,
@@ -486,15 +490,27 @@ exports.saveCourse = async (req, res) => {
       });
     }
 
-    // إضافة الكورس إلى قائمة الكورسات المحفوظة إذا لم يكن موجودًا بالفعل
-    if (!user.savedCourses.includes(courseId)) {
+    
+    const isSaved = user.savedCourses.includes(courseId);
+
+    if (isSaved) {
+      
+      user.savedCourses = user.savedCourses.filter(
+        (id) => id.toString() !== courseId
+      );
+    } else {
+      
       user.savedCourses.push(courseId);
-      await user.save();
     }
+
+    await user.save();
 
     return res.status(200).json({
       success: true,
-      data: "Course saved successfully",
+      data: isSaved
+        ? "Course removed from saved list"
+        : "Course saved successfully",
+      isSaved: !isSaved, 
     });
   } catch (error) {
     return res.status(500).json({
@@ -503,6 +519,41 @@ exports.saveCourse = async (req, res) => {
     });
   }
 };
+
+// حفظ كورس معين للطالب
+// exports.saveCourse = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const { courseId } = req.body;
+
+//     // التحقق من وجود المستخدم والكورس
+//     const user = await User.findById(userId);
+//     const course = await Course.findById(courseId);
+    
+//     if (!user || !course) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User or Course not found",
+//       });
+//     }
+
+//     // إضافة الكورس إلى قائمة الكورسات المحفوظة إذا لم يكن موجودًا بالفعل
+//     if (!user.savedCourses.includes(courseId)) {
+//       user.savedCourses.push(courseId);
+//       await user.save();
+//     }
+
+//     return res.status(200).json({
+//       success: true,
+//       data: "Course saved successfully",
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
 
 // جلب جميع الكورسات المحفوظة للطالب
 
