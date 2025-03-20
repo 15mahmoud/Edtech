@@ -1,15 +1,14 @@
 package com.example.student_project.ui.screen.home.content
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -87,15 +86,10 @@ import com.example.student_project.data.repo.InstructorRepo
 import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.home.uidata.BottomNavItem
-import com.example.student_project.ui.theme.addReviewTextColor
-import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.darkerGrayColor
 import com.example.student_project.ui.theme.lightGray
 import com.example.student_project.ui.theme.starFillingColor
 import com.example.student_project.util.Constant
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -195,7 +189,15 @@ fun HomeScreen(
             Modifier
                 .fillMaxSize()
                 .consumeWindowInsets(innerPadding)
-                .padding(top = screenHeight * 12/100)
+                .padding(
+                    paddingValues = PaddingValues(
+                        top = screenHeight * 12 / 100,
+                        bottom = innerPadding.calculateBottomPadding()
+                    )
+                )
+
+//                .navigationBarsPadding()
+//                .windowInsetsBottomHeight(WindowInsets.systemBars)
         ) {
             Column(
                 Modifier
@@ -420,7 +422,7 @@ fun HomeScreen(
 
 
                     }?.onFailure {
-                        Toast.makeText(context, "faild to load mentor data", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, "failed to load mentor data", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
@@ -437,7 +439,7 @@ fun HomeScreen(
                             .align(Alignment.CenterEnd),
                         onClick = {
                             // here we write code to navigate to all subject
-                            navController.navigate(Screens.TrendingCourseScreen.route)
+                            navController.navigate(Screens.AllCourseScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     ) {
@@ -494,10 +496,10 @@ fun HomeScreen(
 
 // i should move those 2 function from here may be i make another file for them
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ScaffoldTopAppBar() {
-    val context = LocalContext.current
-}
+//@Composable
+//fun ScaffoldTopAppBar() {
+//    val context = LocalContext.current
+//}
 
 @Composable
 fun BottomNavBar(selectedState: Int, navController: NavController) {
@@ -588,33 +590,6 @@ fun CourseRaw(
                 .padding(bottom = Constant.smallPadding)
         ) {
 
-//                IconButton(
-//                    modifier = Modifier.align(Alignment.TopEnd),
-//                    onClick = {
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        savedCourseState = courseRepo.savedCourse(course.id)
-//                    }
-//
-//                }) {
-//                    savedCourseState?.onSuccess {
-//                        savedCourseBooleanState = true
-//                    }?.onFailure {
-//                        Toast.makeText(context, "Failed to save course", Toast.LENGTH_SHORT).show()
-//                    }
-//                    if (course.isSaved) {
-//                        Icon(
-//                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_bookmark_24),
-//                            tint = buttonColor,
-//                            contentDescription = "bookmark"
-//                        )
-//                    } else {
-//                        Icon(
-//                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_bookmark_border_24),
-//                            tint = buttonColor,
-//                            contentDescription = "bookmark"
-//                        )
-//                    }
-//                }
             AsyncImage(
                 model = ImageRequest.Builder(context).crossfade(true).data(course.thumbnail)
                     .build(),

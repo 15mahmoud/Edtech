@@ -11,6 +11,7 @@ object Constant {
     val paddingTextFromImage = 25.dp
     val verySmallPadding = 2.5.dp
     val veryLargePadding = 30.dp
+    val paddingWithoutScaffold = 40.dp
     //    val padding = 5.dp
     //    val padding = 5.dp
     val buttonRadios = 18.dp

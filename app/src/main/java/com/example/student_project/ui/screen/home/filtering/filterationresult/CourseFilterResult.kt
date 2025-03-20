@@ -125,6 +125,7 @@ fun CourseFilterResultScreen(
                     it?.let {
                         items(it) { course ->
                             CourseColumn(
+                                courseRepo=courseRepo,
                                 course = course,
                                 context = context,
                                 // here we will send id to details screen
