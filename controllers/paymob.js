@@ -162,8 +162,8 @@ exports.handleWebhook = async (req, res) => {
 
 exports.getTransactionStatus = async (req, res) => {
   try {
-    const { courseId } = req.body; 
-    const userId = req.user.id; 
+    const { courseId } = req.body;
+    const userId = req.user.id;
 
     const transaction = await Transaction.findOne({
       user: userId,
@@ -172,8 +172,8 @@ exports.getTransactionStatus = async (req, res) => {
 
     if (!transaction) {
       return res
-        .status(404)
-        .json({ success: false, message: "Transaction not found" });
+        .status(200)
+        .json({ success: true, data: "No transaction found" });
     }
 
     res.status(200).json({ success: true, data: transaction.status });
@@ -182,24 +182,3 @@ exports.getTransactionStatus = async (req, res) => {
   }
 };
 
-// exports.getTransactionStatus = async (req, res) => {
-//   try {
-//     const { transactionId } = req.body;
-//     if (!transactionId) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "Transaction ID is required" });
-//     }
-
-//     const transaction = await Transaction.findOne({ transactionId });
-//     if (!transaction) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "Transaction not found" });
-//     }
-
-//     res.status(200).json({ success: true, data: transaction.status });
-//   } catch (error) {
-//     res.status(500).json({ success: false, message: "Server error" });
-//   }
-// };
