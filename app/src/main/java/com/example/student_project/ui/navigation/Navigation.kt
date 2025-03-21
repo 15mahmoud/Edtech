@@ -22,6 +22,7 @@ import com.example.student_project.ui.screen.SplashScreen
 import com.example.student_project.ui.screen.YourAiScreen
 import com.example.student_project.ui.screen.details.mentor.MentorDetailsScreen
 import com.example.student_project.ui.screen.home.allcourses.AllCourseScreen
+import com.example.student_project.ui.screen.home.allmentor.AllMentorScreen
 import com.example.student_project.ui.screen.home.trendingcourses.TrendingCourseScreen
 import com.example.student_project.ui.screen.inbox.chat.InboxChatScreen
 import com.example.student_project.ui.screen.log.forgetpassword.EmailAndPhoneScreen
@@ -43,7 +44,7 @@ import com.example.student_project.ui.screen.profile.security.SecurityScreen
 fun Navigation(depContainer: DepContainer) {
     val navController = rememberNavController()
     // start from splash
-    NavHost(navController = navController, startDestination = Screens.HomeScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.AllMentorScreen.route) {
         composable(Screens.SplashScreen.route) {
             SplashScreen(
                 navController,
@@ -127,6 +128,7 @@ fun Navigation(depContainer: DepContainer) {
         ) { backStackEntry ->
             MentorFilterResultScreen(
                 navController = navController,
+                depContainer.studentRepo,
                 backStackEntry.arguments?.getString("jop_title"),
                 backStackEntry.arguments?.getFloat("rating"),
                 backStackEntry.arguments?.getFloat("hourly_rate"),
@@ -274,6 +276,13 @@ fun Navigation(depContainer: DepContainer) {
             CourseLessonScreen(
                 navController = navController,
                 backStackEntry.arguments?.getString("video_url"),
+            )
+        }
+        composable(
+            Screens.AllMentorScreen.route
+        ) {
+            AllMentorScreen(
+                navController = navController, studentRepo = depContainer.studentRepo,depContainer.instructorRepo
             )
         }
     }

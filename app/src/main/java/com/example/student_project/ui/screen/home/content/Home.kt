@@ -388,7 +388,7 @@ fun HomeScreen(
                             .padding(top = Constant.smallPadding),
                         onClick = {
                             // here we write code to navigate to all mentor
-                            navController.navigate(Screens.TrendingCourseScreen.route)
+                            navController.navigate(Screens.AllMentorScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     ) {

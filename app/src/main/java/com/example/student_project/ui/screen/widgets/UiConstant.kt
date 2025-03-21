@@ -341,14 +341,14 @@ fun CourseColumn(
                         }) {
                         savedCourseState?.onSuccess {
                             isLoading = false
-                            bookmarkState = true
+                            bookmarkState = !bookmarkState
                         }?.onFailure {
                             Toast.makeText(context, "Failed to save course", Toast.LENGTH_SHORT)
                                 .show()
                         }
 
                         when{
-                            course.isSaved || bookmarkState -> Icon(
+                             bookmarkState -> Icon(
                                 modifier = Modifier
 //                                    .width(screenWidth * 8 / 100)
 ////                                    .height(screenHeight * 6 / 100)
