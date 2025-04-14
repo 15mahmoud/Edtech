@@ -134,6 +134,8 @@ Format the output as a YAML list of dictionaries:
 
         # --- Validation ---
         yaml_str = response.strip().split("```yaml")[1].split("```")[0].strip()
+        # Remove backticks before parsing to avoid YAML errors
+        yaml_str = yaml_str.replace('`', '')
         abstractions = yaml.safe_load(yaml_str)
 
         if not isinstance(abstractions, list):
