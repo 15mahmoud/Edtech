@@ -1,7 +1,6 @@
 package com.example.student_project.ui.screen.widgets
 
 import android.content.Context
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -28,7 +27,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -55,7 +52,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -64,11 +60,14 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.student_project.R
 import com.example.student_project.data.model.Category
+import com.example.student_project.data.model.ChattingRoom
 import com.example.student_project.data.model.Course
+import com.example.student_project.data.model.Instructor
 import com.example.student_project.data.model.RatingAndReview
 import com.example.student_project.data.model.SubSection
 import com.example.student_project.data.repo.CourseRepo
-import com.example.student_project.ui.theme.ambientShadowColor
+import com.example.student_project.data.repo.StudentRepo
+import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.cardContainerColor
 import com.example.student_project.ui.theme.darkerGrayColor
@@ -80,7 +79,6 @@ import com.example.student_project.util.Constant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.annotation.meta.When
 
 // we will change this to lambda fun that will take string and will return -> string
 // then take the returning string and put it in a a list
@@ -604,3 +602,104 @@ fun ReviewColumn(ratingAndReview: RatingAndReview, context: Context) {
     }
 }
 
+@Composable
+fun MentorColumn(
+    navController: NavController,
+    instructor: Instructor,
+    studentRepo: StudentRepo,
+    context: Context,
+    onClickListener: (String) -> Unit
+) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    var chattingRoomState by remember {
+        mutableStateOf<Result<ChattingRoom>?>(null)
+    }
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
+
+    androidx.compose.material.Card(
+        modifier = Modifier
+            .shadow(0.dp)
+            .padding(bottom = Constant.mediumPadding)
+            .fillMaxWidth()
+            .clickable { onClickListener(instructor.id) },
+        contentColor = Color.White,
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = Constant.normalPadding)
+        ) {
+
+            Row {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = context).crossfade(true)
+                        .data(instructor.image)
+                        .transformations(CircleCropTransformation()).build(),
+                    contentDescription = "mentor image",
+                    modifier =
+                    Modifier
+                        .padding(top = Constant.normalPadding, start = Constant.smallPadding)
+                        .height(screenHeight * 8 / 100)
+                        .width(screenWidth * 18 / 100),
+                )
+                Box(
+                    modifier = Modifier.padding(
+                        start = Constant.mediumPadding,
+                        top = Constant.paddingComponentFromScreen + Constant.verySmallPadding
+                    )
+                ) {
+                    Text(
+                        text = instructor.firstName + " " + instructor.lastName,
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight(700),
+                        fontSize = 22.sp,
+                        color = buttonColor,
+                    )
+                    Text(
+                        modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
+                        text = instructor.additionalDetails.about.toString(),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontSize = 14.sp,
+                        color = jopTitleColor,
+                    )
+                }
+            }
+            IconButton(modifier = Modifier.align(Alignment.CenterEnd), onClick = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    isLoading = true
+                    chattingRoomState = studentRepo.createChat(instructor.id)
+                    isLoading = false
+                }
+                chattingRoomState?.onSuccess { chattingRoom ->
+                    for (user in chattingRoom.users) {
+                        if (user.id == instructor.id) {
+                            navController.navigate(Screens.InboxChatScreen.route + "/${chattingRoom.id}/${instructor.firstName + " " + instructor.lastName}")
+                        }
+                    }
+                }?.onFailure {
+                    Toast.makeText(context, "failed to get in chat", Toast.LENGTH_SHORT).show()
+                }
+            }) {
+                when {
+                    //why it take  time to start
+                    isLoading -> CircularProgressIndicator(
+                        modifier = Modifier.width(64.dp),
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    )
+
+                    else -> Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.baseline_sms_24),
+                        tint = buttonColor,
+                        contentDescription = "chatting"
+                    )
+                }
+
+            }
+        }
+    }
+}
