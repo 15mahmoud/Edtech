@@ -1,6 +1,7 @@
 package com.example.student_project.ui.screen.home.allmentor
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +31,7 @@ import com.example.student_project.data.model.Instructor
 import com.example.student_project.data.repo.InstructorRepo
 import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
-import com.example.student_project.ui.screen.home.filtering.filterationresult.MentorResult
+import com.example.student_project.ui.screen.widgets.MentorColumn
 import com.example.student_project.util.Constant
 
 @Composable
@@ -67,11 +69,11 @@ fun AllMentorScreen(navController: NavHostController,studentRepo: StudentRepo,in
                 fontWeight = FontWeight(700),
             )
         }
-        LazyColumn(){
+        LazyColumn(modifier = Modifier.background(color = Color.White)){
             instructorState?.onSuccess {nullableInstructor->
                 nullableInstructor?.let {notNullableInstructor->
                     items(notNullableInstructor){
-                        MentorResult(navController,instructor = it,studentRepo,context, onClickListener = { id ->
+                        MentorColumn(navController,instructor = it,studentRepo,context, onClickListener = { id ->
                             navController.navigate(Screens.MentorDetailsScreen.route + "/$id")
                         })
                     }

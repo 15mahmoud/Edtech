@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
@@ -44,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -66,6 +68,7 @@ import com.example.student_project.ui.theme.editProfileLogoutColor
 import com.example.student_project.ui.theme.jopTitleColor
 import com.example.student_project.ui.theme.unselectedButton
 import com.example.student_project.util.Constant
+import com.example.student_project.util.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -100,16 +103,16 @@ fun InboxScreen(navController: NavController, studentRepo: StudentRepo) {
         ) {
             Text(
                 modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.systemBars)
+//                    .windowInsetsPadding(WindowInsets.systemBars)
                     .padding(
                         top = Constant.paddingComponentFromScreen,
                         bottom = Constant.paddingComponentFromScreen,
                         start = Constant.paddingComponentFromScreen
                     ),
                 text = "Inbox",
-                fontSize = 18.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight(700),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.headlineLarge
             )
 
             Row(
@@ -166,8 +169,8 @@ fun InboxScreen(navController: NavController, studentRepo: StudentRepo) {
             AnimatedVisibility(visible = chatButtonSelected) {
                 LazyColumn(
                     modifier = Modifier.padding(
-                        top = Constant.normalPadding,
-                        start = Constant.paddingComponentFromScreen,
+//                        top = Constant.normalPadding,
+//                        start = Constant.paddingComponentFromScreen,
                         end = Constant.paddingComponentFromScreen
                     )
                 ) {
@@ -183,7 +186,7 @@ fun InboxScreen(navController: NavController, studentRepo: StudentRepo) {
                             }
                         }
                     }?.onFailure {
-
+                        Log.e("failed to get chats", it.message.toString())
                     }
 
                 }
@@ -191,8 +194,8 @@ fun InboxScreen(navController: NavController, studentRepo: StudentRepo) {
             AnimatedVisibility(visible = meetingButtonSelected) {
                 LazyColumn(
                     modifier = Modifier.padding(
-                        top = Constant.normalPadding,
-                        start = Constant.paddingComponentFromScreen,
+//                        top = Constant.normalPadding,
+//                        start = Constant.paddingComponentFromScreen,
                         end = Constant.paddingComponentFromScreen
                     )
                 ) {
@@ -217,7 +220,7 @@ fun InboxScreen(navController: NavController, studentRepo: StudentRepo) {
                         }
 
                     }?.onFailure {
-                        Toast.makeText(context, "faild to get meeting", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "failed to get meeting", Toast.LENGTH_SHORT).show()
                     }
 
                 }
@@ -237,25 +240,32 @@ fun MeetingRow(
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
 
-    Column(modifier = Modifier.fillMaxSize()) {
 
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ),
+
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = Constant.mediumPadding),
+        onClick = {
+            onClick(meeting.url)
+        }) {
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = Constant.normalPadding),
-            onClick = {
-                onClick(meeting.url)
-            }) {
+                .padding(end = Constant.normalPadding)
+        ) {
+
             Row {
+
 
                 AsyncImage(
                     modifier = Modifier
-                        .width(screenWidth * 16 / 100)
-                        .height(screenHeight * 9 / 100)
-                        .padding(start = Constant.normalPadding),
+                        .width(screenWidth * 18 / 100)
+                        .height(screenHeight * 8 / 100)
+                        .padding(top = Constant.normalPadding, start = Constant.smallPadding),
                     model = ImageRequest.Builder(context).crossfade(true)
                         .transformations(CircleCropTransformation()).data(meeting.host.image)
                         .build(),
@@ -263,13 +273,15 @@ fun MeetingRow(
                 )
                 Box(
                     modifier = Modifier
-                        .padding(start = Constant.normalPadding)
+                        .padding(
+                            start = Constant.normalPadding
+                        )
                 ) {
                     Text(
                         modifier = Modifier.padding(top = Constant.normalPadding),
                         text = meeting.host.firstName + " " + meeting.host.lastName,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontSize = 22.sp,
                         color = buttonColor,
                         fontWeight = FontWeight(700)
                     )
@@ -277,7 +289,7 @@ fun MeetingRow(
                         Card(
                             //we need to change size
                             modifier = Modifier.padding(
-                                top = 40.dp,
+                                top = 37.5.dp,
                                 end = Constant.verySmallPadding
                             ),
                             shape = RoundedCornerShape(15.dp), colors = CardDefaults.cardColors(
@@ -321,9 +333,7 @@ fun MeetingRow(
                         )
                         Text(
                             modifier = Modifier.padding(top = Constant.veryLargePadding),
-                            text = Instant.parse(meeting.date).atZone(
-                                ZoneId.systemDefault()
-                            ).format(DateTimeFormatter.ofPattern(" MMM d ,yyyy")).toString(),
+                            text = Utils.fromDateToTime(meeting.date," MMM d ,yyyy"),
                             style = MaterialTheme.typography.titleLarge,
                             fontSize = 15.sp,
                             color = jopTitleColor,
@@ -336,6 +346,7 @@ fun MeetingRow(
     }
 }
 
+
 //@Preview(showBackground = true)
 @Composable
 fun ChatRow(
@@ -345,52 +356,58 @@ fun ChatRow(
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
 
-    Column(modifier = Modifier.fillMaxSize()) {
 
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ),
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        modifier = Modifier
+//            .shadow(0.dp)
+            .padding(bottom = Constant.mediumPadding)
+            .fillMaxWidth(),
+        onClick = {
+            onClick(chat.id, chat.user.firstName + " " + chat.user.lastName)
+        }) {
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = Constant.normalPadding),
-            onClick = {
-                onClick(chat.id, chat.user.firstName + " " + chat.user.lastName)
-            }) {
-            Row {
+                .padding(end = Constant.normalPadding)
+        ) {
 
-                AsyncImage(
-                    modifier = Modifier
-                        .width(screenWidth * 16 / 100)
-                        .height(screenHeight * 9 / 100)
-                        .padding(start = Constant.normalPadding),
-                    model = ImageRequest.Builder(context).crossfade(true)
-                        .transformations(CircleCropTransformation()).data(chat.user.image)
-                        .build(),
-                    contentDescription = "user image"
+            AsyncImage(
+                modifier = Modifier
+                    .width(screenWidth * 18 / 100)
+                    .height(screenHeight * 8 / 100)
+                    .padding(top = Constant.normalPadding, start = Constant.smallPadding),
+                model = ImageRequest.Builder(context).crossfade(true)
+                    .transformations(CircleCropTransformation()).data(chat.user.image)
+                    .build(),
+                contentDescription = "user image"
+            )
+            Box(
+                modifier = Modifier
+                    .padding(
+                        start = Constant.mediumPadding,
+                        top = Constant.paddingComponentFromScreen + Constant.verySmallPadding
+                    )
+            ) {
+                Text(
+                    text = chat.user.firstName + " " + chat.user.lastName,
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontSize = 22.sp,
+                    color = buttonColor,
+                    fontWeight = FontWeight(700)
                 )
-                Box(
-                    modifier = Modifier
-                        .padding(start = Constant.normalPadding)
-                ) {
-                    Text(
-                        modifier = Modifier.padding(top = Constant.normalPadding),
-                        text = chat.user.firstName + " " + chat.user.lastName,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontSize = 20.sp,
-                        color = buttonColor,
-                        fontWeight = FontWeight(700)
-                    )
-                    Text(
-                        modifier = Modifier.padding(top = Constant.veryLargePadding),
-                        text = chat.latestMessage?.content.toString(),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontSize = 15.sp,
-                        color = jopTitleColor,
-                        fontWeight = FontWeight(400)
-                    )
-                }
+                Text(
+                    modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
+                    text = chat.latestMessage?.content.toString(),
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontSize = 14.sp,
+                    color = jopTitleColor,
+                    fontWeight = FontWeight(400)
+                )
             }
         }
     }
+
 }
