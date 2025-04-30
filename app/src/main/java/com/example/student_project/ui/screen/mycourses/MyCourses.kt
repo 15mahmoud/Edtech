@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -115,17 +117,17 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
         },
         bottomBar = { BottomNavBar(selectedItemIndex, navController) },
     ) { innerPadding ->
-        Column(Modifier.padding(innerPadding)) {
+        Column(Modifier.padding(top = 70.dp, bottom = innerPadding.calculateBottomPadding())) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
                         start = Constant.paddingComponentFromScreen,
                         end = Constant.paddingComponentFromScreen,
-                        bottom = Constant.mediumPadding
+//                        bottom = Constant.smallPadding
                     ),
                 horizontalArrangement = Arrangement.spacedBy(
-                    Constant.normalPadding,
+                    Constant.verySmallPadding,
                     Alignment.CenterHorizontally
                 )
             ) {
@@ -188,8 +190,11 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                 )
             )
             courseState?.onSuccess { courseList ->
-                AnimatedVisibility(visible = ongoingButtonVisibilityState) {
-                    LazyColumn {
+                AnimatedVisibility(
+                    visible = ongoingButtonVisibilityState,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    LazyColumn(modifier = Modifier) {
                         courseList?.let { course ->
                             items(course.filter { it.totalLessons != it.completedLessons }) { item ->
                                 CourseProgressColumn(course = item, context = context) {
@@ -200,8 +205,11 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                     }
                 }
 
-                AnimatedVisibility(visible = completedButtonVisibilityState) {
-                    LazyColumn {
+                AnimatedVisibility(
+                    visible = completedButtonVisibilityState,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    LazyColumn(modifier = Modifier) {
                         courseList?.let { course ->
                             items(course.filter { it.totalLessons == it.completedLessons }) { item ->
                                 CourseProgressColumn(course = item, context = context) {
@@ -222,7 +230,11 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                     LazyColumn {
                         courseList?.let { course ->
                             items(course.filter { it.totalLessons == it.completedLessons }) { item ->
-                                CourseColumn(courseRepo = courseRepo,course = item, context = context) {
+                                CourseColumn(
+                                    courseRepo = courseRepo,
+                                    course = item,
+                                    context = context
+                                ) {
                                     navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
                                 }
                             }
@@ -242,44 +254,68 @@ fun CourseProgressColumn(course: Course, context: Context, onClickListener: (Str
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Card(
-        shape = RoundedCornerShape(32.dp),
+        shape = RoundedCornerShape(20.dp),
         modifier =
         Modifier
-            .padding(top = Constant.mediumPadding)
-            .fillMaxWidth()
+            .padding(
+                bottom = Constant.smallPadding,
+                top = Constant.smallPadding
+            )
+            .width(screenWidth * 90 / 100)
             // .height(screenHeight * 15/100)
             .clickable { onClickListener(course.id) }
-            .shadow(4.dp, RoundedCornerShape(32.dp)), colors = CardDefaults.cardColors(
+            .shadow(4.dp, RoundedCornerShape(20.dp)), colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = ImageRequest.Builder(context = context).crossfade(true)
-                    .data(course.thumbnail).build(), contentDescription = "course image",
+            Card(
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .width(screenWidth * 37 / 100)
-                    .height(screenHeight * 14 / 100)
-                    .padding(start = Constant.paddingComponentFromScreen, end = Constant.mediumPadding)
-            )
+                    .height(screenHeight * 12 / 100)
+                    .padding(
+                        top = Constant.mediumPadding,
+                        bottom = Constant.mediumPadding,
+                        start = Constant.mediumPadding,
+                        end = Constant.mediumPadding
+                    )
+                    .border(width = 1.dp, shape = RoundedCornerShape(12.dp), color = Color(0xAAAAAAAA))
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = context).crossfade(true)
+                        .data(course.thumbnail).build(),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "course image"
+                )
+            }
             Column {
                 Text(
                     text = course.courseName,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight(600),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                     fontSize = 15.sp,
+                    lineHeight = 10.sp,
                     color = buttonColor,
-                    modifier = Modifier.padding(
-                        start = Constant.smallPadding,
-                        top = Constant.normalPadding,
-                        //bottom = Constant.mediumPadding
-                    ),
+                    modifier = Modifier
+                        .align(alignment = Alignment.CenterHorizontally)
+                        .padding(
+                            start = Constant.smallPadding,
+                            top = Constant.normalPadding,
+                            //bottom = Constant.mediumPadding
+                        ),
                 )
                 Text(
                     text = course.totalDuration,
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 12.sp,
                     modifier = Modifier
-                        .padding(Constant.normalPadding)
+                        .padding(
+                            top = Constant.verySmallPadding
+//                            Constant.normalPadding
+                        )
                         .align(Alignment.CenterHorizontally),
                     color = jopTitleColor,
                     fontWeight = FontWeight(400)
@@ -298,10 +334,10 @@ fun CourseProgressColumn(course: Course, context: Context, onClickListener: (Str
                 LinearProgressIndicator(
 
                     modifier = Modifier.width(175.dp),
-                    trackColor =MaterialTheme.colorScheme.surfaceVariant,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
                     color = if (course.progressPercentage!! > 0 && course.progressPercentage <= 50) progressBar else if (course.progressPercentage in 50.0..75.0) colorForProgressParFrom50To75 else if (course.progressPercentage in 75.0..100.0) colorForProgressParFrom75To100 else MaterialTheme.colorScheme.surfaceVariant,
-                            progress = {
-                        course.progressPercentage.toFloat()/100
+                    progress = {
+                        course.progressPercentage.toFloat() / 100
                     }
                 )
 

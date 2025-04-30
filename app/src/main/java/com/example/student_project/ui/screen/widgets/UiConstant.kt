@@ -656,7 +656,7 @@ fun MentorColumn(
                         text = instructor.firstName + " " + instructor.lastName,
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight(700),
-                        fontSize = 22.sp,
+                        fontSize = 20.sp,
                         color = buttonColor,
                     )
                     Text(

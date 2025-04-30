@@ -20,5 +20,4 @@ object Utils {
         return any { it in arabicRange }
     }
 
-
 }
