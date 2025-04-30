@@ -57,7 +57,7 @@ exports.sendMessage = async (req, res) => {
     // Save conversation
     await conversation.save();
 
-    res.json({ reply: aiReply, conversation });
+    res.json({ data: aiReply }); //res.json({ data: aiReply, conversation });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({
@@ -80,7 +80,7 @@ exports.getConversation = async (req, res) => {
       return res.status(404).json({ error: "Conversation not found." });
     }
 
-    res.json(conversation);
+    res.json({ data: conversation.messages }); //res.json({ data: conversation });
   } catch (error) {
     console.error("🔴 Error:", error.message);
     res.status(500).json({ error: "An error occurred while fetching data." });
