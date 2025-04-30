@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
@@ -50,6 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,6 +67,7 @@ import com.example.student_project.ui.screen.home.content.BottomNavBar
 import com.example.student_project.ui.theme.anotherColorForFillingStar
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.editProfileLogoutColor
+import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.jopTitleColor
 import com.example.student_project.ui.theme.unselectedButton
 import com.example.student_project.util.Constant
@@ -94,26 +97,41 @@ fun InboxScreen(navController: NavController, studentRepo: StudentRepo) {
         Modifier
             .fillMaxSize()
             .background(Color.White),
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
+                backgroundColor = Color.White,
+                title = {
+                    Text(
+                        text = "Inbox",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = headLineColor,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(700),
+                        modifier = Modifier.padding(Constant.paddingComponentFromScreen)
+                    )
+                })
+        },
         bottomBar = { BottomNavBar(selectedItemIndex, navController) },
     ) { innerPadding ->
         Column(
             Modifier
-                .consumeWindowInsets(innerPadding)
-                .padding(top = Constant.paddingComponentFromScreen)
+//                .consumeWindowInsets(innerPadding)
+                .padding( innerPadding)
         ) {
-            Text(
-                modifier = Modifier
-//                    .windowInsetsPadding(WindowInsets.systemBars)
-                    .padding(
-                        top = Constant.paddingComponentFromScreen,
-                        bottom = Constant.paddingComponentFromScreen,
-                        start = Constant.paddingComponentFromScreen
-                    ),
-                text = "Inbox",
-                fontSize = 20.sp,
-                fontWeight = FontWeight(700),
-                style = MaterialTheme.typography.headlineLarge
-            )
+//            Text(
+//                modifier = Modifier
+////                    .windowInsetsPadding(WindowInsets.systemBars)
+//                    .padding(
+//                        top = Constant.paddingComponentFromScreen,
+//                        bottom = Constant.paddingComponentFromScreen,
+//                        start = Constant.paddingComponentFromScreen
+//                    ),
+//                text = "Inbox",
+//                fontSize = 20.sp,
+//                fontWeight = FontWeight(700),
+//                style = MaterialTheme.typography.headlineLarge
+//            )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -281,7 +299,7 @@ fun MeetingRow(
                         modifier = Modifier.padding(top = Constant.normalPadding),
                         text = meeting.host.firstName + " " + meeting.host.lastName,
                         style = MaterialTheme.typography.headlineLarge,
-                        fontSize = 22.sp,
+                        fontSize = 20.sp,
                         color = buttonColor,
                         fontWeight = FontWeight(700)
                     )
@@ -363,7 +381,11 @@ fun ChatRow(
         ),
         modifier = Modifier
 //            .shadow(0.dp)
-            .padding(bottom = Constant.mediumPadding)
+            .padding(
+                top = Constant.mediumPadding,
+                bottom = Constant.verySmallPadding,
+                start = screenWidth * 2 / 100
+            )
             .fillMaxWidth(),
         onClick = {
             onClick(chat.id, chat.user.firstName + " " + chat.user.lastName)
@@ -376,9 +398,12 @@ fun ChatRow(
 
             AsyncImage(
                 modifier = Modifier
-                    .width(screenWidth * 18 / 100)
-                    .height(screenHeight * 8 / 100)
-                    .padding(top = Constant.normalPadding, start = Constant.smallPadding),
+                    .width(screenWidth * 16 / 100)
+                    .height(screenHeight * 7 / 100)
+                    .padding(
+//                        top = Constant.smallPadding,
+                        start = Constant.smallPadding
+                    ),
                 model = ImageRequest.Builder(context).crossfade(true)
                     .transformations(CircleCropTransformation()).data(chat.user.image)
                     .build(),
@@ -388,20 +413,24 @@ fun ChatRow(
                 modifier = Modifier
                     .padding(
                         start = Constant.mediumPadding,
-                        top = Constant.paddingComponentFromScreen + Constant.verySmallPadding
+                        top = Constant.normalPadding
                     )
             ) {
                 Text(
                     text = chat.user.firstName + " " + chat.user.lastName,
                     style = MaterialTheme.typography.headlineLarge,
-                    fontSize = 22.sp,
+                    fontSize = 16.sp,
                     color = buttonColor,
                     fontWeight = FontWeight(700)
                 )
                 Text(
-                    modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
+                    modifier = Modifier.padding(
+                        top = Constant.normalPadding
+                    ),
                     text = chat.latestMessage?.content.toString(),
                     style = MaterialTheme.typography.headlineMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     fontSize = 14.sp,
                     color = jopTitleColor,
                     fontWeight = FontWeight(400)

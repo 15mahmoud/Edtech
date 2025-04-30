@@ -63,6 +63,7 @@ import com.example.student_project.data.model.Message
 import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.chatReceiverColor
+import com.example.student_project.ui.theme.jopTitleColor
 import com.example.student_project.ui.theme.progressBar
 import com.example.student_project.ui.theme.textFieldColor
 import com.example.student_project.util.Constant
@@ -319,9 +320,6 @@ fun MessageRow(message: Message, isCurrentUser: Boolean, screenWidth: Dp) {
 //    }
     val isArabic = message.content.containsArabic()
     val bubbleColor = if (isCurrentUser) progressBar else chatReceiverColor
-    val timeColor = if (isCurrentUser) Color(0xFF689F38) else Color(0xFF757575)
-
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -397,114 +395,10 @@ fun MessageRow(message: Message, isCurrentUser: Boolean, screenWidth: Dp) {
                             Alignment.End
                         }
                     ),
-                    color = Color.White
+                    color = jopTitleColor
                 )
             }
         }
     }
 
-
-//    //User's message
-//    if (message.sender.id == idState) {
-//        Column(modifier = Modifier.fillMaxWidth()) {
-//
-//            Box(
-//                modifier = Modifier
-//                    .padding(Constant.normalPadding)
-//                    .align(Alignment.End)
-//                    .width(screenWidth * 50 / 100)
-//                    .background(
-//                        progressBar,
-//                        RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-//                    )
-////                    .shadow(
-////                        2.dp,
-////                        shape = RoundedCornerShape(
-////                            topStart = 16.dp,
-////                            bottomStart = 16.dp,
-////                            bottomEnd = 16.dp
-////                        )
-////                    )
-//            ) {
-////                Surface(
-////                    color = progressBar,
-////                    modifier = Modifier
-//////                        .padding(Constant.smallPadding)
-////                        .clip(shape = RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp))
-////                ) {
-//                    Column(
-//                        modifier = Modifier.padding(Constant.smallPadding)
-//                    ) {
-//
-//                        Text(
-//                            text = message.content,
-//                            style = MaterialTheme.typography.titleMedium,
-//                            fontSize = 11.sp,
-//                            modifier = Modifier.align(Alignment.End),
-//                            color = Color.White
-//                        )
-//                        Text(
-//                            text = Instant.parse(message.createdAt).atZone(
-//                                ZoneId.systemDefault()
-//                            ).format(DateTimeFormatter.ofPattern("d MMM hh:mm")).toString(),
-//                            style = MaterialTheme.typography.titleMedium,
-//                            fontSize = 11.sp,
-//                            modifier = Modifier,
-//                            color = Color.White
-//                        )
-//                    }
-////                }
-//            }
-//        }
-//        //other's message
-//    } else {
-//        Box(
-//            modifier = Modifier
-//                .padding(bottom = Constant.normalPadding)
-//                .width(screenWidth * 50 / 100)
-//                .background(
-//                    chatReceiverColor,
-//                    RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-//                )
-//                .shadow(
-//                    2.dp,
-//                    shape = RoundedCornerShape(
-//                        topEnd = 16.dp,
-//                        bottomStart = 16.dp,
-//                        bottomEnd = 16.dp
-//                    )
-//                )
-//        ) {
-//
-////            Surface(
-////                color = chatReceiverColor,
-////                modifier = Modifier
-////
-////                    .padding(Constant.smallPadding)
-////                    .clip(shape = RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp))
-////            ) {
-//                Column(modifier = Modifier.padding(Constant.smallPadding)) {
-//
-//                    Text(
-//                        text = message.content,
-//                        style = MaterialTheme.typography.titleMedium,
-//                        fontSize = 11.sp,
-//                        modifier = Modifier.align(Alignment.Start),
-//                        color = buttonColor
-//                    )
-//                    Text(
-//                        text = Instant.parse(message.createdAt).atZone(
-//                            ZoneId.systemDefault()
-//                        ).format(DateTimeFormatter.ofPattern("d MMM hh:mm")).toString(),
-//                        style = MaterialTheme.typography.titleMedium,
-//                        fontSize = 11.sp,
-//                        modifier = Modifier,
-//                        color = buttonColor
-//                    )
-//                }
-//            }
-//        }
 }
-//}
-
-
