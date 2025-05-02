@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,16 +15,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -40,9 +47,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -50,17 +62,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.student_project.R
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.repo.CourseRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.home.content.BottomNavBar
 import com.example.student_project.ui.screen.widgets.CourseColumn
 import com.example.student_project.ui.theme.buttonColor
+import com.example.student_project.ui.theme.cardContainerColor
 import com.example.student_project.ui.theme.colorForProgressParFrom50To75
 import com.example.student_project.ui.theme.colorForProgressParFrom75To100
 import com.example.student_project.ui.theme.headLineColor
 import com.example.student_project.ui.theme.jopTitleColor
 import com.example.student_project.ui.theme.progressBar
+import com.example.student_project.ui.theme.spotShadowColor
+import com.example.student_project.ui.theme.starFillingColor
 import com.example.student_project.ui.theme.unselectedButton
 import com.example.student_project.util.Constant
 import kotlinx.coroutines.CoroutineScope
@@ -230,8 +246,7 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
                     LazyColumn {
                         courseList?.let { course ->
                             items(course.filter { it.totalLessons == it.completedLessons }) { item ->
-                                CourseColumn(
-                                    courseRepo = courseRepo,
+                                SavedCourseColumn(
                                     course = item,
                                     context = context
                                 ) {
@@ -244,6 +259,100 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
             }?.onFailure {
                 Toast.makeText(context, "Failed to load saved courses", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+}
+
+@Composable
+fun SavedCourseColumn(
+    course: Course,
+    context: Context,
+    onClickListener: (String) -> Unit
+) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    Card(
+        modifier =
+        Modifier
+            .padding(
+                start = Constant.normalPadding,
+                end = Constant.normalPadding,
+                bottom = Constant.mediumPadding
+            )
+            .fillMaxWidth()
+//            .height(screenHeight * 18 / 100)
+            .shadow(
+                8.dp,
+                RoundedCornerShape(Constant.buttonRadios),
+//                ambientColor = Color.Blue,
+                spotColor = spotShadowColor.copy(.33f)
+            )
+            // .height(screenHeight * 15/100)
+            .clickable { onClickListener(course.id) }, colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ), shape = RoundedCornerShape(20.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+//                    top = Constant.mediumPadding,
+                    start = Constant.normalPadding,
+                    end = Constant.smallPadding
+                )
+        ) {
+            Card(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+
+                    .width(screenWidth * 30 / 100)
+                    .height(screenHeight * 15 / 100)
+                    .padding(top = Constant.smallPadding, bottom = Constant.smallPadding),
+//                    .padding(bottom = Constant.normalPadding),
+                shape = RoundedCornerShape(15.dp)
+
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = context).crossfade(true)
+                        .data(course.thumbnail).build(), contentDescription = "course image",
+                    modifier = Modifier,
+//                    .padding(Constant)
+                    contentScale = ContentScale.Crop
+                )
+            }
+            Column {
+                Text(
+                    text = course.courseName,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight(700),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 17.sp,
+//                    lineHeight = (-5).sp,
+                    modifier = Modifier.padding(
+                        start = Constant.normalPadding,
+//                        top = Constant.smallPadding
+                    ),
+                )
+                Text(
+                    modifier = Modifier.padding(
+                        start = Constant.normalPadding,
+//                        top = Constant.smallPadding
+                    ),
+                    text =
+                    AnnotatedString("EGP ", spanStyle = SpanStyle(color = jopTitleColor, fontSize = 16.sp))
+                            + AnnotatedString(
+                                course.price.toString(),
+                                SpanStyle(
+                                    fontSize = 16.sp,
+                                    fontStyle = FontStyle.Normal,
+                                    fontWeight = FontWeight(600)
+                                )
+                            ),
+                )
+            }
+
         }
     }
 }
@@ -280,7 +389,11 @@ fun CourseProgressColumn(course: Course, context: Context, onClickListener: (Str
                         start = Constant.mediumPadding,
                         end = Constant.mediumPadding
                     )
-                    .border(width = 1.dp, shape = RoundedCornerShape(12.dp), color = Color(0xAAAAAAAA))
+                    .border(
+                        width = 1.dp,
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0xAAAAAAAA)
+                    )
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(context = context).crossfade(true)

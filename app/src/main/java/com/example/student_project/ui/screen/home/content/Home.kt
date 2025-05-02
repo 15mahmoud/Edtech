@@ -132,6 +132,7 @@ fun HomeScreen(
             .background(Color.White),
         topBar = {
             TopAppBar(
+                modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
                 title = {
                     Column(modifier = Modifier.clickable { navController.navigate(Screens.ProfileScreen.route) }) {
                         Row(modifier = Modifier.fillMaxSize()) {
@@ -315,6 +316,18 @@ fun HomeScreen(
                         )
                     }
                 }
+
+
+
+                //all the above code will delete or at aleast most of it
+
+
+
+
+
+
+
+
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
