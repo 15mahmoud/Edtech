@@ -49,7 +49,7 @@ object AppModule {
     @Provides
     fun provideOkHttpClient(studentDatabaseDao: StudentDatabaseDao) =
         OkHttpClient.Builder()
-            .readTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor { chain ->
                 val token = runBlocking { studentDatabaseDao.getCurrentStudent()?.token }
                 val originalRequest: Request = chain.request()

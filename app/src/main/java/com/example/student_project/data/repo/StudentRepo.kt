@@ -2,6 +2,8 @@ package com.example.student_project.data.repo
 
 import coil.network.HttpException
 import com.example.student_project.data.db.StudentDatabaseDao
+import com.example.student_project.data.model.Allin
+import com.example.student_project.data.model.AllinContent
 import com.example.student_project.data.model.ChattingRoom
 import com.example.student_project.data.model.InboxChat
 import com.example.student_project.data.model.Meeting
@@ -10,6 +12,7 @@ import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
 import com.example.student_project.data.network.ApiClient
 import com.example.student_project.data.network.request.ApiBodyForResetPassword
+import com.example.student_project.data.network.request.ApiReqForAllinAi
 import com.example.student_project.data.network.request.ApiReqForChat
 import com.example.student_project.data.network.request.ApiReqForMessageInChat
 import com.example.student_project.data.network.request.ApiReqForSendingMessage
@@ -107,5 +110,10 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
 
     suspend fun deleteAllStudent() {
         studentDatabaseDao.deleteAllStudents()
+    }
+
+
+    suspend fun codeExplainer(githubURL:String):Result<Allin>{
+        return Result.runCatching { apiClient.projects(ApiReqForAllinAi(githubURL)).data }
     }
 }

@@ -251,7 +251,7 @@ fun Navigation(depContainer: DepContainer) {
         }
         composable(Screens.YourAiScreen.route) {
 
-            YourAiScreen(navController = navController)
+            YourAiScreen(navController = navController,depContainer.studentRepo)
         }
         composable(Screens.InboxScreen.route) {
             InboxScreen(navController = navController, depContainer.studentRepo)
