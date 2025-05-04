@@ -84,7 +84,7 @@ async def generate_tutorial(request: TutorialRequest):
         # Return the content of the files
         return {
             "message": "Tutorial generated successfully",
-            "tutorial_files": markdown_files # Dictionary {filename: content}
+            "data": markdown_files # Dictionary {filename: content}
         }
         # --- End Retrieve in-memory content ---
 
