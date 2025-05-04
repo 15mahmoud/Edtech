@@ -1,5 +1,7 @@
 package com.example.student_project.data.network
 
+import com.example.student_project.data.model.Allin
+import com.example.student_project.data.model.AllinContent
 import com.example.student_project.data.model.Category
 import com.example.student_project.data.model.ChattingRoom
 import com.example.student_project.data.model.Course
@@ -10,6 +12,7 @@ import com.example.student_project.data.model.Message
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
 import com.example.student_project.data.network.request.ApiBodyForResetPassword
+import com.example.student_project.data.network.request.ApiReqForAllinAi
 import com.example.student_project.data.network.request.ApiReqForChat
 import com.example.student_project.data.network.request.ApiReqForMessageInChat
 import com.example.student_project.data.network.request.ApiReqForSendingMessage
@@ -106,4 +109,7 @@ interface ApiClient {
     //here we need some change too
     @POST("auth/reset-password")
     suspend fun resetPassword(@Body apiBodyForResetPassword: ApiBodyForResetPassword): BaseResponse<String>
+
+    @POST("projects/")
+    suspend fun projects(@Body apiReqForAllinAi: ApiReqForAllinAi): BaseResponse<Allin>
 }
