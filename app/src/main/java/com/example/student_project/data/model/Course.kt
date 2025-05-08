@@ -16,7 +16,7 @@ data class Course(
     val progressPercentage:Double?,
     val createdAt: String,
     val instructions: List<String>,
-    val instructor: Instructor,
+    val instructor: Instructor,//here he make string and in same time object
     val price: Double,
     val ratingAndReviews: List<RatingAndReview>,
     val status: String,

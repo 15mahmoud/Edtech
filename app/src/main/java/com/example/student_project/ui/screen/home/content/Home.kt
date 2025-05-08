@@ -113,6 +113,10 @@ fun HomeScreen(
     var instructorState by remember { mutableStateOf<Result<List<Instructor>?>?>(null) }
 
     var topNewCourseState by remember { mutableStateOf<Result<List<Course>?>?>(null) }
+
+    var enrolledCourses by remember {
+        mutableStateOf<Result<List<Course>?>?>(null)
+    }
     var studentState by remember { mutableStateOf<User?>(null) }
 
     LaunchedEffect(scope) {
@@ -121,7 +125,7 @@ fun HomeScreen(
         studentState = studentRepo.getCurrentStudent()
         //  val trendingCoursesList = courseRepo.getTrendingCourse()
         instructorState = instructorRepo.getAllInstructor()
-
+        enrolledCourses = courseRepo.getEnrolledCourses()
     }
 
     // we will make var that be true to show api
@@ -148,7 +152,7 @@ fun HomeScreen(
                                     .size(50.dp)
                                     .border(2.dp, color = Color.White, shape = CircleShape),
                             )
-                            Column (modifier = Modifier.align(Alignment.CenterVertically)){
+                            Column(modifier = Modifier.align(Alignment.CenterVertically)) {
 
                                 Text(
                                     text = "Hello",
@@ -206,49 +210,8 @@ fun HomeScreen(
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    TextField(
-                        modifier =
-                        Modifier.border(
-                            width = 3.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(10.dp),
-                        ),
-                        value = searchState,
-                        onValueChange = {
-                            // here when value change we will give this value to back end to search
-                            // and then we get the result
-                            searchState = it
-                        },
-                        placeholder = {
-                            Text(text = "search", fontSize = 22.sp, color = Color.Gray)
-                        },
-                        leadingIcon = {
-                            Image(
-                                modifier = Modifier,
-                                painter = painterResource(id = R.drawable.baseline_search_24),
-                                contentDescription = null,
-                            )
-                            // here we can make trailing icon that can be clickable
-                        },
-                        colors =
-                        TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                        ),
-                    )
-                    // this is filter button
-                    // we will need to modify this
-//                    Button(
-//                        onClick = { navController.navigate(Screens.MentorFilterScreen.route) },
-//                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-//                    ) {
-//                        Image(
-//                            painter = painterResource(id = R.drawable.move_to_filter),
-//                            contentDescription = null,
-//                        )
-//                    }
-                }
+
+
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -318,14 +281,60 @@ fun HomeScreen(
                 }
 
 
-
                 //all the above code will delete or at aleast most of it
 
 
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Enrolled Courses",
+                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight(600),
+                        modifier = Modifier.padding(top = Constant.paddingComponentFromScreen),
+                    )
+//                    Button(
+//                        modifier = Modifier
+//                            .align(Alignment.CenterEnd)
+//                            .padding(
+//                                top = Constant.smallPadding
+//                            ),
+//                        onClick = {
+//                            // here we write code to navigate to all subject
+//                            navController.navigate(Screens.TrendingCourseScreen.route)
+//                        },
+//                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+//                    ) {
+//
+//                        Text(
+//                            text = "All subject",
+//                            style = MaterialTheme.typography.titleMedium,
+//                            fontSize = 14.sp,
+//                            color = darkerGrayColor
+//                        )
+//                        // here we put image for a right arrow
+//
+//                    }
+                }
 
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 5.dp, bottom = 5.dp)
+                ) {
+                    enrolledCourses?.onSuccess { nullableEnrolledCourse ->
+                        nullableEnrolledCourse?.let { notNullableEnrolledCourse ->
+                            items(notNullableEnrolledCourse) { course ->
+                                EnrolledCourseRow(course, context) { id ->
+                                    navController.navigate(Screens.CourseDetailScreen.route + "/${id}")
 
+                                }
+                            }
+                        }
 
-
+                    }?.onFailure {
+                        Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
 
 
 
@@ -506,6 +515,104 @@ fun HomeScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun EnrolledCourseRow(course: Course, context: Context, onCLickListener: (String) -> Unit) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    Column(
+        modifier =
+        Modifier
+            .height(220.dp)
+            .width(230.dp)
+            .padding(end = Constant.normalPadding)
+            .clip(RoundedCornerShape(15.dp))
+            .clickable { onCLickListener(course.id) }
+    ) {
+        Card(
+            modifier = Modifier
+                .width(230.dp)
+                .height(120.dp)
+                .padding(bottom = Constant.smallPadding)
+        ) {
+
+            AsyncImage(
+                model = ImageRequest.Builder(context).crossfade(true).data(course.thumbnail)
+                    .build(),
+                contentDescription = "course image",
+                modifier = Modifier,
+                contentScale = ContentScale.Crop
+            )
+
+        }
+
+
+        Text(
+            text = course.courseName,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight(600),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            fontSize = 16.sp,
+            modifier = Modifier
+
+        )
+//        Text(
+//            modifier = Modifier.padding(
+//                top = Constant.smallPadding,
+//                bottom = Constant.mediumPadding
+//            ),
+//            text = course.instructor.firstName + " ${course.instructor.lastName}",
+//            style = MaterialTheme.typography.titleMedium,
+//            color = Color(0xFF334155),
+//        )
+        HorizontalDivider()
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Constant.smallPadding)
+        ) {
+
+            Text(
+                modifier = Modifier.padding(),
+                text =
+                AnnotatedString(
+                    "EGP ", spanStyle = SpanStyle(color = Color(0xFF334155), fontSize = 16.sp),
+                )
+                        +
+                        AnnotatedString(
+                            course.price.toString(),
+                            SpanStyle(
+                                fontSize = 16.sp,
+                                fontStyle = FontStyle.Normal,
+                                fontWeight = FontWeight(600)
+                            )
+                        ),
+//                    style = MaterialTheme.typography.titleLarge,
+            )
+
+//            Row(modifier = Modifier.align(Alignment.CenterEnd)) {
+//
+//                Icon(
+//                    imageVector = Icons.Filled.Star,
+//                    tint = starFillingColor,
+//                    contentDescription = "Avg rating",
+//                )
+//
+//                Text(
+//                    // we need to change this
+//                    //to make number 2 point
+//                    text = ("%.2f".format(course.averageRating)),
+//                    fontSize = 12.sp,
+//                    modifier = Modifier.padding(start = Constant.smallPadding, top = 1.dp),
+//                )
+//            }
+        }
+
     }
 }
 
