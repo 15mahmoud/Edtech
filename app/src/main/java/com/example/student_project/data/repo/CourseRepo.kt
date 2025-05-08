@@ -3,6 +3,7 @@ package com.example.student_project.data.repo
 import com.example.student_project.data.model.Category
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.network.ApiClient
+import com.example.student_project.data.network.request.ApiBodyForUpdateProgress
 import com.example.student_project.data.network.request.CapturePayment
 import com.example.student_project.data.network.request.CreateRatingReq
 import com.example.student_project.data.network.request.ApiRequestWithCourseId
@@ -54,5 +55,19 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
         return Result.runCatching { apiClient.getAllCourseProgress().data }
     }
 
+    suspend fun  updateCourseProgress(courseId: String,subsectionId:String):Result<String>{
+//        return Result.runCatching { apiClient.updateCourseProgress(ApiBodyForUpdateProgress(courseId,subsectionId)).data }
+        return try {
+            val response = apiClient.updateCourseProgress(ApiBodyForUpdateProgress(courseId, subsectionId))
+
+            when{
+                response.data != null ->Result.success(response.data)
+                response.error !=null -> Result.failure(Exception(response.error))
+                else -> Result.failure(Exception("Unknown error occurred"))
+            }
+        }catch (e:Exception){
+            Result.failure(e)
+        }
+    }
 
 }

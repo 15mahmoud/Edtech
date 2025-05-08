@@ -66,6 +66,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -907,6 +908,8 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                                     (index + 1).toString() +
                                                                     " " +
                                                                     item.sectionName,
+                                                            maxLines = 1,
+                                                            overflow = TextOverflow.Ellipsis,
                                                             style = MaterialTheme.typography.titleMedium,
                                                             color = jopTitleColor,
                                                             fontWeight = FontWeight(700),
@@ -914,28 +917,28 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                             modifier =
                                                             Modifier.padding(
                                                                 start = Constant.normalPadding,
-                                                                bottom = 12.5.dp,
+                                                                bottom = Constant.moreNormalPadding,
                                                             ),
                                                         )
                                                         LazyColumn(modifier = Modifier.height(250.dp)) {
                                                             itemsIndexed(item.subSection) { subsectionIndex,
                                                                                             subSection ->
-                                                                Card(onClick = {}) {
+                                                                Card() {
                                                                     LessonsColumn(
                                                                         subSection = subSection,
                                                                         index = subsectionIndex,
                                                                         lock = !lock,
                                                                         context = context,
-                                                                    ) {
+                                                                    ) {url,id->
                                                                         val encodedUrl =
                                                                             URLEncoder.encode(
-                                                                                subSection.videoUrl,
+                                                                                url,
                                                                                 StandardCharsets.UTF_8
                                                                                     .toString(),
                                                                             )
                                                                         navController.navigate(
                                                                             Screens.CourseLessonScreen.route +
-                                                                                    "/${encodedUrl}"
+                                                                                    "/${encodedUrl}" + "/${courseId.toString()}" + "/${id}"
                                                                         )
                                                                     }
                                                                 }

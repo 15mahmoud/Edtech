@@ -12,6 +12,7 @@ import com.example.student_project.data.model.Message
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
 import com.example.student_project.data.network.request.ApiBodyForResetPassword
+import com.example.student_project.data.network.request.ApiBodyForUpdateProgress
 import com.example.student_project.data.network.request.ApiReqForAllinAi
 import com.example.student_project.data.network.request.ApiReqForChat
 import com.example.student_project.data.network.request.ApiReqForMessageInChat
@@ -112,4 +113,8 @@ interface ApiClient {
 
     @POST("projects/")
     suspend fun projects(@Body apiReqForAllinAi: ApiReqForAllinAi): BaseResponse<Allin>
+
+    //what is the response
+    @POST("course/updateCourseProgress")
+    suspend fun updateCourseProgress(@Body apiBodyForUpdateProgress: ApiBodyForUpdateProgress):BaseResponse<String>
 }
