@@ -30,9 +30,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -52,16 +54,17 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.student_project.R
+import com.example.student_project.data.model.User
 import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.home.content.BottomNavBar
-import com.example.student_project.ui.screen.widgets.EditProfileButton
+import com.example.student_project.ui.screen.widgets.ImagePicker
+import com.example.student_project.ui.screen.widgets.ProfileCommonButton
 import com.example.student_project.ui.theme.ambientShadowColor
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.cancelButton
 import com.example.student_project.ui.theme.editProfileLogoutColor
 import com.example.student_project.ui.theme.editProfileTextColor
-import com.example.student_project.ui.theme.spotShadowColor
 import com.example.student_project.util.Constant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +72,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController,studentRepo: StudentRepo) {
+fun ProfileScreen(navController: NavController, studentRepo: StudentRepo) {
     val selectedItemIndex by rememberSaveable { mutableStateOf(4) }
 
     val context = LocalContext.current
@@ -80,6 +83,13 @@ fun ProfileScreen(navController: NavController,studentRepo: StudentRepo) {
 
     var dialogKey by remember {
         mutableStateOf(false)
+    }
+    var student by remember {
+        mutableStateOf<User?>(null)
+    }
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(scope) {
+        student = studentRepo.getCurrentStudent()
     }
 
     Scaffold(
@@ -129,36 +139,42 @@ fun ProfileScreen(navController: NavController,studentRepo: StudentRepo) {
                             .padding(top = 15.dp, bottom = 7.5.dp)
                             .align(Alignment.CenterHorizontally)
                     ) {
-                        AsyncImage(
-                            model =
-                            ImageRequest.Builder(context)
-                                .data("https://i.redd.it/spgt1hclj2cd1.jpeg")
-                                .crossfade(true)
-                                .transformations(CircleCropTransformation())
-                                .build(),
-                            contentDescription = "profile pic",
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                        IconButton(
-                            onClick = { /*TODO*/ },
-                            modifier = Modifier.align(Alignment.BottomEnd),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "change pic",
-                                tint = Color.White,
-                                modifier = Modifier.background(Color.Black),
-                            )
-                        }
+
+                        student?.let { ImagePicker(student = it, onImageSelected ={
+                            
+                        }) }
+//                        AsyncImage(
+//                            model =
+//                            ImageRequest.Builder(context)
+//                                .data(student?.image)
+//                                .crossfade(true)
+//                                .transformations(CircleCropTransformation())
+//                                .build(),
+//                            contentDescription = "profile pic",
+//                            modifier = Modifier.fillMaxSize(),
+//                        )
+//                        IconButton(
+//                            onClick = { /*TODO*/ },
+//                            modifier = Modifier.align(Alignment.BottomEnd),
+//                        ) {
+//                            Icon(
+//                                imageVector = Icons.Default.Edit,
+//                                contentDescription = "change pic",
+//                                tint = Color.White,
+//                                modifier = Modifier.background(Color.Black),
+//                            )
+//                        }
                     }
                     Text(
-                        text = "Name here",
+                        text = student?.firstName.toString() + " " + student?.lastName.toString(),
                         style = MaterialTheme.typography.headlineLarge,
                         fontSize = 24.sp,
-                        modifier = Modifier.padding(2.5.dp),
+                        modifier = Modifier
+                            .padding(2.5.dp)
+                            .align(alignment = Alignment.CenterHorizontally),
                     )
                     Text(
-                        text = "email@domain.com",
+                        text = student?.email.toString(),
                         style = MaterialTheme.typography.titleMedium,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(top = 5.dp),
@@ -168,49 +184,49 @@ fun ProfileScreen(navController: NavController,studentRepo: StudentRepo) {
 
             HorizontalDivider(modifier = Modifier.padding(20.dp))
             Column(modifier = Modifier.fillMaxWidth()) {
-                EditProfileButton(
+                ProfileCommonButton(
                     imgVector = ImageVector.vectorResource(R.drawable.profile_setting),
                     text = "Edit Profile",
                     route = Screens.EditProfileScreen.route,
                     navController = navController,
                     modifier = Modifier,
                 )
-                EditProfileButton(
+                ProfileCommonButton(
                     imgVector = ImageVector.vectorResource(R.drawable.notification),
                     text = "Notification",
                     route = Screens.NotificationScreen.route,
                     navController = navController,
                     modifier = Modifier,
                 )
-                EditProfileButton(
+                ProfileCommonButton(
                     imgVector = ImageVector.vectorResource(R.drawable.wallet),
                     text = "Payment",
                     route = Screens.PaymentScreen.route,
                     navController = navController,
                     modifier = Modifier,
                 )
-                EditProfileButton(
+                ProfileCommonButton(
                     imgVector = ImageVector.vectorResource(R.drawable.privacy),
                     text = "Security",
                     route = Screens.SecurityScreen.route,
                     navController = navController,
                     modifier = Modifier,
                 )
-                EditProfileButton(
+                ProfileCommonButton(
                     imgVector = ImageVector.vectorResource(R.drawable.lock),
                     text = "Privacy Policy",
                     route = Screens.PrivacyPolicyScreen.route,
                     navController = navController,
                     modifier = Modifier,
                 )
-                EditProfileButton(
+                ProfileCommonButton(
                     imgVector = ImageVector.vectorResource(R.drawable.info_square),
                     text = "Help Center",
                     route = Screens.HelpCenterScreen.route,
                     navController = navController,
                     modifier = Modifier,
                 )
-                EditProfileButton(
+                ProfileCommonButton(
                     imgVector = ImageVector.vectorResource(R.drawable.add_friends),
                     text = "Invite Friends",
                     route = Screens.InviteFriendsScreen.route,
@@ -257,10 +273,12 @@ fun ProfileScreen(navController: NavController,studentRepo: StudentRepo) {
                             fontSize = 24.sp,
                             color = editProfileLogoutColor,
                             fontWeight = FontWeight(700),
-                            modifier = Modifier.padding(
-                                top = Constant.paddingComponentFromScreen,
-                                bottom = Constant.paddingComponentFromScreen
-                            ).align(Alignment.CenterHorizontally)
+                            modifier = Modifier
+                                .padding(
+                                    top = Constant.paddingComponentFromScreen,
+                                    bottom = Constant.paddingComponentFromScreen
+                                )
+                                .align(Alignment.CenterHorizontally)
                         )
                         HorizontalDivider()
                     }
@@ -277,7 +295,7 @@ fun ProfileScreen(navController: NavController,studentRepo: StudentRepo) {
                         )
                     )
                 }, confirmButton = {
-                    Row (horizontalArrangement = Arrangement.Center){
+                    Row(horizontalArrangement = Arrangement.Center) {
                         Button(shape = RoundedCornerShape(100.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = cancelButton

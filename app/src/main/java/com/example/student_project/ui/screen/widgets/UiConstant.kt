@@ -154,7 +154,7 @@ fun PopBackStackEntry(navController: NavController) {
 }
 
 @Composable
-fun EditProfileButton(
+fun ProfileCommonButton(
     imgVector: ImageVector,
     text: String,
     route: String,

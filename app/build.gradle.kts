@@ -92,6 +92,9 @@ dependencies {
     implementation("androidx.compose.material:material:1.7.7")
     //viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.androidx.appcompat)
+
     //life cycle
     implementation(libs.androidx.lifecycle.runtime.compose)
     //navigation

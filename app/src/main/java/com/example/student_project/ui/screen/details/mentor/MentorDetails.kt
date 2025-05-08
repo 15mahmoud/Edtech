@@ -42,9 +42,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -61,6 +66,8 @@ import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.theme.buttonColor
 import com.example.student_project.ui.theme.editProfileTextColor
 import com.example.student_project.ui.theme.headLineColor
+import com.example.student_project.ui.theme.jopTitleColor
+import com.example.student_project.ui.theme.spotShadowColor
 import com.example.student_project.ui.theme.unselectedButton
 import com.example.student_project.util.Constant
 import kotlinx.coroutines.CoroutineScope
@@ -375,66 +382,86 @@ fun CourseColumnForMentorDetails(
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Card(
-        shape = RoundedCornerShape(32.dp),
         modifier =
         Modifier
-            .padding(top = Constant.mediumPadding)
-            .fillMaxWidth()
-            // .height(screenHeight * 15/100)
-            .clickable { onClickListener(course.id) }
-            .shadow(4.dp, RoundedCornerShape(32.dp)), colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
-    ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = ImageRequest.Builder(context = context).crossfade(true)
-                    .data(course.thumbnail).build(), contentDescription = "course image",
-                modifier = Modifier
-                    .width(screenWidth * 37 / 100)
-                    .height(screenHeight * 14 / 100)
+            .padding(
+                start = Constant.normalPadding,
+                end = Constant.normalPadding,
+                bottom = Constant.mediumPadding
             )
+            .fillMaxWidth()
+//            .height(screenHeight * 18 / 100)
+            .shadow(
+                8.dp,
+                RoundedCornerShape(Constant.buttonRadios),
+//                ambientColor = Color.Blue,
+                spotColor = spotShadowColor.copy(.33f)
+            )
+            // .height(screenHeight * 15/100)
+            .clickable { onClickListener(course.id) }, colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ), shape = RoundedCornerShape(20.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+//                    top = Constant.mediumPadding,
+                    start = Constant.normalPadding,
+                    end = Constant.smallPadding
+                )
+        ) {
+            Card(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+
+                    .width(screenWidth * 30 / 100)
+                    .height(screenHeight * 15 / 100)
+                    .padding(top = Constant.smallPadding, bottom = Constant.smallPadding),
+//                    .padding(bottom = Constant.normalPadding),
+                shape = RoundedCornerShape(15.dp)
+
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = context).crossfade(true)
+                        .data(course.thumbnail).build(), contentDescription = "course image",
+                    modifier = Modifier,
+//                    .padding(Constant)
+                    contentScale = ContentScale.Crop
+                )
+            }
             Column {
                 Text(
                     text = course.courseName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(5.dp),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight(700),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 17.sp,
+//                    lineHeight = (-5).sp,
+                    modifier = Modifier.padding(
+                        start = Constant.normalPadding,
+//                        top = Constant.smallPadding
+                    ),
                 )
 //                Text(
-//                    text = course.instructor.firstName + " " + course.instructor.lastName,
-//                    style = MaterialTheme.typography.headlineSmall,
-//                    fontSize = 15.sp,
-//                    modifier = Modifier.padding(5.dp),
-//                    color = jopTitleColor,
+//                    modifier = Modifier.padding(
+//                        start = Constant.normalPadding,
+////                        top = Constant.smallPadding
+//                    ),
+//                    text =
+//                    AnnotatedString("EGP ", spanStyle = SpanStyle(color = jopTitleColor, fontSize = 16.sp))
+//                            + AnnotatedString(
+//                        course.price.toString(),
+//                        SpanStyle(
+//                            fontSize = 16.sp,
+//                            fontStyle = FontStyle.Normal,
+//                            fontWeight = FontWeight(600)
+//                        )
+//                    ),
 //                )
-//                HorizontalDivider()
-//                Row {
-//                    Text(
-//                        text = "${course.price}$",
-//                        style = MaterialTheme.typography.titleMedium,
-//                        fontSize = 15.sp,
-//                        modifier = Modifier.padding(5.dp),
-//                        color = buttonColor,
-//                    )
-//                    Spacer(modifier = Modifier.width(150.dp))
-//                    Icon(
-//                        imageVector = Icons.Filled.Star,
-//                        contentDescription = "rating star",
-//                        tint = starFillingColor,
-//                    )
-//                    Text(
-//                        // he didn't use rating
-//                        text = "4.5",
-//                        style = MaterialTheme.typography.titleMedium,
-//                        fontSize = 15.sp,
-//                        modifier = Modifier.padding(5.dp),
-//                        color = buttonColor,
-//                    )
-//                }
-//            }
-                //      }
             }
+
         }
     }
 }
