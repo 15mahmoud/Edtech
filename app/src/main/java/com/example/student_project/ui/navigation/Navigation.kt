@@ -251,7 +251,7 @@ fun Navigation(depContainer: DepContainer) {
         }
         composable(Screens.YourAiScreen.route) {
 
-            YourAiScreen(navController = navController,depContainer.studentRepo)
+            YourAiScreen(navController = navController, depContainer.studentRepo)
         }
         composable(Screens.InboxScreen.route) {
             InboxScreen(navController = navController, depContainer.studentRepo)
@@ -270,19 +270,27 @@ fun Navigation(depContainer: DepContainer) {
             )
         }
         composable(
-            Screens.CourseLessonScreen.route + "/{video_url}",
-            arguments = listOf(navArgument(name = "video_url") { type = NavType.StringType }),
+            Screens.CourseLessonScreen.route + "/{video_url}" + "/{course_id}" + "/{lesson_id}",
+            arguments = listOf(navArgument(name = "video_url") { type = NavType.StringType },
+                navArgument(name = "course_id") { type = NavType.StringType },
+                navArgument(name = "lesson_id") { type = NavType.StringType }
+            ),
         ) { backStackEntry ->
             CourseLessonScreen(
                 navController = navController,
                 backStackEntry.arguments?.getString("video_url"),
+                depContainer.courseRepo,
+                backStackEntry.arguments?.getString("course_id"),
+                backStackEntry.arguments?.getString("lesson_id")
             )
         }
         composable(
             Screens.AllMentorScreen.route
         ) {
             AllMentorScreen(
-                navController = navController, studentRepo = depContainer.studentRepo,depContainer.instructorRepo
+                navController = navController,
+                studentRepo = depContainer.studentRepo,
+                depContainer.instructorRepo
             )
         }
     }

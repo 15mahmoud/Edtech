@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -345,8 +346,8 @@ fun CourseColumn(
                                 .show()
                         }
 
-                        when{
-                             bookmarkState -> Icon(
+                        when {
+                            bookmarkState -> Icon(
                                 modifier = Modifier
 //                                    .width(screenWidth * 8 / 100)
 ////                                    .height(screenHeight * 6 / 100)
@@ -449,7 +450,7 @@ fun LessonsColumn(
     index: Int,
     lock: Boolean,
     context: Context,
-    onClickListener: (String) -> Unit,
+    onClickListener: (String,String) -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -465,16 +466,16 @@ fun LessonsColumn(
                         .makeText(context, "This section is locked", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    onClickListener(subSection.videoUrl)
+                    onClickListener(subSection.videoUrl,subSection.id)
                 }
             }
             //            .clip(RoundedCornerShape(200.dp))
             .shadow(4.dp),
     ) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(15.dp)
+                .padding(start = Constant.normalPadding)
         ) {
             Card(
                 shape = CircleShape,
@@ -486,7 +487,7 @@ fun LessonsColumn(
 
                     // .padding(10.dp)
                     .shadow(4.dp, CircleShape)
-                    .align(Alignment.CenterVertically),
+                    .align(Alignment.CenterStart),
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Text(
@@ -499,31 +500,55 @@ fun LessonsColumn(
                     )
                 }
             }
-            Column(modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp)) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(
+                        start = Constant.paddingWithoutScaffold,
+                        end = Constant.paddingWithoutScaffold,
+                        top = 10.dp,
+                        bottom = 10.dp
+                    )
+            ) {
                 Text(
                     text = subSection.title,
                     fontWeight = FontWeight(700),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     color = buttonColor,
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 18.sp,
                     modifier = Modifier.padding(bottom = 7.5.dp),
                 )
                 Text(
-                    text = subSection.timeDuration + " mins",
+                    text = subSection.timeDuration + " Sec",
                     fontWeight = FontWeight(700),
                     color = jopTitleColor,
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 14.sp,
                 )
             }
-            Spacer(modifier = Modifier.width(130.dp))
-            AnimatedVisibility(visible = lock) {
+//            Spacer(modifier = Modifier.width(130.dp))
+//            AnimatedVisibility(visible = lock, modifier = Modifier) {
+            if (lock) {
+
                 Icon(
                     imageVector = Icons.Filled.Lock,
                     contentDescription = "Lock icon",
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(10.dp),
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = "Play icon",
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(10.dp),
                 )
             }
+//            }
         }
     }
 }
