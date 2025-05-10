@@ -113,6 +113,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
     var lessonVisibilityState by remember { mutableStateOf(false) }
     var reviewsVisibilityState by remember { mutableStateOf(false) }
 
+    var avgRateNumberState by remember {
+        mutableStateOf<Result<Number>?>(null)
+    }
+
     var rateNumber by remember {
         mutableStateOf(0.0)
     }
@@ -130,6 +134,8 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
     var rateTextState by remember {
         mutableStateOf("")
     }
+
+
     var unLock by remember { mutableStateOf<Result<Boolean?>?>(null) }
 
     var getTransaction by remember { mutableStateOf<Result<String?>?>(null) }
@@ -144,8 +150,10 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
     courseDetailsState
         ?.onSuccess { course ->
             CoroutineScope(Dispatchers.IO).launch {
-                //there is a problem here
+
                 getTransaction = courseRepo.getTransactionState(course?.id.toString())
+
+                avgRateNumberState = courseRepo.getAvgRating(course?.id.toString())
             }
             getTransaction?.onSuccess { it ->
 
@@ -350,8 +358,8 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         }) {
                                                             Icon(
                                                                 //here we need to add green border
-                                                                imageVector = if (number.toDouble() <= rateNumber) Icons.Sharp.Star else Icons.Default.Star,
-                                                                tint = anotherColorForFillingStar,
+                                                                imageVector =  if (number.toDouble() <= rateNumber) Icons.Sharp.Star else Icons.Default.Star,
+                                                                tint = if (number.toDouble() <= rateNumber) anotherColorForFillingStar else jopTitleColor,
                                                                 contentDescription = "rating icon"
                                                             )
                                                         }
@@ -623,19 +631,36 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                             tint = starFillingColor,
                                             contentDescription = "rating icon",
                                         )
-                                        Text(
-                                            modifier =
-                                            Modifier.padding(
-                                                start = Constant.mediumPadding,
+                                        avgRateNumberState?.onSuccess {rates->
+                                            Text(
+                                                modifier =
+                                                Modifier.padding(
+                                                    start = Constant.mediumPadding,
+                                    //                                            bottom = Constant.paddingComponentFromScreen,
+                                                    top = Constant.normalPadding
+                                                ),
+                                                text = rates.toString(),
+                                                color = editProfileTextColor,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontSize = 16.sp,
+                                            )
+                                        }?.onFailure {
+                                            Text(
+                                                modifier =
+                                                Modifier.padding(
+                                                    start = Constant.mediumPadding,
 //                                            bottom = Constant.paddingComponentFromScreen,
-                                                top = Constant.normalPadding
-                                            ),
-                                            text = (course?.averageRating ?: 0.0).toString(),
-                                            color = editProfileTextColor,
-                                            style = MaterialTheme.typography.titleMedium,
-                                            fontSize = 16.sp,
-                                        )
+                                                    top = Constant.normalPadding
+                                                ),
+                                                text = (course?.averageRating ?: 0.0).toString(),
+                                                color = editProfileTextColor,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontSize = 16.sp,
+                                            )
+                                        }
+
                                     }
+
                                     Row(modifier = Modifier.fillMaxWidth()) {
                                         Icon(
                                             modifier =
@@ -745,11 +770,6 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                         }
                                         Button(
                                             onClick = {
-
-                                                if ((course?.averageRating
-                                                        ?: 0.0).toString() != "0.0"
-                                                ) {
-
                                                     if (!reviewsVisibilityState) {
                                                         aboutVisibilityState = false
                                                         lessonVisibilityState = false
@@ -758,13 +778,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         lessonVisibilityState = false
                                                         aboutVisibilityState = false
                                                     }
-                                                } else {
-                                                    Toast.makeText(
-                                                        context,
-                                                        "no reviews",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                }
+
                                             },
                                             colors =
                                             ButtonDefaults.buttonColors(containerColor = Color.Transparent),
@@ -971,13 +985,23 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                     contentDescription = "rating icon",
                                                     modifier = Modifier.padding(end = Constant.smallPadding),
                                                 )
-                                                Text(
-                                                    text = (course?.averageRating
-                                                        ?: 0.0).toString(),
-                                                    style = MaterialTheme.typography.titleLarge,
-                                                    fontWeight = FontWeight(700),
-                                                    color = buttonColor,
-                                                )
+                                                avgRateNumberState?.onSuccess {
+
+                                                    Text(
+                                                        text = it.toString(),
+                                                        style = MaterialTheme.typography.titleLarge,
+                                                        fontWeight = FontWeight(700),
+                                                        color = buttonColor,
+                                                    )
+                                                }?.onFailure {
+                                                    Text(
+                                                        text = (course?.averageRating
+                                                            ?: 0.0).toString(),
+                                                        style = MaterialTheme.typography.titleLarge,
+                                                        fontWeight = FontWeight(700),
+                                                        color = buttonColor,
+                                                    )
+                                                }
                                             }
                                             LazyColumn(modifier = Modifier.height(500.dp)) {
                                                 course?.let { item ->

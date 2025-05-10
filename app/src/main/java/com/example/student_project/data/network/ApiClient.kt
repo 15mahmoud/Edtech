@@ -13,6 +13,7 @@ import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
 import com.example.student_project.data.network.request.ApiBodyForResetPassword
 import com.example.student_project.data.network.request.ApiBodyForUpdateProgress
+import com.example.student_project.data.network.request.ApiBodyReqForGettingAvgRating
 import com.example.student_project.data.network.request.ApiReqForAllinAi
 import com.example.student_project.data.network.request.ApiReqForChat
 import com.example.student_project.data.network.request.ApiReqForMessageInChat
@@ -64,6 +65,9 @@ interface ApiClient {
 
     @POST("course/createRating")
     suspend fun createRating(@Body ratingReq: CreateRatingReq)
+
+  @POST("course/getAverageRating")
+    suspend fun getAverageRating(@Body apiBodyReqForGettingAvgRating: ApiBodyReqForGettingAvgRating):BaseResponse<Number>
 
     //we will made it
     @POST("profile/saveCourse")

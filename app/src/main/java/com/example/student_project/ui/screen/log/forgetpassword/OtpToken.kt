@@ -94,7 +94,6 @@ fun OtpTokenScreen(navController: NavController, userEmail: String?, studentRepo
         mutableStateOf<Result<String>?>(null)
     }
     LaunchedEffect(date) {
-        tokenState = studentRepo.resetPasswordToken(userEmail.toString())
         if (date >= 1) {
             delay(1000)
             date--
@@ -102,6 +101,10 @@ fun OtpTokenScreen(navController: NavController, userEmail: String?, studentRepo
             resendButtonVisibility = true
             verifyButtonVisibility = false
         }
+    }
+    LaunchedEffect(scope) {
+        tokenState = studentRepo.resetPasswordToken(userEmail.toString())
+
     }
     Column(
         modifier = Modifier
