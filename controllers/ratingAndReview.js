@@ -185,10 +185,11 @@ exports.createRating = async (req, res) => {
 
 
 // ================ Get Average Rating ================
-
 exports.getAverageRating = async (req, res) => {
   try {
+    //get course ID
     const courseId = req.body.courseId;
+    //calculate avg rating
 
     const result = await RatingAndReview.aggregate([
       {
@@ -204,13 +205,19 @@ exports.getAverageRating = async (req, res) => {
       },
     ]);
 
+    //return rating
+    if (result.length > 0) {
+      return res.status(200).json({
+        success: true,
+        data: result[0].averageRating,
+      });
+    }
+
+    //if no rating/Review exist
     return res.status(200).json({
       success: true,
-      averageRating: result.length > 0 ? result[0].averageRating : 0,
-      message:
-        result.length > 0
-          ? ""
-          : "Average Rating is 0, no valid ratings given till now",
+      message: "Average Rating is 0, no ratings given till now",
+      averageRating: 0,
     });
   } catch (error) {
     console.log(error);
@@ -220,6 +227,40 @@ exports.getAverageRating = async (req, res) => {
     });
   }
 };
+// exports.getAverageRating = async (req, res) => {
+//   try {
+//     const courseId = req.body.courseId;
+
+//     const result = await RatingAndReview.aggregate([
+//       {
+//         $match: {
+//           course: new mongoose.Types.ObjectId(courseId),
+//         },
+//       },
+//       {
+//         $group: {
+//           _id: null,
+//           averageRating: { $avg: "$rating" },
+//         },
+//       },
+//     ]);
+
+//     return res.status(200).json({
+//       success: true,
+//       averageRating: result.length > 0 ? result[0].averageRating : 0,
+//       message:
+//         result.length > 0
+//           ? ""
+//           : "Average Rating is 0, no valid ratings given till now",
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
 
 // exports.getAverageRating = async (req, res) => {
 //     try {
