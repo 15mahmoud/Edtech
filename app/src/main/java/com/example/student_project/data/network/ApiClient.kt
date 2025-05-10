@@ -26,10 +26,13 @@ import com.example.student_project.data.network.request.StudentUpdateRequest
 import com.example.student_project.data.network.request.TokenReq
 import com.example.student_project.data.network.request.VerifyPayment
 import com.example.student_project.data.network.response.BaseResponse
+import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 
 interface ApiClient {
     // we will this response to make default attribute for user
@@ -117,4 +120,8 @@ interface ApiClient {
     //what is the response
     @POST("course/updateCourseProgress")
     suspend fun updateCourseProgress(@Body apiBodyForUpdateProgress: ApiBodyForUpdateProgress):BaseResponse<String>
+
+    @Multipart
+    @PUT("profile/updateUserProfileImage")
+    suspend fun updateUserProfileImage(@Part profileImage: MultipartBody.Part):BaseResponse<User>
 }

@@ -89,9 +89,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.compose.material:material:1.7.7")
-    //viewModel
+     //viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    //material
+    implementation ("com.google.android.material:material:1.13.0-alpha13")
 
     implementation(libs.androidx.appcompat)
 
@@ -107,6 +109,10 @@ dependencies {
     //Hilt-Dagger
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+
+
+    // For file operations
+    implementation("commons-io:commons-io:2.11.0")
 
     //room
     annotationProcessor("androidx.room:room-compiler:2.6.1")

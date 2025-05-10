@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -111,6 +112,7 @@ fun BickerButton(timeSlot: String?, onClick: (String?) -> Unit) {
 @Composable
 fun ScaffoldFilterScreenTopBar(navController: NavController, text: String) {
     TopAppBar(
+        modifier = Modifier.background(Color.White),
         title = {
             Row(modifier = Modifier.fillMaxWidth()) {
                 IconButton(onClick = { navController.popBackStack() }) {
@@ -645,13 +647,14 @@ fun MentorColumn(
         mutableStateOf(false)
     }
 
-    androidx.compose.material.Card(
+    Card(
         modifier = Modifier
             .shadow(0.dp)
             .padding(bottom = Constant.mediumPadding)
             .fillMaxWidth()
+            .background(Color.White)
             .clickable { onClickListener(instructor.id) },
-        contentColor = Color.White,
+
     ) {
         Box(
             modifier = Modifier
