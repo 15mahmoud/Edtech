@@ -27,12 +27,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.sharp.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -451,102 +451,103 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                     }
                                 }
                                 if (dialogKeyForPayment) {
-                                    AlertDialog(
-                                        title = {
-                                            Text(
-                                                text = "continue payment",
-                                                style = MaterialTheme.typography.titleLarge,
-                                                fontSize = 20.sp,
-                                                fontWeight = FontWeight(600),
-                                                color = buttonColor
-                                            )
-                                        },
-                                        text = {
-                                            Text(
-                                                text = "click here to end payment process",
-                                                style = MaterialTheme.typography.titleMedium,
-                                                fontSize = 15.sp,
-                                                fontWeight = FontWeight(500)
-                                            )
-                                        },
-                                        onDismissRequest = { dialogKeyForPayment = false },
-                                        buttons = {
-                                            Button(
-                                                shape = RoundedCornerShape(Constant.buttonRadios),
-                                                modifier = Modifier
-                                                    .align(Alignment.CenterHorizontally)
-                                                    .padding(Constant.mediumPadding)
-                                                    .shadow(
-                                                        elevation = 4.dp,
-                                                        RoundedCornerShape(Constant.buttonRadios)
-                                                    ),
-                                                colors = ButtonDefaults.buttonColors(
-                                                    containerColor = buttonColor
-                                                ),
-                                                onClick = {
+                                   AlertDialog(
+                                       title = {   Text(
+                                           text = "continue payment",
+                                           style = MaterialTheme.typography.titleLarge,
+                                           fontSize = 20.sp,
+                                           fontWeight = FontWeight(600),
+                                           color = buttonColor
+                                       )},
+                                       text = {
 
-                                                    val capturePayment = CapturePayment(
-                                                        course?.price!!,
-                                                        courseId.toString()
-                                                    )
-                                                    CoroutineScope(Dispatchers.IO).launch {
-                                                        paymentState = courseRepo.initiatePayment(
-                                                            capturePayment
-                                                        )
-                                                    }
-                                                    paymentState?.onSuccess {
-                                                        //intent to payment screen
-                                                        //and when he return to this screen
-                                                        //we will make get Transaction
-                                                        val intent =
-                                                            Intent(
-                                                                Intent.ACTION_VIEW,
-                                                                Uri.parse(it)
-                                                            )
-                                                        context.startActivity(intent)
+                                               Text(
+                                                   text = "click here to end payment process",
+                                                   style = MaterialTheme.typography.titleMedium,
+                                                   fontSize = 15.sp,
+                                                   fontWeight = FontWeight(500)
+                                               )
 
-                                                        CoroutineScope(Dispatchers.IO).launch {
-                                                            getTransaction =
-                                                                courseRepo.getTransactionState(
-                                                                    course.id
-                                                                )
-                                                        }
-                                                        getTransaction?.onSuccess { transaction ->
-                                                            if (transaction == "paid") {
-                                                                lock = true
-                                                                dialogKeyForPayment = false
-                                                            } else {
-                                                                Toast.makeText(
-                                                                    context,
-                                                                    "your payment faild",
-                                                                    Toast.LENGTH_SHORT
-                                                                ).show()
-                                                            }
-                                                        }?.onFailure {
-                                                            Toast.makeText(
-                                                                context,
-                                                                "can't verify payment",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
-                                                        }
-                                                    }?.onFailure {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "failed on your data",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
+                                       },
+                                       onDismissRequest = { dialogKeyForPayment = false },
 
-                                                }
-                                            ) {
-                                                Text(
-                                                    text = "Submit",
-                                                    fontSize = 22.sp,
-                                                    fontWeight = FontWeight(600),
-                                                    style = MaterialTheme.typography.titleMedium,
-                                                    color = Color.White
-                                                )
-                                            }
+                                       confirmButton = {
+                                           Button(
+                                           shape = RoundedCornerShape(Constant.buttonRadios),
+                                           modifier = Modifier
+                                               .align(Alignment.CenterHorizontally)
+                                               .padding(Constant.mediumPadding)
+                                               .shadow(
+                                                   elevation = 4.dp,
+                                                   RoundedCornerShape(Constant.buttonRadios)
+                                               ),
+                                           colors = ButtonDefaults.buttonColors(
+                                               containerColor = buttonColor
+                                           ),
+                                           onClick = {
+
+                                               val capturePayment = CapturePayment(
+                                                   course?.price!!,
+                                                   courseId.toString()
+                                               )
+                                               CoroutineScope(Dispatchers.IO).launch {
+                                                   paymentState = courseRepo.initiatePayment(
+                                                       capturePayment
+                                                   )
+                                               }
+                                               paymentState?.onSuccess {
+                                                   //intent to payment screen
+                                                   //and when he return to this screen
+                                                   //we will make get Transaction
+                                                   val intent =
+                                                       Intent(
+                                                           Intent.ACTION_VIEW,
+                                                           Uri.parse(it)
+                                                       )
+                                                   context.startActivity(intent)
+
+                                                   CoroutineScope(Dispatchers.IO).launch {
+                                                       getTransaction =
+                                                           courseRepo.getTransactionState(
+                                                               course.id
+                                                           )
+                                                   }
+                                                   getTransaction?.onSuccess { transaction ->
+                                                       if (transaction == "paid") {
+                                                           lock = true
+                                                           dialogKeyForPayment = false
+                                                       } else {
+                                                           Toast.makeText(
+                                                               context,
+                                                               "your payment faild",
+                                                               Toast.LENGTH_SHORT
+                                                           ).show()
+                                                       }
+                                                   }?.onFailure {
+                                                       Toast.makeText(
+                                                           context,
+                                                           "can't verify payment",
+                                                           Toast.LENGTH_SHORT
+                                                       ).show()
+                                                   }
+                                               }?.onFailure {
+                                                   Toast.makeText(
+                                                       context,
+                                                       "failed on your data",
+                                                       Toast.LENGTH_SHORT
+                                                   ).show()
+                                               }
+
+                                           }
+                                       ) {
+                                           Text(
+                                               text = "Submit",
+                                               fontSize = 22.sp,
+                                               fontWeight = FontWeight(600),
+                                               style = MaterialTheme.typography.titleMedium,
+                                               color = Color.White
+                                           )
+                                       }
 
                                         })
                                 }
@@ -554,7 +555,9 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                 Column(modifier = Modifier.padding()) {
 
 
-                                    LazyRow(modifier = Modifier.fillMaxWidth().padding(top = Constant.normalPadding)) {
+                                    LazyRow(modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = Constant.normalPadding)) {
                                         course?.let {
                                             items(it.tag) { item ->
                                                 Card(

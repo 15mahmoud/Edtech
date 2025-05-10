@@ -19,6 +19,7 @@ import com.example.student_project.data.network.request.ApiReqForSendingMessage
 import com.example.student_project.data.network.request.StudentLogin
 import com.example.student_project.data.network.request.StudentUpdateRequest
 import com.example.student_project.data.network.request.TokenReq
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class StudentRepo
@@ -52,14 +53,24 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
     suspend fun getAllChat(): Result<List<InboxChat>> {
         return Result.runCatching { apiClient.getAllChat().data }
     }
+
     suspend fun getAllMeeting(): Result<List<Meeting>> {
         return Result.runCatching { apiClient.getAllMeeting().data }
     }
-    suspend fun getMessage(chatId:String): Result<List<Message>> {
+
+    suspend fun getMessage(chatId: String): Result<List<Message>> {
         return Result.runCatching { apiClient.getMessages(ApiReqForMessageInChat(chatId)).data }
     }
-    suspend fun sendMessage(chatId:String,content:String): Result<Message> {
-        return Result.runCatching { apiClient.sendMessage(ApiReqForSendingMessage(chatId,content)).data }
+
+    suspend fun sendMessage(chatId: String, content: String): Result<Message> {
+        return Result.runCatching {
+            apiClient.sendMessage(
+                ApiReqForSendingMessage(
+                    chatId,
+                    content
+                )
+            ).data
+        }
     }
 
     suspend fun updateProfile(student: StudentUpdateRequest): Result<User?> {
@@ -82,15 +93,18 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
     }
 
     // this one will change
-        suspend fun resetPasswordToken(studentEmail: String): Result<String> {
-            return Result.runCatching { apiClient.resetPasswordToken(TokenReq(studentEmail)).data
-     }
+    suspend fun resetPasswordToken(studentEmail: String): Result<String> {
+        return Result.runCatching {
+            apiClient.resetPasswordToken(TokenReq(studentEmail)).data
         }
+    }
+
     //this will change
     suspend fun resetPassword(apiBodyForResetPassword: ApiBodyForResetPassword): Result<String> {
-            return Result.runCatching { apiClient.resetPassword(apiBodyForResetPassword).data
-     }
+        return Result.runCatching {
+            apiClient.resetPassword(apiBodyForResetPassword).data
         }
+    }
 
     suspend fun addUser(student: User) {
         studentDatabaseDao.addStudent(student)
@@ -113,7 +127,29 @@ constructor(private val studentDatabaseDao: StudentDatabaseDao, private val apiC
     }
 
 
-    suspend fun codeExplainer(githubURL:String):Result<Allin>{
+    suspend fun codeExplainer(githubURL: String): Result<Allin> {
         return Result.runCatching { apiClient.projects(ApiReqForAllinAi(githubURL)).data }
     }
+
+
+    // this one will change
+    suspend fun updateUserProfileImage(profileImage: MultipartBody.Part): Result<User> {
+//        return Result.runCatching { apiClient.updateUserProfileImage(profileImage).data }
+        val result = Result.runCatching { apiClient.updateUserProfileImage(profileImage).data }
+        return if (result.isSuccess) {
+            val updatedStudent = result.getOrThrow()
+            updatedStudent.token = studentDatabaseDao.getCurrentStudent()?.token
+            studentDatabaseDao.updateStudent(updatedStudent)
+            result
+        } else {
+            Result.failure(
+                if (result.exceptionOrNull() is HttpException) {
+                    HttpException((result.exceptionOrNull() as HttpException).response)
+                } else {
+                    result.exceptionOrNull() ?: Exception("Unknown error")
+                }
+            )
+        }
+    }
+
 }

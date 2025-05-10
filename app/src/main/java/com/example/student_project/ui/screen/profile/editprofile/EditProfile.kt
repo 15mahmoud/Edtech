@@ -43,7 +43,7 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
 
     val context = LocalContext.current
     // var countryState by remember { mutableStateOf("") }
-    var genderState by remember { mutableStateOf("") }
+    var genderState by remember { mutableStateOf<String?>(null) }
     //    val countryList = listOf("United States", "Canada", "United Kingdom", "Australia",
     // "Germany")
     val genderList = listOf("null", "Male", "Female")
@@ -119,7 +119,7 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                 label = { Text(text = "Phone Number") },
             )
             // of course there is no gender
-            DropdownBox(list = genderList, gender = genderState) { genderState = it }
+            genderState?.let { DropdownBox(list = genderList, gender = it) { genderState = it } }
 
             OutlinedTextField(
                 value = aboutState,
@@ -220,11 +220,11 @@ fun DropdownBox(list: List<String>, gender: String, onChoseItem: (String) -> (Un
             onDismissRequest = { expanded = false },
             modifier = Modifier.verticalScroll(rememberScrollState()),
         ) {
-            list.forEach { country ->
+            list.forEach { gender ->
                 DropdownMenuItem(
-                    text = { Text(text = country) },
+                    text = { Text(text = gender) },
                     onClick = {
-                        selectedText = country
+                        selectedText = gender
                         expanded = false
                         onChoseItem(selectedText)
                     },

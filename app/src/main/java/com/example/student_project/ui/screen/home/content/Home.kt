@@ -625,7 +625,6 @@ fun EnrolledCourseRow(course: Course, context: Context, onCLickListener: (String
 
 @Composable
 fun BottomNavBar(selectedState: Int, navController: NavController) {
-    val imageVector = ImageVector.vectorResource(id = R.drawable.selected_courses_nav)
     val items =
         listOf(
             BottomNavItem(
@@ -636,20 +635,20 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
             ),
             BottomNavItem(
                 route = "learning_screen",
-                selectedIcon = imageVector,
+                selectedIcon = ImageVector.vectorResource(id = R.drawable.selected_courses_nav),
                 unselectedIcon = ImageVector.vectorResource(id = R.drawable.courses_nav),
                 label = "Coursaty",
             ),
             BottomNavItem(
                 route = "your_ai_screen",
-                selectedIcon = Icons.Filled.Person,
-                unselectedIcon = Icons.Outlined.Person,
+                selectedIcon = ImageVector.vectorResource(id = R.drawable.round_auto_awesome_24),
+                unselectedIcon = ImageVector.vectorResource(id =R.drawable.unselected_round_auto_awesome_24 ),
                 label = "Your AI"
             ),
             BottomNavItem(
                 route = "inbox_screen",
-                selectedIcon = Icons.Filled.Person,
-                unselectedIcon = Icons.Outlined.Person,
+                selectedIcon = ImageVector.vectorResource(id = R.drawable.baseline_message_24),
+                unselectedIcon = ImageVector.vectorResource(id =R.drawable.unselected_baseline_message_24 ),
                 label = "Inbox"
             ),
 
