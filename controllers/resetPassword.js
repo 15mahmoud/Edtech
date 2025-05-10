@@ -53,6 +53,7 @@ const bcrypt = require('bcrypt');
 //     }
 // }
 
+
 exports.resetPasswordToken = async (req, res) => {
   try {
     const { email } = req.body;
@@ -64,16 +65,16 @@ exports.resetPasswordToken = async (req, res) => {
         message: "Your Email is not registered with us",
       });
     }
-    const token = "C9&@zL!u1k*Q%R#mB7^T4oPn$G!";
+    const token = Math.floor(100000 + Math.random() * 900000).toString();
     const updatedUser = await User.findOneAndUpdate(
       { email: email },
       { token: token, resetPasswordTokenExpires: Date.now() + 5 * 60 * 1000 },
-      { new: true } 
-    ); 
+      { new: true }
+    );
     res.status(200).json({
       success: true,
       message: "Token generated successfully",
-      data: token, 
+      data: token,
     });
   } catch (error) {
     console.log("Error while creating token for reset password");
@@ -89,74 +90,57 @@ exports.resetPasswordToken = async (req, res) => {
 
 // ================ resetPassword ================
 exports.resetPassword = async (req, res) => {
-    try {
-        // extract data
-        // extract token by anyone from this 3 ways
-        const token = req.body?.token || req.cookies?.token || req.header('Authorization')?.replace('Bearer ', '');
+  try {
+    const { token, password, confirmPassword, email } = req.body;
 
-        const { password, confirmPassword } = req.body;
-
-        // validation
-        if (!token || !password || !confirmPassword) {
-            return res.status(401).json({
-                success: false,
-                message: "All fiels are required...!"
-            });
-        }
-
-        // validate both passwords
-        if (password !== confirmPassword) {
-            return res.status(401).json({
-                success: false,
-                message: 'Passowrds are not matched'
-            });
-        }
-
-
-        // find user by token from DB
-        const userDetails = await User.findOne({ token: token });
-
-        // check ==> is this needed or not ==> for security  
-        if (token !== userDetails.token) {
-            return res.status(401).json({
-                success: false,
-                message: 'Password Reset token is not matched'
-            });
-        }
-
-        // console.log('userDetails.resetPasswordExpires = ', userDetails.resetPasswordExpires);
-
-        // check token is expire or not
-        if (!(userDetails.resetPasswordTokenExpires > Date.now())) {
-            return res.status(401).json({
-                success: false,
-                message: 'Token is expired, please regenerate token'
-            });
-        }
-
-
-        // hash new passoword
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // update user with New Password
-        await User.findOneAndUpdate(
-            { token },
-            { password: hashedPassword },
-            { new: true });
-
-        res.status(200).json({
-            success: true,
-            message: 'Password reset successfully'
-        });
+    if (!token || !password || !confirmPassword || !email) {
+      return res.status(401).json({
+        success: false,
+        message: "All fields are required!",
+      });
     }
 
-    catch (error) {
-        console.log('Error while reseting password');
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-            message: 'Error while reseting password12'
-        });
+    if (password !== confirmPassword) {
+      return res.status(401).json({
+        success: false,
+        message: "Passwords do not match",
+      });
     }
-}
+
+    const userDetails = await User.findOne({ email, token });
+
+    if (!userDetails) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token or email",
+      });
+    }
+
+    if (!(userDetails.resetPasswordTokenExpires > Date.now())) {
+      return res.status(401).json({
+        success: false,
+        message: "Token has expired, please regenerate token",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    userDetails.password = hashedPassword;
+    userDetails.token = undefined;
+    userDetails.resetPasswordTokenExpires = undefined;
+
+    await userDetails.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    console.log("Error while resetting password:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
