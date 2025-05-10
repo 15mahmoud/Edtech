@@ -4,6 +4,7 @@ import com.example.student_project.data.model.Category
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.network.ApiClient
 import com.example.student_project.data.network.request.ApiBodyForUpdateProgress
+import com.example.student_project.data.network.request.ApiBodyReqForGettingAvgRating
 import com.example.student_project.data.network.request.CapturePayment
 import com.example.student_project.data.network.request.CreateRatingReq
 import com.example.student_project.data.network.request.ApiRequestWithCourseId
@@ -34,6 +35,9 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
         Result.runCatching {
             apiClient.createRating(ratingReq)
         }
+    }
+    suspend fun getAvgRating(courseId: String):Result<Number> {
+       return Result.runCatching { apiClient.getAverageRating(ApiBodyReqForGettingAvgRating(courseId)).data }
     }
 
     suspend fun showAllCategories():Result<List<Category>?>{

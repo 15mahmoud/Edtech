@@ -114,6 +114,9 @@ dependencies {
     // For file operations
     implementation("commons-io:commons-io:2.11.0")
 
+    //for activity result
+    implementation("androidx.activity:activity-compose:1.8.1")
+
     //room
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")

@@ -57,5 +57,7 @@ data class AdditionalDetails(
     val dateOfBirth: String?,
     var about: String?,
     var gender: String?,
+    @SerializedName("Linkedin")
+    val linkedIn:String?
 )
 
