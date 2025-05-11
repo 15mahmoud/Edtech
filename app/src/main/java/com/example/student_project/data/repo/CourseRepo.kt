@@ -31,9 +31,17 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
         return Result.runCatching { apiClient.getTransactionState(VerifyPayment(courseId)).data }
     }
 
-    suspend fun createRating(ratingReq: CreateRatingReq) {
-        Result.runCatching {
-            apiClient.createRating(ratingReq)
+    suspend fun createRating(ratingReq: CreateRatingReq):Result<String> {
+        return try {
+            val response = apiClient.createRating(ratingReq)
+
+            when{
+                response.data != null ->Result.success(response.data)
+                response.error !=null -> Result.failure(Exception(response.error))
+                else -> Result.failure(Exception("Unknown error occurred"))
+            }
+        }catch (e:Exception){
+            Result.failure(e)
         }
     }
     suspend fun getAvgRating(courseId: String):Result<Number> {

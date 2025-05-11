@@ -61,7 +61,7 @@ interface ApiClient {
     suspend fun getTransactionState(@Body courseId: VerifyPayment): BaseResponse<String>
 
     @POST("course/createRating")
-    suspend fun createRating(@Body ratingReq: CreateRatingReq)
+    suspend fun createRating(@Body ratingReq: CreateRatingReq):BaseResponse<String>
 
     @POST("course/getAverageRating")
     suspend fun getAverageRating(@Body apiBodyReqForGettingAvgRating: ApiBodyReqForGettingAvgRating): BaseResponse<Number>
