@@ -135,7 +135,9 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
         mutableStateOf("")
     }
 
-
+var reviewMessageState by remember {
+    mutableStateOf<Result<String>?>(null)
+}
     var unLock by remember { mutableStateOf<Result<Boolean?>?>(null) }
 
     var getTransaction by remember { mutableStateOf<Result<String?>?>(null) }
@@ -412,11 +414,17 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                             rateTextState
                                                         )
                                                         CoroutineScope(Dispatchers.IO).launch {
-                                                            courseRepo.createRating(studentReview)
+                                                           reviewMessageState = courseRepo.createRating(studentReview)
                                                             //here we need to handle exception
                                                             //to save app from crashing
                                                         }
-                                                        dialogKeyForReview = false
+                                                        reviewMessageState?.onSuccess {message->
+                                                            Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
+                                                            dialogKeyForReview = false
+                                                        }?.onFailure {
+                                                            Toast.makeText(context,it.message,Toast.LENGTH_SHORT).show()
+                                                            dialogKeyForReview = false
+                                                        }
                                                     }) {
                                                     Text(
                                                         text = "Write Review",
@@ -1011,7 +1019,7 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                 course?.let { item ->
                                                     items(item.ratingAndReviews) { rate ->
                                                         ReviewColumn(
-                                                            ratingAndReview = rate,
+                                                            ratingAndReview =rate,
                                                             context = context
                                                         )
                                                         HorizontalDivider(
