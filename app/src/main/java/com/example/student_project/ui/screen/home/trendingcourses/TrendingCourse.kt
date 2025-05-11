@@ -70,9 +70,11 @@ fun TrendingCourseScreen(navController: NavController, courseRepo: CourseRepo) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Constant.paddingWithoutScaffold)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Constant.paddingWithoutScaffold)
+        ) {
             IconButton(onClick = { navController.popBackStack() }) {
                 Image(
                     painter = painterResource(id = R.drawable.baseline_arrow_back_24),

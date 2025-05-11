@@ -185,12 +185,15 @@ fun Navigation(depContainer: DepContainer) {
                 backStackEntry.arguments?.getString("user_email"),
             )
         }
-        composable(Screens.NewPasswordScreen.route + "/{otp_token}", arguments = listOf(
-            navArgument(name = "otp_token") { type = NavType.StringType }
-        )) { backStackEntry ->
+        composable(Screens.NewPasswordScreen.route + "/{otp_token}" + "/{email}",
+            arguments = listOf(
+                navArgument(name = "otp_token") { type = NavType.StringType },
+                navArgument(name = "email") { type = NavType.StringType }
+            )) { backStackEntry ->
             NewPasswordScreen(
                 navController = navController,
                 backStackEntry.arguments?.getString("otp_token"),
+                backStackEntry.arguments?.getString("email"),
                 depContainer.studentRepo
             )
         }

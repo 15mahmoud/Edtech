@@ -452,7 +452,7 @@ fun LessonsColumn(
     index: Int,
     lock: Boolean,
     context: Context,
-    onClickListener: (String,String) -> Unit,
+    onClickListener: (String, String) -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -468,7 +468,7 @@ fun LessonsColumn(
                         .makeText(context, "This section is locked", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    onClickListener(subSection.videoUrl,subSection.id)
+                    onClickListener(subSection.videoUrl, subSection.id)
                 }
             }
             //            .clip(RoundedCornerShape(200.dp))
@@ -655,7 +655,7 @@ fun MentorColumn(
             .background(Color.White)
             .clickable { onClickListener(instructor.id) },
 
-    ) {
+        ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

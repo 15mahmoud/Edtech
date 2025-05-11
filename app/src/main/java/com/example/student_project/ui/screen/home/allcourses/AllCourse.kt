@@ -71,9 +71,11 @@ fun AllCourseScreen(navController: NavController, courseRepo: CourseRepo) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Constant.paddingWithoutScaffold)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Constant.paddingWithoutScaffold)
+        ) {
             IconButton(onClick = { navController.popBackStack() }) {
                 Image(
                     painter = painterResource(id = R.drawable.baseline_arrow_back_24),
@@ -113,10 +115,12 @@ fun AllCourseScreen(navController: NavController, courseRepo: CourseRepo) {
                     color = if (focused) Color.White else buttonColor
                 )
             }
-            LazyRow(modifier = Modifier.padding(
-                start = Constant.normalPadding,
-                top = Constant.normalPadding
-            )) {
+            LazyRow(
+                modifier = Modifier.padding(
+                    start = Constant.normalPadding,
+                    top = Constant.normalPadding
+                )
+            ) {
                 categoryState?.onSuccess { category ->
                     category?.let {
                         items(it) { notNullCategory ->
@@ -140,14 +144,14 @@ fun AllCourseScreen(navController: NavController, courseRepo: CourseRepo) {
 
                     if (focused) {
                         items(notNollCourse) { item ->
-                            CourseColumn(courseRepo,course = item, context = context) {
+                            CourseColumn(courseRepo, course = item, context = context) {
                                 navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
                             }
                         }
                     } else if (focusedForLazyRow) {
                         items(notNollCourse.filter { it.category.name == focusedCategory }
                             .sortedBy { it.averageRating }) { item ->
-                            CourseColumn(courseRepo,course = item, context = context) {
+                            CourseColumn(courseRepo, course = item, context = context) {
                                 navController.navigate(Screens.CourseDetailScreen.route + "/${item.id}")
                             }
                         }

@@ -35,7 +35,11 @@ import com.example.student_project.ui.screen.widgets.MentorColumn
 import com.example.student_project.util.Constant
 
 @Composable
-fun AllMentorScreen(navController: NavHostController,studentRepo: StudentRepo,instructorRepo: InstructorRepo) {
+fun AllMentorScreen(
+    navController: NavHostController,
+    studentRepo: StudentRepo,
+    instructorRepo: InstructorRepo
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -69,13 +73,18 @@ fun AllMentorScreen(navController: NavHostController,studentRepo: StudentRepo,in
                 fontWeight = FontWeight(700),
             )
         }
-        LazyColumn(modifier = Modifier.background(color = Color.White)){
-            instructorState?.onSuccess {nullableInstructor->
-                nullableInstructor?.let {notNullableInstructor->
-                    items(notNullableInstructor){
-                        MentorColumn(navController,instructor = it,studentRepo,context, onClickListener = { id ->
-                            navController.navigate(Screens.MentorDetailsScreen.route + "/$id")
-                        })
+        LazyColumn(modifier = Modifier.background(color = Color.White)) {
+            instructorState?.onSuccess { nullableInstructor ->
+                nullableInstructor?.let { notNullableInstructor ->
+                    items(notNullableInstructor) {
+                        MentorColumn(
+                            navController,
+                            instructor = it,
+                            studentRepo,
+                            context,
+                            onClickListener = { id ->
+                                navController.navigate(Screens.MentorDetailsScreen.route + "/$id")
+                            })
                     }
                 }
             }

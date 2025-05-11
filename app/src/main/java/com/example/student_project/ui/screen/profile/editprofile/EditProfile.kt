@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -31,7 +33,10 @@ import com.example.student_project.data.network.request.StudentUpdateRequest
 import com.example.student_project.data.repo.StudentRepo
 import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.widgets.ScaffoldFilterScreenTopBar
+import com.example.student_project.ui.theme.ambientShadowColor
 import com.example.student_project.ui.theme.buttonColor
+import com.example.student_project.ui.theme.spotShadowColor
+import com.example.student_project.util.Constant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,6 +45,10 @@ import kotlinx.coroutines.launch
 fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
     var studentState by remember { mutableStateOf<User?>(null) }
     var studentResponseState by remember { mutableStateOf<Result<User?>?>(null) }
+
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
 
     val context = LocalContext.current
     // var countryState by remember { mutableStateOf("") }
@@ -67,13 +76,17 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
             ScaffoldFilterScreenTopBar(navController = navController, text = "Edit Profile")
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
+        Column(modifier = Modifier
+            .padding(innerPadding)
+            .verticalScroll(rememberScrollState())) {
             OutlinedTextField(
                 value = firstName,
                 onValueChange = { firstName = it },
                 textStyle = MaterialTheme.typography.headlineLarge,
                 shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth().padding(15.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
                 // .shadow(),
                 label = { Text(text = "First Name") },
             )
@@ -82,7 +95,9 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                 textStyle = MaterialTheme.typography.headlineLarge,
                 onValueChange = { lastName = it },
                 shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth().padding(15.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
                 label = { Text(text = "Last Name") },
             )
             // here will be text for date
@@ -92,7 +107,9 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                 readOnly = true,
                 textStyle = MaterialTheme.typography.headlineLarge,
                 shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth().padding(15.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
                 label = { Text(text = "Email") },
             )
 
@@ -104,18 +121,20 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                 onValueChange = { phoneNumber = it },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 isError =
-                    if (
-                        phoneNumber.isDigitsOnly() &&
-                            phoneNumber.length == 11
+                if (
+                    phoneNumber.isDigitsOnly() &&
+                    phoneNumber.length == 11
 //                            phoneNumber.startsWith("010") &&
 //                            phoneNumber.startsWith("011") &&
 //                            phoneNumber.startsWith("012") &&
 //                            phoneNumber.startsWith("015")
-                    )
-                        phoneNumberError
-                    else !phoneNumberError,
+                )
+                    phoneNumberError
+                else !phoneNumberError,
                 shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth().padding(15.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
                 label = { Text(text = "Phone Number") },
             )
             // of course there is no gender
@@ -126,7 +145,9 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                 textStyle = MaterialTheme.typography.headlineLarge,
                 onValueChange = { aboutState = it },
                 shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth().padding(15.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
                 label = { Text(text = "About") },
             )
             OutlinedTextField(
@@ -135,24 +156,34 @@ fun EditProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                 onValueChange = {},
                 readOnly = true,
                 shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth().padding(15.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
             )
             Button(
-                shape = RoundedCornerShape(120.dp),
+                shape = RoundedCornerShape(Constant.buttonRadios),
                 modifier =
-                    Modifier.align(Alignment.CenterHorizontally)
-                        .shadow(3.dp, spotColor = Color.Blue),
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = buttonColor,
-                        contentColor = Color.White,
+                Modifier
+                    .padding(top = 40.dp, bottom = Constant.veryLargePadding)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .width(screenWidth * 90 / 100)
+                    .shadow(
+                        elevation = 10.dp,
+                        RoundedCornerShape(Constant.buttonRadios),
+                        spotColor = spotShadowColor.copy(alpha = 0.4f),
+                        ambientColor = ambientShadowColor.copy(alpha = 0.35f),
                     ),
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = buttonColor,
+                    contentColor = Color.White,
+                ),
                 onClick = {
                     // here we will send this data to server
                     // and then take response
                     if (
                         phoneNumber.isDigitsOnly() &&
-                            phoneNumber.length == 11
+                        phoneNumber.length == 11
 //                            phoneNumber.startsWith("010") &&
 //                            phoneNumber.startsWith("011") &&
 //                            phoneNumber.startsWith("012") &&
@@ -200,19 +231,23 @@ fun DropdownBox(list: List<String>, gender: String, onChoseItem: (String) -> (Un
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
     ) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier.menuAnchor().fillMaxWidth(),
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(),
             colors =
-                OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                ),
+            OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+            ),
         )
 
         ExposedDropdownMenu(

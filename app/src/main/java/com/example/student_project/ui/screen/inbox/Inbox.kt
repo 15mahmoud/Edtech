@@ -101,7 +101,9 @@ fun InboxScreen(navController: NavController, studentRepo: StudentRepo) {
             .background(Color.White),
         topBar = {
             TopAppBar(
-                modifier = Modifier.padding(top = Constant.paddingComponentFromScreen).background(Color.White),
+                modifier = Modifier
+                    .padding(top = Constant.paddingComponentFromScreen)
+                    .background(Color.White),
                 title = {
                     Text(
                         text = "Inbox",
@@ -118,7 +120,7 @@ fun InboxScreen(navController: NavController, studentRepo: StudentRepo) {
         Column(
             Modifier
 //                .consumeWindowInsets(innerPadding)
-                .padding( innerPadding)
+                .padding(innerPadding)
         ) {
 //            Text(
 //                modifier = Modifier
@@ -352,7 +354,7 @@ fun MeetingRow(
                         )
                         Text(
                             modifier = Modifier.padding(top = Constant.veryLargePadding),
-                            text = Utils.fromDateToTime(meeting.date," MMM d ,yyyy"),
+                            text = Utils.fromDateToTime(meeting.date, " MMM d ,yyyy"),
                             style = MaterialTheme.typography.titleLarge,
                             fontSize = 15.sp,
                             color = jopTitleColor,

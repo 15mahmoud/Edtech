@@ -113,7 +113,9 @@ fun MentorDetailsScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    modifier = Modifier.padding(Constant.paddingComponentFromScreen).background(color = Color.White),
+                    modifier = Modifier
+                        .padding(Constant.paddingComponentFromScreen)
+                        .background(color = Color.White),
                     title = {
                         IconButton(onClick = {
                             navController.popBackStack()
@@ -268,7 +270,7 @@ fun MentorDetailsScreen(
 //                            .border(2.dp, color = buttonColor, RoundedCornerShape(120.dp))
                             .shadow(4.dp, RoundedCornerShape(100.dp)),
                         onClick = {
-                            if (mentor.additionalDetails.linkedIn!=null){
+                            if (mentor.additionalDetails.linkedIn != null) {
 
                                 val webpage: Uri =
                                     Uri.parse(mentor.additionalDetails.linkedIn)
@@ -279,8 +281,9 @@ fun MentorDetailsScreen(
                                     // Handle the exception (e.g., show a message to the user)
                                     e.printStackTrace()
                                 }
-                            }else{
-                                Toast.makeText(context, "no linkin found", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "no linkin found", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }, colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                     ) {

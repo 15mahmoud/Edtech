@@ -105,15 +105,16 @@ fun ProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                         fontSize = 24.sp,
                         modifier = Modifier.padding(10.dp),
                     )
-                },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(10.dp)) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.menu),
-                            contentDescription = "menu list",
-                        )
-                    }
-                },
+                }
+//                ,
+//                actions = {
+//                    IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(10.dp)) {
+//                        Icon(
+//                            imageVector = ImageVector.vectorResource(id = R.drawable.menu),
+//                            contentDescription = "menu list",
+//                        )
+//                    }
+//                },
             )
         },
         bottomBar = { BottomNavBar(selectedItemIndex, navController) },
@@ -140,9 +141,11 @@ fun ProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                             .align(Alignment.CenterHorizontally)
                     ) {
 
-                        student?.let { ImagePicker(student = it, onImageSelected ={
-                            
-                        }) }
+                        student?.let {
+                            ImagePicker(student = it, onImageSelected = {
+
+                            })
+                        }
 //                        AsyncImage(
 //                            model =
 //                            ImageRequest.Builder(context)
@@ -170,19 +173,26 @@ fun ProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                         style = MaterialTheme.typography.headlineLarge,
                         fontSize = 24.sp,
                         modifier = Modifier
-                            .padding(2.5.dp)
+                            .padding(Constant.verySmallPadding)
                             .align(alignment = Alignment.CenterHorizontally),
                     )
                     Text(
                         text = student?.email.toString(),
                         style = MaterialTheme.typography.titleMedium,
                         fontSize = 14.sp,
-                        modifier = Modifier.padding(top = 5.dp),
+                        modifier = Modifier
+                            .padding(top = Constant.smallPadding)
+                            .align(alignment = Alignment.CenterHorizontally),
                     )
                 }
             }
 
-            HorizontalDivider(modifier = Modifier.padding(20.dp))
+            HorizontalDivider(
+                modifier = Modifier.padding(
+                    top = Constant.paddingTextFromText,
+                    bottom = Constant.paddingTextFromText
+                )
+            )
             Column(modifier = Modifier.fillMaxWidth()) {
                 ProfileCommonButton(
                     imgVector = ImageVector.vectorResource(R.drawable.profile_setting),
@@ -191,48 +201,48 @@ fun ProfileScreen(navController: NavController, studentRepo: StudentRepo) {
                     navController = navController,
                     modifier = Modifier,
                 )
-                ProfileCommonButton(
-                    imgVector = ImageVector.vectorResource(R.drawable.notification),
-                    text = "Notification",
-                    route = Screens.NotificationScreen.route,
-                    navController = navController,
-                    modifier = Modifier,
-                )
-                ProfileCommonButton(
-                    imgVector = ImageVector.vectorResource(R.drawable.wallet),
-                    text = "Payment",
-                    route = Screens.PaymentScreen.route,
-                    navController = navController,
-                    modifier = Modifier,
-                )
-                ProfileCommonButton(
-                    imgVector = ImageVector.vectorResource(R.drawable.privacy),
-                    text = "Security",
-                    route = Screens.SecurityScreen.route,
-                    navController = navController,
-                    modifier = Modifier,
-                )
-                ProfileCommonButton(
-                    imgVector = ImageVector.vectorResource(R.drawable.lock),
-                    text = "Privacy Policy",
-                    route = Screens.PrivacyPolicyScreen.route,
-                    navController = navController,
-                    modifier = Modifier,
-                )
-                ProfileCommonButton(
-                    imgVector = ImageVector.vectorResource(R.drawable.info_square),
-                    text = "Help Center",
-                    route = Screens.HelpCenterScreen.route,
-                    navController = navController,
-                    modifier = Modifier,
-                )
-                ProfileCommonButton(
-                    imgVector = ImageVector.vectorResource(R.drawable.add_friends),
-                    text = "Invite Friends",
-                    route = Screens.InviteFriendsScreen.route,
-                    navController = navController,
-                    modifier = Modifier,
-                )
+//                ProfileCommonButton(
+//                    imgVector = ImageVector.vectorResource(R.drawable.notification),
+//                    text = "Notification",
+//                    route = Screens.NotificationScreen.route,
+//                    navController = navController,
+//                    modifier = Modifier,
+//                )
+//                ProfileCommonButton(
+//                    imgVector = ImageVector.vectorResource(R.drawable.wallet),
+//                    text = "Payment",
+//                    route = Screens.PaymentScreen.route,
+//                    navController = navController,
+//                    modifier = Modifier,
+//                )
+//                ProfileCommonButton(
+//                    imgVector = ImageVector.vectorResource(R.drawable.privacy),
+//                    text = "Security",
+//                    route = Screens.SecurityScreen.route,
+//                    navController = navController,
+//                    modifier = Modifier,
+//                )
+//                ProfileCommonButton(
+//                    imgVector = ImageVector.vectorResource(R.drawable.lock),
+//                    text = "Privacy Policy",
+//                    route = Screens.PrivacyPolicyScreen.route,
+//                    navController = navController,
+//                    modifier = Modifier,
+//                )
+//                ProfileCommonButton(
+//                    imgVector = ImageVector.vectorResource(R.drawable.info_square),
+//                    text = "Help Center",
+//                    route = Screens.HelpCenterScreen.route,
+//                    navController = navController,
+//                    modifier = Modifier,
+//                )
+//                ProfileCommonButton(
+//                    imgVector = ImageVector.vectorResource(R.drawable.add_friends),
+//                    text = "Invite Friends",
+//                    route = Screens.InviteFriendsScreen.route,
+//                    navController = navController,
+//                    modifier = Modifier,
+//                )
             }
             Button(
                 onClick = {

@@ -32,24 +32,24 @@ data class ChattingRoom(
 
 data class Message(
     val sender: User,
-    val content:String,
-    val createdAt:String,
+    val content: String,
+    val createdAt: String,
 )
 
 data class InboxChat(
     val user: User,
     @SerializedName("_id")
     val id: String,
-    val latestMessage:Message?
+    val latestMessage: Message?
 )
 
 data class Meeting(
-    val host:Instructor,
-    val date:String,
-    val url:String,
-    val isEnded:Boolean,
+    val host: Instructor,
+    val date: String,
+    val url: String,
+    val isEnded: Boolean,
 
-)
+    )
 
 data class AdditionalDetails(
     @SerializedName("_id") val idForAdditionalDetails: String,
@@ -58,6 +58,6 @@ data class AdditionalDetails(
     var about: String?,
     var gender: String?,
     @SerializedName("Linkedin")
-    val linkedIn:String?
+    val linkedIn: String?
 )
 

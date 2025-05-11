@@ -642,13 +642,13 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
             BottomNavItem(
                 route = "your_ai_screen",
                 selectedIcon = ImageVector.vectorResource(id = R.drawable.round_auto_awesome_24),
-                unselectedIcon = ImageVector.vectorResource(id =R.drawable.unselected_round_auto_awesome_24 ),
+                unselectedIcon = ImageVector.vectorResource(id = R.drawable.unselected_round_auto_awesome_24),
                 label = "Your AI"
             ),
             BottomNavItem(
                 route = "inbox_screen",
                 selectedIcon = ImageVector.vectorResource(id = R.drawable.baseline_message_24),
-                unselectedIcon = ImageVector.vectorResource(id =R.drawable.unselected_baseline_message_24 ),
+                unselectedIcon = ImageVector.vectorResource(id = R.drawable.unselected_baseline_message_24),
                 label = "Inbox"
             ),
 

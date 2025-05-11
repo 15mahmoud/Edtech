@@ -71,9 +71,11 @@ fun CourseFilterScreen(navController: NavController) {
         bottomBar = {
             NavigationBar {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
                     horizontalArrangement =
-                        Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
+                    Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
                 ) {
                     Button(
                         modifier = Modifier.weight(0.4f),
@@ -97,11 +99,11 @@ fun CourseFilterScreen(navController: NavController) {
                             // var filterationRequest = FilterationRequest()
                             navController.navigate(
                                 Screens.CourseFilterResultScreen.route +
-                                    "/$courseCategoryChoiceState" +
-                                    "/$difficultyLevelChoiceState" +
-                                    "/$releasedDateChoiceState" +
-                                    "/$selectedRating" +
-                                    "/$hourlyRate"
+                                        "/$courseCategoryChoiceState" +
+                                        "/$difficultyLevelChoiceState" +
+                                        "/$releasedDateChoiceState" +
+                                        "/$selectedRating" +
+                                        "/$hourlyRate"
                             )
                             // navigate with arguments "filteration object" to search result
                         },
@@ -112,7 +114,10 @@ fun CourseFilterScreen(navController: NavController) {
             }
         },
     ) { innerPadding ->
-        Column(Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
+        Column(
+            Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())) {
             Text(
                 text = "I'm looking for",
                 Modifier.padding(10.dp),
@@ -123,7 +128,7 @@ fun CourseFilterScreen(navController: NavController) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement =
-                    Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
+                Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
             ) {
                 Button(
                     modifier = Modifier.weight(0.4f),
@@ -160,7 +165,7 @@ fun CourseFilterScreen(navController: NavController) {
 
             ExposedDropdownMenuBox(
                 modifier =
-                    Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
+                Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
                 expanded = isExpandedForCourseCategory,
                 onExpandedChange = { isExpandedForCourseCategory = !isExpandedForCourseCategory },
             ) {
@@ -174,22 +179,23 @@ fun CourseFilterScreen(navController: NavController) {
                         )
                     },
                     colors =
-                        ExposedDropdownMenuDefaults.textFieldColors(
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                        ),
+                    ExposedDropdownMenuDefaults.textFieldColors(
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                    ),
                     modifier =
-                        Modifier.menuAnchor()
-                            .fillMaxWidth()
-                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                    Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     modifier =
-                        Modifier.border(
-                            width = 1.dp,
-                            color = Color.Gray,
-                            RoundedCornerShape(10.dp),
-                        ),
+                    Modifier.border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        RoundedCornerShape(10.dp),
+                    ),
                     expanded = isExpandedForCourseCategory,
                     onDismissRequest = { isExpandedForCourseCategory = false },
                 ) {
@@ -208,7 +214,7 @@ fun CourseFilterScreen(navController: NavController) {
 
             ExposedDropdownMenuBox(
                 modifier =
-                    Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
+                Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
                 expanded = isExpandedForDifficultyLevel,
                 onExpandedChange = { isExpandedForDifficultyLevel = !isExpandedForDifficultyLevel },
             ) {
@@ -222,22 +228,23 @@ fun CourseFilterScreen(navController: NavController) {
                         )
                     },
                     colors =
-                        ExposedDropdownMenuDefaults.textFieldColors(
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                        ),
+                    ExposedDropdownMenuDefaults.textFieldColors(
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                    ),
                     modifier =
-                        Modifier.menuAnchor()
-                            .fillMaxWidth()
-                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                    Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     modifier =
-                        Modifier.border(
-                            width = 1.dp,
-                            color = Color.Gray,
-                            RoundedCornerShape(10.dp),
-                        ),
+                    Modifier.border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        RoundedCornerShape(10.dp),
+                    ),
                     expanded = isExpandedForDifficultyLevel,
                     onDismissRequest = { isExpandedForDifficultyLevel = false },
                 ) {
@@ -255,7 +262,8 @@ fun CourseFilterScreen(navController: NavController) {
             CourseFilterScreenText(text = "Rating")
 
             Row(
-                Modifier.padding(top = 8.dp)
+                Modifier
+                    .padding(top = 8.dp)
                     .border(width = 1.dp, color = borderRating, shape = RoundedCornerShape(10.dp)),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
@@ -265,8 +273,8 @@ fun CourseFilterScreen(navController: NavController) {
                             imageVector = Icons.Filled.Star,
                             contentDescription = "Rating Star",
                             tint =
-                                if (number.toDouble() <= selectedRating) starFillingColor
-                                else Color.Gray,
+                            if (number.toDouble() <= selectedRating) starFillingColor
+                            else Color.Gray,
                         )
                     }
                 }
@@ -285,9 +293,10 @@ fun CourseFilterScreen(navController: NavController) {
                     thumb = {
                         Spacer(
                             modifier =
-                                Modifier.size(20.dp)
-                                    .background(Color.White, CircleShape)
-                                    .border(width = 2.dp, color = buttonColor, shape = CircleShape)
+                            Modifier
+                                .size(20.dp)
+                                .background(Color.White, CircleShape)
+                                .border(width = 2.dp, color = buttonColor, shape = CircleShape)
                         )
                     },
                     modifier = Modifier.padding(start = 10.dp),
@@ -295,10 +304,10 @@ fun CourseFilterScreen(navController: NavController) {
                     onValueChange = { hourlyRate = it.toDouble() },
                     valueRange = 0f..100f,
                     colors =
-                        SliderDefaults.colors(
-                            thumbColor = buttonColor,
-                            activeTrackColor = buttonColor,
-                        ),
+                    SliderDefaults.colors(
+                        thumbColor = buttonColor,
+                        activeTrackColor = buttonColor,
+                    ),
                 )
                 Text(text = "${hourlyRate} USD/hour", fontSize = 14.sp, color = Color.Gray)
             }
@@ -307,7 +316,7 @@ fun CourseFilterScreen(navController: NavController) {
 
             ExposedDropdownMenuBox(
                 modifier =
-                    Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
+                Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
                 expanded = isExpandedForReleasedDate,
                 onExpandedChange = { isExpandedForReleasedDate = !isExpandedForReleasedDate },
             ) {
@@ -321,22 +330,23 @@ fun CourseFilterScreen(navController: NavController) {
                         )
                     },
                     colors =
-                        ExposedDropdownMenuDefaults.textFieldColors(
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                        ),
+                    ExposedDropdownMenuDefaults.textFieldColors(
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                    ),
                     modifier =
-                        Modifier.menuAnchor()
-                            .fillMaxWidth()
-                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                    Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     modifier =
-                        Modifier.border(
-                            width = 1.dp,
-                            color = Color.Gray,
-                            RoundedCornerShape(10.dp),
-                        ),
+                    Modifier.border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        RoundedCornerShape(10.dp),
+                    ),
                     expanded = isExpandedForReleasedDate,
                     onDismissRequest = { isExpandedForReleasedDate = false },
                 ) {

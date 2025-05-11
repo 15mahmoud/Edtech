@@ -80,9 +80,12 @@ fun MentorFilterScreen(navController: NavController) {
         bottomBar = {
             NavigationBar {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(10.dp).background(Color.Transparent),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .background(Color.Transparent),
                     horizontalArrangement =
-                        Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
+                    Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
                 ) {
                     Button(
                         modifier = Modifier.weight(0.4f),
@@ -108,9 +111,9 @@ fun MentorFilterScreen(navController: NavController) {
                             // its like web url
                             navController.navigate(
                                 Screens.MentorFilterResultScreen.route +
-                                    "/$majorChoiceState" +
-                                    "/$selectedRating" +
-                                    "/$hourlyRate"
+                                        "/$majorChoiceState" +
+                                        "/$selectedRating" +
+                                        "/$hourlyRate"
                             )
                             // navigate with arguments "filteration object" to search result
                         },
@@ -121,7 +124,10 @@ fun MentorFilterScreen(navController: NavController) {
             }
         },
     ) { innerPadding ->
-        Column(Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
+        Column(
+            Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())) {
             Text(
                 text = "I'm looking for",
                 Modifier.padding(10.dp),
@@ -132,7 +138,7 @@ fun MentorFilterScreen(navController: NavController) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement =
-                    Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
+                Arrangement.spacedBy(8.dp, alignment = Alignment.CenterHorizontally),
             ) {
                 Button(
                     modifier = Modifier.weight(0.4f),
@@ -175,12 +181,11 @@ fun MentorFilterScreen(navController: NavController) {
             )
 
             ExposedDropdownMenuBox(
-                modifier = Modifier
+                modifier = Modifier,
                 //                .border(
                 //                width = 1.dp, color = Color.Gray,
                 //                RoundedCornerShape(10.dp)
                 //            )
-                ,
                 expanded = isExpandedForMajor,
                 onExpandedChange = { isExpandedForMajor = !isExpandedForMajor },
             ) {
@@ -194,11 +199,13 @@ fun MentorFilterScreen(navController: NavController) {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForMajor)
                     },
                     colors =
-                        ExposedDropdownMenuDefaults.textFieldColors(
-                            unfocusedContainerColor = Color.Green,
-                            focusedContainerColor = Color.Transparent,
-                        ),
-                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    ExposedDropdownMenuDefaults.textFieldColors(
+                        unfocusedContainerColor = Color.Green,
+                        focusedContainerColor = Color.Transparent,
+                    ),
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
                     //                        .border(
                     //                            6.dp, Color.Green,
                     //                            RoundedCornerShape(10.dp)
@@ -207,11 +214,11 @@ fun MentorFilterScreen(navController: NavController) {
                 )
                 ExposedDropdownMenu(
                     modifier =
-                        Modifier.border(
-                            width = 1.dp,
-                            color = Color.Gray,
-                            RoundedCornerShape(10.dp),
-                        ),
+                    Modifier.border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        RoundedCornerShape(10.dp),
+                    ),
                     expanded = isExpandedForMajor,
                     onDismissRequest = { isExpandedForMajor = false },
                 ) {
@@ -235,7 +242,9 @@ fun MentorFilterScreen(navController: NavController) {
                 color = buttonColor,
             )
             // implement lazy row for days ass button
-            Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())) {
                 BickerButton(timeSlot = "Saturday", onClick = { s -> daySelected.add(s) })
 
                 BickerButton(timeSlot = "Sunday", onClick = { s -> daySelected.add(s) })
@@ -258,7 +267,9 @@ fun MentorFilterScreen(navController: NavController) {
                 color = buttonColor,
             )
             // same as the top one
-            Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())) {
                 BickerButton(timeSlot = "Morning", onClick = { s -> timeSlotSelected.add(s) })
 
                 BickerButton(timeSlot = "Afternoon", onClick = { s -> timeSlotSelected.add(s) })
@@ -286,14 +297,15 @@ fun MentorFilterScreen(navController: NavController) {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForExperience)
                     },
                     colors =
-                        ExposedDropdownMenuDefaults.textFieldColors(
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                        ),
+                    ExposedDropdownMenuDefaults.textFieldColors(
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                    ),
                     modifier =
-                        Modifier.menuAnchor()
-                            .fillMaxWidth()
-                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                    Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     expanded = isExpandedForExperience,
@@ -321,7 +333,7 @@ fun MentorFilterScreen(navController: NavController) {
             // drop down box
             ExposedDropdownMenuBox(
                 modifier =
-                    Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
+                Modifier.border(width = 1.dp, color = Color.Gray, RoundedCornerShape(10.dp)),
                 expanded = isExpandedForDegree,
                 onExpandedChange = { isExpandedForDegree = !isExpandedForDegree },
             ) {
@@ -333,22 +345,23 @@ fun MentorFilterScreen(navController: NavController) {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedForDegree)
                     },
                     colors =
-                        ExposedDropdownMenuDefaults.textFieldColors(
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                        ),
+                    ExposedDropdownMenuDefaults.textFieldColors(
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                    ),
                     modifier =
-                        Modifier.menuAnchor()
-                            .fillMaxWidth()
-                            .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                    Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
                 )
                 ExposedDropdownMenu(
                     modifier =
-                        Modifier.border(
-                            width = 1.dp,
-                            color = Color.Gray,
-                            RoundedCornerShape(10.dp),
-                        ),
+                    Modifier.border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        RoundedCornerShape(10.dp),
+                    ),
                     expanded = isExpandedForDegree,
                     onDismissRequest = { isExpandedForDegree = false },
                 ) {
@@ -379,8 +392,8 @@ fun MentorFilterScreen(navController: NavController) {
                             imageVector = Icons.Filled.Star,
                             contentDescription = "Rating Star",
                             tint =
-                                if (number.toDouble() <= selectedRating) Color.Yellow
-                                else Color.Gray,
+                            if (number.toDouble() <= selectedRating) Color.Yellow
+                            else Color.Gray,
                         )
                     }
                 }
@@ -408,9 +421,10 @@ fun MentorFilterScreen(navController: NavController) {
                     thumb = {
                         Spacer(
                             modifier =
-                                Modifier.size(20.dp)
-                                    .background(Color.White, CircleShape)
-                                    .border(width = 2.dp, color = buttonColor, shape = CircleShape)
+                            Modifier
+                                .size(20.dp)
+                                .background(Color.White, CircleShape)
+                                .border(width = 2.dp, color = buttonColor, shape = CircleShape)
                         )
                     },
                     modifier = Modifier.padding(start = 10.dp),
@@ -418,10 +432,10 @@ fun MentorFilterScreen(navController: NavController) {
                     onValueChange = { hourlyRate = it.toDouble() },
                     valueRange = 0f..100f,
                     colors =
-                        SliderDefaults.colors(
-                            thumbColor = buttonColor,
-                            activeTrackColor = buttonColor,
-                        ),
+                    SliderDefaults.colors(
+                        thumbColor = buttonColor,
+                        activeTrackColor = buttonColor,
+                    ),
                 )
                 Text(text = "${hourlyRate} USD/hour", fontSize = 14.sp, color = Color.Gray)
             }

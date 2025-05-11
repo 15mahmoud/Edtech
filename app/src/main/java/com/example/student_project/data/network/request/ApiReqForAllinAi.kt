@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class ApiReqForAllinAi(
     @SerializedName("repo_url")
-    private val repoURL:String
+    private val repoURL: String
 )

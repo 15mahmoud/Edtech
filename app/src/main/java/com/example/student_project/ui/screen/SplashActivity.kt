@@ -16,19 +16,21 @@ import com.example.student_project.ui.navigation.Screens
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController,studentRepo: StudentRepo) {
+fun SplashScreen(navController: NavController, studentRepo: StudentRepo) {
     val timeState = rememberCoroutineScope()
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.splash_screen),
             contentDescription = null,
-            modifier = Modifier.align(alignment = Alignment.Center).fillMaxSize(),
+            modifier = Modifier
+                .align(alignment = Alignment.Center)
+                .fillMaxSize(),
         )
         LaunchedEffect(timeState) {
             delay(2000)
-            if (studentRepo.getCurrentStudent()==null) {
+            if (studentRepo.getCurrentStudent() == null) {
                 navController.navigate(Screens.LoginScreen.route)
-            }else{
+            } else {
                 navController.navigate(Screens.HomeScreen.route)
             }
         }
