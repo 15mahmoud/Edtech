@@ -21,11 +21,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject lateinit var studentRepo: StudentRepo
+    @Inject
+    lateinit var studentRepo: StudentRepo
 
-    @Inject lateinit var courseRepo: CourseRepo
+    @Inject
+    lateinit var courseRepo: CourseRepo
 
-    @Inject lateinit var instructorRepo: InstructorRepo
+    @Inject
+    lateinit var instructorRepo: InstructorRepo
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,13 +44,28 @@ class MainActivity : ComponentActivity() {
         } else {
             // For older Android versions (deprecated, but still works)
             @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN)
+            window.decorView.systemUiVisibility =
+                (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN)
         }
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { StudentProjectTheme { Navigation(DepContainer(studentRepo, courseRepo,instructorRepo)) } }
+        setContent {
+            StudentProjectTheme {
+                Navigation(
+                    DepContainer(
+                        studentRepo,
+                        courseRepo,
+                        instructorRepo
+                    )
+                )
+            }
+        }
     }
 }
 
-class DepContainer(var studentRepo: StudentRepo, var courseRepo: CourseRepo,var instructorRepo: InstructorRepo)
+class DepContainer(
+    var studentRepo: StudentRepo,
+    var courseRepo: CourseRepo,
+    var instructorRepo: InstructorRepo
+)

@@ -54,7 +54,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun NewPasswordScreen(navController: NavController, otpToken: String?, studentRepo: StudentRepo) {
+fun NewPasswordScreen(
+    navController: NavController,
+    otpToken: String?,
+    email: String?,
+    studentRepo: StudentRepo
+) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -251,12 +256,19 @@ fun NewPasswordScreen(navController: NavController, otpToken: String?, studentRe
 
                     //this all will change
                     val objectForChangingPassword =
-                        ApiBodyForResetPassword(otpToken.toString(), password, confirmPassword)
+                        ApiBodyForResetPassword(
+                            otpToken.toString(),
+                            password,
+                            confirmPassword,
+                            email = email.toString()
+                        )
                     CoroutineScope(Dispatchers.IO).launch {
                         changedPasswordState = studentRepo.resetPassword(objectForChangingPassword)
                     }
                     changedPasswordState?.onSuccess {
                         navController.navigate(Screens.LoginScreen.route)
+                        Toast.makeText(context, "Password changed successfully", Toast.LENGTH_SHORT)
+                            .show()
                     }?.onFailure {
                         Toast.makeText(context, "failed to change the password", Toast.LENGTH_SHORT)
                             .show()

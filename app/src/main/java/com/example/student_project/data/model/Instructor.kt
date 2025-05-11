@@ -19,7 +19,7 @@ data class Instructor(
     val updatedAt: String,
     val courseProgress: List<Any>,
     val additionalDetails: AdditionalDetails,
-    val students:List<User>
+    val students: List<User>
 )
 
 

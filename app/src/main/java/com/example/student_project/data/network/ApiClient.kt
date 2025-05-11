@@ -36,9 +36,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 
 interface ApiClient {
-    // we will this response to make default attribute for user
-    // user can change it later
-    // by using put Request
+
     @POST("auth/login")
     suspend fun login(@Body studentLogin: StudentLogin): BaseResponse<User>
 
@@ -48,7 +46,6 @@ interface ApiClient {
     @GET("course/getAllCourses")
     suspend fun getAllCourses(): BaseResponse<List<Course>>
 
-    // i need to add these new feature
     @POST("course/getFullCourseDetails")
     suspend fun getFullCourseDetails(@Body courseId: ApiRequestWithCourseId): BaseResponse<Course>
 
@@ -66,12 +63,11 @@ interface ApiClient {
     @POST("course/createRating")
     suspend fun createRating(@Body ratingReq: CreateRatingReq)
 
-  @POST("course/getAverageRating")
-    suspend fun getAverageRating(@Body apiBodyReqForGettingAvgRating: ApiBodyReqForGettingAvgRating):BaseResponse<Number>
+    @POST("course/getAverageRating")
+    suspend fun getAverageRating(@Body apiBodyReqForGettingAvgRating: ApiBodyReqForGettingAvgRating): BaseResponse<Number>
 
-    //we will made it
     @POST("profile/saveCourse")
-    suspend fun saveCourse(@Body courseId: ApiRequestWithCourseId):BaseResponse<String>
+    suspend fun saveCourse(@Body courseId: ApiRequestWithCourseId): BaseResponse<String>
 
     @POST("course/getInstructorDetails")
     suspend fun getInstructorDetails(@Body instructorId: ApiRequestWithInstructorId): BaseResponse<Instructor>
@@ -92,11 +88,9 @@ interface ApiClient {
     @GET("meeting/all")
     suspend fun getAllMeeting(): BaseResponse<List<Meeting>>
 
-    //we will do it too
     @GET("profile/getSavedCourses")
     suspend fun getSavedCourses(): BaseResponse<List<Course>>
 
-    //this one will remove and we will add get all course progress
     @GET("profile/getEnrolledCourses")
     suspend fun getEnrolledCourses(): BaseResponse<List<Course>>
 
@@ -110,22 +104,19 @@ interface ApiClient {
     @GET("course/showAllCategories")
     suspend fun showAllCategories(): BaseResponse<List<Category>>
 
-    // this one need to change
     @POST("auth/reset-password-token")
     suspend fun resetPasswordToken(@Body email: TokenReq): BaseResponse<String>
 
-    //here we need some change too
     @POST("auth/reset-password")
     suspend fun resetPassword(@Body apiBodyForResetPassword: ApiBodyForResetPassword): BaseResponse<String>
 
     @POST("projects/")
     suspend fun projects(@Body apiReqForAllinAi: ApiReqForAllinAi): BaseResponse<Allin>
 
-    //what is the response
     @POST("course/updateCourseProgress")
-    suspend fun updateCourseProgress(@Body apiBodyForUpdateProgress: ApiBodyForUpdateProgress):BaseResponse<String>
+    suspend fun updateCourseProgress(@Body apiBodyForUpdateProgress: ApiBodyForUpdateProgress): BaseResponse<String>
 
     @Multipart
     @PUT("profile/updateUserProfileImage")
-    suspend fun updateUserProfileImage(@Part profileImage: MultipartBody.Part):BaseResponse<User>
+    suspend fun updateUserProfileImage(@Part profileImage: MultipartBody.Part): BaseResponse<User>
 }

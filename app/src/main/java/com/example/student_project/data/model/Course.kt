@@ -11,9 +11,9 @@ data class Course(
     val courseContent: List<CourseContent>,
     val courseDescription: String,
     val courseName: String,
-    val totalLessons:Int,
-    val completedLessons:Int,
-    val progressPercentage:Double?,
+    val totalLessons: Int,
+    val completedLessons: Int,
+    val progressPercentage: Double?,
     val createdAt: String,
     val instructions: List<String>,
     val instructor: Instructor,//here he make string and in same time object
@@ -26,7 +26,7 @@ data class Course(
     val thumbnail: String,
     val totalDuration: String,
     val completedVideos: List<Any>,
-    val averageRating:Double?,
+    val averageRating: Double?,
     val isSaved: Boolean,
 )
 

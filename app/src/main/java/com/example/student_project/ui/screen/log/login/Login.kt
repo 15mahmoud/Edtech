@@ -78,10 +78,11 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
     var isLoading by remember { mutableStateOf(false) }
 
 
-    Scaffold(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)
-        ) { innerPadding ->
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) { innerPadding ->
         Box(
             modifier =
             Modifier
@@ -90,7 +91,7 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                 .verticalScroll(rememberScrollState())
         ) {
             AnimatedVisibility(visible = isLoading) {
-                Dialog( onDismissRequest = { isLoading = false }) {
+                Dialog(onDismissRequest = { isLoading = false }) {
                     CircularProgressIndicator()
 
                 }
@@ -110,9 +111,11 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                     .padding(top = 70.dp, start = Constant.paddingComponentFromScreen)
                     .align(alignment = Alignment.TopCenter),
             )
-            Column(modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth()) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth()
+            ) {
 
                 // we need to make shadow
                 TextField(
@@ -158,12 +161,12 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                     //                        }
                     //                    },
                     colors =
-                        TextFieldDefaults.colors(
-                            unfocusedContainerColor = textFieldColor,
-                            focusedContainerColor = textFieldColor,
-                            unfocusedIndicatorColor = textFieldColor,
-                            focusedIndicatorColor = textFieldColor,
-                        ),
+                    TextFieldDefaults.colors(
+                        unfocusedContainerColor = textFieldColor,
+                        focusedContainerColor = textFieldColor,
+                        unfocusedIndicatorColor = textFieldColor,
+                        focusedIndicatorColor = textFieldColor,
+                    ),
                 )
                 TextField(
                     modifier =
@@ -221,31 +224,33 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                     //                        }
                     //                    },
                     colors =
-                        TextFieldDefaults.colors(
-                            unfocusedContainerColor = textFieldColor,
-                            focusedContainerColor = textFieldColor,
-                            unfocusedIndicatorColor = textFieldColor,
-                            focusedIndicatorColor = textFieldColor,
-                        ),
+                    TextFieldDefaults.colors(
+                        unfocusedContainerColor = textFieldColor,
+                        focusedContainerColor = textFieldColor,
+                        unfocusedIndicatorColor = textFieldColor,
+                        focusedIndicatorColor = textFieldColor,
+                    ),
                     visualTransformation =
-                        if (showPassword) VisualTransformation.None
-                        else PasswordVisualTransformation(),
+                    if (showPassword) VisualTransformation.None
+                    else PasswordVisualTransformation(),
                 )
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(Constant.normalPadding))
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(Constant.normalPadding)
+                )
                 Button(
                     onClick = {
                         if (
                             emailState.isNotEmpty() &&
-                                passwordState.isNotEmpty() &&
-                                emailState.endsWith("@gmail.com")
+                            passwordState.isNotEmpty() &&
+                            emailState.endsWith("@gmail.com")
                         ) {
 
                             val user = StudentLogin(emailState, passwordState)
                             CoroutineScope(Dispatchers.IO).launch {
                                 isLoading = true
-                                 resultState = studentRepo.checkUser(user)
+                                resultState = studentRepo.checkUser(user)
                                 isLoading = false
                             }
                             resultState
@@ -259,10 +264,10 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                                 }
                                 ?.onFailure {
                                     Toast.makeText(
-                                            context,
-                                            "your email or password is mismatched",
-                                            Toast.LENGTH_SHORT,
-                                        )
+                                        context,
+                                        "your email or password is mismatched",
+                                        Toast.LENGTH_SHORT,
+                                    )
                                         .show()
                                 }
                         } else {
@@ -280,9 +285,9 @@ fun LoginScreen(navController: NavController, studentRepo: StudentRepo) {
                         .width(screenWidth * 90 / 100)
                         .align(alignment = Alignment.CenterHorizontally),
                     colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor = colorResource(id = R.color.button_color)
-                        ),
+                    ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.button_color)
+                    ),
                 ) {
                     Text(
                         text = "Sign in",

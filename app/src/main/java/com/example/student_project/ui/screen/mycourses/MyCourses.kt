@@ -120,7 +120,9 @@ fun MyCoursesScreen(navController: NavController, courseRepo: CourseRepo) {
             .background(Color.White),
         topBar = {
             TopAppBar(
-                modifier = Modifier.padding(top = Constant.paddingComponentFromScreen).background(Color.White),
+                modifier = Modifier
+                    .padding(top = Constant.paddingComponentFromScreen)
+                    .background(Color.White),
 
                 title = {
                     Text(
@@ -343,15 +345,18 @@ fun SavedCourseColumn(
 //                        top = Constant.smallPadding
                     ),
                     text =
-                    AnnotatedString("EGP ", spanStyle = SpanStyle(color = jopTitleColor, fontSize = 16.sp))
+                    AnnotatedString(
+                        "EGP ",
+                        spanStyle = SpanStyle(color = jopTitleColor, fontSize = 16.sp)
+                    )
                             + AnnotatedString(
-                                course.price.toString(),
-                                SpanStyle(
-                                    fontSize = 16.sp,
-                                    fontStyle = FontStyle.Normal,
-                                    fontWeight = FontWeight(600)
-                                )
-                            ),
+                        course.price.toString(),
+                        SpanStyle(
+                            fontSize = 16.sp,
+                            fontStyle = FontStyle.Normal,
+                            fontWeight = FontWeight(600)
+                        )
+                    ),
                 )
             }
 

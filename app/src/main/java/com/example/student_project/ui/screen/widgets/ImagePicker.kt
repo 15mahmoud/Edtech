@@ -167,14 +167,21 @@ fun checkGalleryPermission(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         // For Android 13+, we don't need storage permission for gallery
         onPermissionGranted()
-    }else{
-        when{
-        ContextCompat.checkSelfPermission(context,Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ->{
-            onPermissionGranted()
-        }
-            (context as? Activity)?.let{activity->
-                ActivityCompat.shouldShowRequestPermissionRationale(activity,Manifest.permission.READ_EXTERNAL_STORAGE)
-            } == true ->{
+    } else {
+        when {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                onPermissionGranted()
+            }
+
+            (context as? Activity)?.let { activity ->
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            } == true -> {
                 launcher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
 

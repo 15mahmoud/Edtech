@@ -21,14 +21,20 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun CourseLessonScreen(navController: NavController, encodedUrl: String?,courseRepo: CourseRepo,courseIdi: String?,subsectionId: String?) {
-val context = LocalContext.current
+fun CourseLessonScreen(
+    navController: NavController,
+    encodedUrl: String?,
+    courseRepo: CourseRepo,
+    courseIdi: String?,
+    subsectionId: String?
+) {
+    val context = LocalContext.current
     val videoUrl = URLDecoder.decode(encodedUrl.toString(), StandardCharsets.UTF_8.toString())
-var updateProgressState by remember {
-    mutableStateOf<Result<String>?>(null)
-}
-    LaunchedEffect(Unit){
-        updateProgressState = courseRepo.updateCourseProgress(courseIdi!!,subsectionId!!)
+    var updateProgressState by remember {
+        mutableStateOf<Result<String>?>(null)
+    }
+    LaunchedEffect(Unit) {
+        updateProgressState = courseRepo.updateCourseProgress(courseIdi!!, subsectionId!!)
     }
     updateProgressState?.let { result ->
         result.onSuccess { response ->
@@ -42,7 +48,7 @@ var updateProgressState by remember {
         }
     }
     val exoPlayer = ExoPlayer.Builder(context).build()
-    val mediaSource = remember(videoUrl){
+    val mediaSource = remember(videoUrl) {
         MediaItem.fromUri(videoUrl)
     }
     LaunchedEffect(mediaSource) {
@@ -54,11 +60,12 @@ var updateProgressState by remember {
             exoPlayer.release()
         }
     }
-    AndroidView(factory ={ctx->
-        PlayerView(ctx).apply {
-            player = exoPlayer
-        }
-    }, modifier = Modifier.fillMaxSize()
+    AndroidView(
+        factory = { ctx ->
+            PlayerView(ctx).apply {
+                player = exoPlayer
+            }
+        }, modifier = Modifier.fillMaxSize()
     )
 
 }

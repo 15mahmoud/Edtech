@@ -20,7 +20,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -71,7 +69,7 @@ fun OtpTokenScreen(navController: NavController, userEmail: String?, studentRepo
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
-    val otpTextString = "123456"
+//    val otpTextString = "123456"
     val focusRequester = remember {
         FocusRequester()
     }
@@ -175,11 +173,17 @@ fun OtpTokenScreen(navController: NavController, userEmail: String?, studentRepo
 
             Button(
                 onClick = {
-//                    tokenState.onSuccess {  }
-                    if (otpText == tokenState.toString()) {
-                        navController.navigate(Screens.NewPasswordScreen.route + "/$otpText")
-                    } else {
-                        Toast.makeText(context, "otp is incorrect", Toast.LENGTH_SHORT).show()
+                    tokenState?.onSuccess {
+
+                        if (otpText == it) {
+
+                            //here we pass email to make sure that the changed password will be this email
+                            navController.navigate(Screens.NewPasswordScreen.route + "/$otpText" + "/$userEmail")
+                        } else {
+                            Toast.makeText(context, "otp is incorrect", Toast.LENGTH_SHORT).show()
+                        }
+                    }?.onFailure {
+                        Toast.makeText(context, "failed to load token", Toast.LENGTH_SHORT).show()
                     }
                 },
                 shape = RoundedCornerShape(Constant.buttonRadios),
@@ -215,7 +219,7 @@ fun OtpTokenScreen(navController: NavController, userEmail: String?, studentRepo
             Button(
                 onClick = {
                     //resend to backend to get the new code
-                     CoroutineScope(Dispatchers.IO).launch{
+                    CoroutineScope(Dispatchers.IO).launch {
                         tokenState = studentRepo.resetPasswordToken(userEmail.toString())
                     }
                     date = 60
@@ -267,6 +271,7 @@ fun OtpInputField(
 ) {
 
 
+    //we can make it read only and just filled the code once the request done
     BasicTextField(
         modifier = modifier,
         value = TextFieldValue(otpText, selection = TextRange(otpText.length)),
