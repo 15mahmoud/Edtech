@@ -6,3 +6,6 @@ data class ApiReqForAllinAi(
     @SerializedName("repo_url")
     private val repoURL: String
 )
+data class ApiReqForChatBootAi(
+    private val message: String
+)

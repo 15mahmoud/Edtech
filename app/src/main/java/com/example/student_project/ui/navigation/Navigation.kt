@@ -19,7 +19,10 @@ import com.example.student_project.ui.screen.home.filtering.filteration.MentorFi
 import com.example.student_project.ui.screen.home.filtering.filterationresult.CourseFilterResultScreen
 import com.example.student_project.ui.screen.home.filtering.filterationresult.MentorFilterResultScreen
 import com.example.student_project.ui.screen.SplashScreen
-import com.example.student_project.ui.screen.YourAiScreen
+import com.example.student_project.ui.screen.ai.ChatBootHistoryScreen
+import com.example.student_project.ui.screen.ai.ChatBootScreen
+import com.example.student_project.ui.screen.ai.GitHubAiHistoryScreen
+import com.example.student_project.ui.screen.ai.GitHubAiScreen
 import com.example.student_project.ui.screen.details.mentor.MentorDetailsScreen
 import com.example.student_project.ui.screen.home.allcourses.AllCourseScreen
 import com.example.student_project.ui.screen.home.allmentor.AllMentorScreen
@@ -252,10 +255,25 @@ fun Navigation(depContainer: DepContainer) {
             // then pass it if true move to next screen
             InviteFriendsScreen(navController = navController)
         }
-        composable(Screens.YourAiScreen.route) {
+        ////////////////////////////
+        composable(Screens.GitHubAiScreen.route) {
 
-            YourAiScreen(navController = navController, depContainer.studentRepo)
+            GitHubAiScreen(navController = navController, depContainer.studentRepo)
         }
+        composable(Screens.GitHubAiHistoryScreen.route) {
+
+            GitHubAiHistoryScreen(navController = navController, depContainer.studentRepo)
+        }
+        composable(Screens.ChatBootScreen.route) {
+
+            ChatBootScreen(navController = navController, depContainer.studentRepo)
+        }
+        composable(Screens.ChatBootHistoryScreen.route) {
+
+            ChatBootHistoryScreen(navController = navController, depContainer.studentRepo)
+        }
+        /////////////////
+
         composable(Screens.InboxScreen.route) {
             InboxScreen(navController = navController, depContainer.studentRepo)
         }

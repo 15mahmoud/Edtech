@@ -1,7 +1,7 @@
 package com.example.student_project.data.network
 
+import com.example.student_project.data.model.AiChatHistoryResponse
 import com.example.student_project.data.model.Allin
-import com.example.student_project.data.model.AllinContent
 import com.example.student_project.data.model.Category
 import com.example.student_project.data.model.ChattingRoom
 import com.example.student_project.data.model.Course
@@ -16,6 +16,7 @@ import com.example.student_project.data.network.request.ApiBodyForUpdateProgress
 import com.example.student_project.data.network.request.ApiBodyReqForGettingAvgRating
 import com.example.student_project.data.network.request.ApiReqForAllinAi
 import com.example.student_project.data.network.request.ApiReqForChat
+import com.example.student_project.data.network.request.ApiReqForChatBootAi
 import com.example.student_project.data.network.request.ApiReqForMessageInChat
 import com.example.student_project.data.network.request.ApiReqForSendingMessage
 import com.example.student_project.data.network.request.CapturePayment
@@ -110,13 +111,23 @@ interface ApiClient {
     @POST("auth/reset-password")
     suspend fun resetPassword(@Body apiBodyForResetPassword: ApiBodyForResetPassword): BaseResponse<String>
 
-    @POST("projects/")
-    suspend fun projects(@Body apiReqForAllinAi: ApiReqForAllinAi): BaseResponse<Allin>
-
     @POST("course/updateCourseProgress")
     suspend fun updateCourseProgress(@Body apiBodyForUpdateProgress: ApiBodyForUpdateProgress): BaseResponse<String>
 
     @Multipart
     @PUT("profile/updateUserProfileImage")
     suspend fun updateUserProfileImage(@Part profileImage: MultipartBody.Part): BaseResponse<User>
+
+    //start of ai end point
+    @POST("projects/")
+    suspend fun createProject(@Body apiReqForAllinAi: ApiReqForAllinAi): BaseResponse<Allin>
+
+    @GET("projects/")
+    suspend fun getProject(): BaseResponse<List<Allin>>
+
+    @POST("openAi/chat")
+    suspend fun createAiChat(@Body apiReqForChatBootAi: ApiReqForChatBootAi): BaseResponse<String>
+
+    @GET("openAi/chat")
+    suspend fun getAiChats(): BaseResponse<List<AiChatHistoryResponse>>
 }

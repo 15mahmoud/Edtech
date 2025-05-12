@@ -37,9 +37,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideApiClient(client: OkHttpClient) =
+    fun provideApiClient(client: OkHttpClient): ApiClient =
         Retrofit.Builder()
-            .baseUrl("https://terrific-swamp-tilapia.glitch.me/api/v1/")
+//            .baseUrl("https://terrific-swamp-tilapia.glitch.me/api/v1/")
+            .baseUrl("https://glitch-server.fly.dev/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
