@@ -51,7 +51,13 @@ sealed class Screens(val route: String) {
 
     data object TrendingCourseScreen : Screens("trending_course_screen")
 
-    data object YourAiScreen : Screens("your_ai_screen")
+    data object GitHubAiScreen : Screens("github_ai_screen")
+
+    data object GitHubAiHistoryScreen : Screens("github_ai_history_screen")
+
+    data object ChatBootScreen : Screens("chat_boot_screen")
+
+    data object ChatBootHistoryScreen : Screens("chat_boot_history_screen")
 
     data object InboxScreen : Screens("inbox_screen")
 

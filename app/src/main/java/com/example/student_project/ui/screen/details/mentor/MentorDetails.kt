@@ -513,8 +513,8 @@ fun StudentRow(student: User, context: Context) {
                 color = headLineColor,
                 fontWeight = FontWeight(700),
                 modifier = Modifier
-                    .padding(bottom = Constant.normalPadding)
-                    .align(Alignment.CenterHorizontally)
+                    .padding()
+//                    .align(Alignment.CenterHorizontally)
             )
             Text(
                 text = student.email,
