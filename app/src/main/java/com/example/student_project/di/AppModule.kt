@@ -39,8 +39,8 @@ object AppModule {
     @Provides
     fun provideApiClient(client: OkHttpClient): ApiClient =
         Retrofit.Builder()
-//            .baseUrl("https://terrific-swamp-tilapia.glitch.me/api/v1/")
-            .baseUrl("https://glitch-server.fly.dev/")
+            .baseUrl("https://terrific-swamp-tilapia.glitch.me/api/v1/")
+//            .baseUrl("https://glitch-server.fly.dev/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -50,7 +50,7 @@ object AppModule {
     @Provides
     fun provideOkHttpClient(studentDatabaseDao: StudentDatabaseDao) =
         OkHttpClient.Builder()
-            .readTimeout(30, TimeUnit.SECONDS)
+//            .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor { chain ->
                 val token = runBlocking { studentDatabaseDao.getCurrentStudent()?.token }
                 val originalRequest: Request = chain.request()

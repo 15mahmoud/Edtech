@@ -11,6 +11,7 @@ import com.example.student_project.data.model.Meeting
 import com.example.student_project.data.model.Message
 import com.example.student_project.data.model.Student
 import com.example.student_project.data.model.User
+import com.example.student_project.data.network.request.ApiBodyForCaptureAndVerifyPayment
 import com.example.student_project.data.network.request.ApiBodyForResetPassword
 import com.example.student_project.data.network.request.ApiBodyForUpdateProgress
 import com.example.student_project.data.network.request.ApiBodyReqForGettingAvgRating
@@ -57,9 +58,15 @@ interface ApiClient {
     @POST("paymob/initiate-payment")
     suspend fun initiatePayment(@Body capturePayment: CapturePayment): BaseResponse<String>
 
+    @POST("payment/capturePayment")
+    suspend fun capturePayment(@Body apiBodyForCaptureAndVerifyPayment: ApiBodyForCaptureAndVerifyPayment): BaseResponse<String>
+
 
     @POST("paymob/getTransactionStatus")
     suspend fun getTransactionState(@Body courseId: VerifyPayment): BaseResponse<String>
+
+    @POST("payment/verifyPayment")
+    suspend fun verifyPayment(@Body apiBodyForCaptureAndVerifyPayment: ApiBodyForCaptureAndVerifyPayment): BaseResponse<Boolean>
 
     @POST("course/createRating")
     suspend fun createRating(@Body ratingReq: CreateRatingReq):BaseResponse<String>
@@ -72,7 +79,6 @@ interface ApiClient {
 
     @POST("course/getInstructorDetails")
     suspend fun getInstructorDetails(@Body instructorId: ApiRequestWithInstructorId): BaseResponse<Instructor>
-
 
     @POST("course/createChat")
     suspend fun createChat(@Body participantId: ApiReqForChat): BaseResponse<ChattingRoom>
@@ -97,7 +103,6 @@ interface ApiClient {
 
     @GET("course/getAllCoursesProgress")
     suspend fun getAllCourseProgress(): BaseResponse<List<Course>>
-
 
     @GET("auth/all-instructors")
     suspend fun allInstructors(): BaseResponse<List<Instructor>>

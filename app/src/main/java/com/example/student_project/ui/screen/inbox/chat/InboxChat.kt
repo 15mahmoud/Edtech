@@ -268,7 +268,7 @@ fun InboxChatScreen(
                                     .padding(Constant.smallPadding),
                                 imageVector = Icons.AutoMirrored.Filled.Send,
                                 tint = Color.White,
-                                contentDescription = "voice message"
+                                contentDescription = "message"
                             )
                         }
                     }
