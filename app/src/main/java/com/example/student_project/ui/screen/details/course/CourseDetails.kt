@@ -76,6 +76,7 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.student_project.R
 import com.example.student_project.data.model.Course
+import com.example.student_project.data.network.request.ApiBodyForCaptureAndVerifyPayment
 import com.example.student_project.data.network.request.CapturePayment
 import com.example.student_project.data.network.request.CreateRatingReq
 import com.example.student_project.data.repo.CourseRepo
@@ -135,9 +136,9 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
         mutableStateOf("")
     }
 
-var reviewMessageState by remember {
-    mutableStateOf<Result<String>?>(null)
-}
+    var reviewMessageState by remember {
+        mutableStateOf<Result<String>?>(null)
+    }
     var unLock by remember { mutableStateOf<Result<Boolean?>?>(null) }
 
     var getTransaction by remember { mutableStateOf<Result<String?>?>(null) }
@@ -160,7 +161,10 @@ var reviewMessageState by remember {
             getTransaction?.onSuccess { it ->
 
                 it?.let { unLockState ->
-                    lock = unLockState == "paid"
+//                    lock = unLockState == "paid"
+                        lock = unLockState == "paid"
+
+
                     Scaffold(
                         bottomBar = {
                             AnimatedVisibility(visible = lock) {
@@ -414,15 +418,26 @@ var reviewMessageState by remember {
                                                             rateTextState
                                                         )
                                                         CoroutineScope(Dispatchers.IO).launch {
-                                                           reviewMessageState = courseRepo.createRating(studentReview)
+                                                            reviewMessageState =
+                                                                courseRepo.createRating(
+                                                                    studentReview
+                                                                )
                                                             //here we need to handle exception
                                                             //to save app from crashing
                                                         }
-                                                        reviewMessageState?.onSuccess {message->
-                                                            Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
+                                                        reviewMessageState?.onSuccess { message ->
+                                                            Toast.makeText(
+                                                                context,
+                                                                message,
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
                                                             dialogKeyForReview = false
                                                         }?.onFailure {
-                                                            Toast.makeText(context,it.message,Toast.LENGTH_SHORT).show()
+                                                            Toast.makeText(
+                                                                context,
+                                                                it.message,
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
                                                             dialogKeyForReview = false
                                                         }
                                                     }) {
@@ -512,6 +527,7 @@ var reviewMessageState by remember {
                                                         paymentState = courseRepo.initiatePayment(
                                                             capturePayment
                                                         )
+
                                                     }
                                                     paymentState?.onSuccess {
                                                         //intent to payment screen
@@ -533,11 +549,27 @@ var reviewMessageState by remember {
                                                         getTransaction?.onSuccess { transaction ->
                                                             if (transaction == "paid") {
                                                                 lock = true
+                                                                CoroutineScope(Dispatchers.IO).launch {
+                                                                    courseRepo.capturePayment(
+                                                                        ApiBodyForCaptureAndVerifyPayment(
+                                                                            listOf(
+                                                                                courseId.toString()
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                    courseRepo.verifyPayment(
+                                                                        ApiBodyForCaptureAndVerifyPayment(
+                                                                            listOf(
+                                                                                courseId.toString()
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                }
                                                                 dialogKeyForPayment = false
                                                             } else {
                                                                 Toast.makeText(
                                                                     context,
-                                                                    "your payment faild",
+                                                                    "your payment failed",
                                                                     Toast.LENGTH_SHORT
                                                                 ).show()
                                                             }
@@ -1019,7 +1051,7 @@ var reviewMessageState by remember {
                                                 course?.let { item ->
                                                     items(item.ratingAndReviews) { rate ->
                                                         ReviewColumn(
-                                                            ratingAndReview =rate,
+                                                            ratingAndReview = rate,
                                                             context = context
                                                         )
                                                         HorizontalDivider(

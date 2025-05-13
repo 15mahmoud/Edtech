@@ -38,12 +38,13 @@ fun CourseLessonScreen(
     }
     updateProgressState?.let { result ->
         result.onSuccess { response ->
-            Toast.makeText(context, "Progress updated successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
         }.onFailure { error ->
             val errorMessage = when (error.message) {
                 "Subsection already completed" -> "You've already completed this section"
                 else -> "Failed to update progress: ${error.localizedMessage}"
             }
+//            courseId subsectionId
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

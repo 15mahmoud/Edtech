@@ -36,3 +36,6 @@ val cancelButton = Color(0xFFEBEFFE)
 val colorForProgressParFrom50To75 = Color(0xFFEBEFFE)
 val colorForProgressParFrom75To100 = Color(0xFFFF697E)
 val chatReceiverColor = Color(0xFFC6C6C6)
+
+val aiBoxColor = Color(0xFFD8D8D8)
+

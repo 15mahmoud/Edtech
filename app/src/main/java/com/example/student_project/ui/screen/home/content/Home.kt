@@ -640,7 +640,7 @@ fun BottomNavBar(selectedState: Int, navController: NavController) {
                 label = "Coursaty",
             ),
             BottomNavItem(
-                route = "your_ai_screen",
+                route = "github_ai_screen",
                 selectedIcon = ImageVector.vectorResource(id = R.drawable.round_auto_awesome_24),
                 unselectedIcon = ImageVector.vectorResource(id = R.drawable.unselected_round_auto_awesome_24),
                 label = "Your AI"

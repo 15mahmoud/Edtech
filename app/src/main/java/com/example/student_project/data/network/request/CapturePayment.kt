@@ -9,3 +9,8 @@ data class CapturePayment(
 data class VerifyPayment(
     val courseId: String
 )
+
+
+data class ApiBodyForCaptureAndVerifyPayment(
+    val coursesId:List<String>
+)

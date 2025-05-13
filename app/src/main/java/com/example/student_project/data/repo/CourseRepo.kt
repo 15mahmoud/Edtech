@@ -3,6 +3,7 @@ package com.example.student_project.data.repo
 import com.example.student_project.data.model.Category
 import com.example.student_project.data.model.Course
 import com.example.student_project.data.network.ApiClient
+import com.example.student_project.data.network.request.ApiBodyForCaptureAndVerifyPayment
 import com.example.student_project.data.network.request.ApiBodyForUpdateProgress
 import com.example.student_project.data.network.request.ApiBodyReqForGettingAvgRating
 import com.example.student_project.data.network.request.CapturePayment
@@ -26,9 +27,16 @@ class CourseRepo @Inject constructor(private val apiClient: ApiClient) {
     suspend fun initiatePayment(capturePayment: CapturePayment): Result<String> {
         return Result.runCatching { apiClient.initiatePayment(capturePayment).data }
     }
+  suspend fun capturePayment(apiBodyForCaptureAndVerifyPayment: ApiBodyForCaptureAndVerifyPayment): Result<String> {
+        return Result.runCatching { apiClient.capturePayment(apiBodyForCaptureAndVerifyPayment).data }
+    }
 
     suspend fun getTransactionState(courseId: String): Result<String> {
         return Result.runCatching { apiClient.getTransactionState(VerifyPayment(courseId)).data }
+    }
+
+    suspend fun verifyPayment(apiBodyForCaptureAndVerifyPayment: ApiBodyForCaptureAndVerifyPayment): Result<Boolean> {
+        return Result.runCatching { apiClient.verifyPayment(apiBodyForCaptureAndVerifyPayment).data }
     }
 
     suspend fun createRating(ratingReq: CreateRatingReq):Result<String> {
