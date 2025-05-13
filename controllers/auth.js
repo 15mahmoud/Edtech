@@ -103,9 +103,8 @@ exports.verifyEmail = async (req, res) => {
 
 
 // ================ SIGNUP ================
-const sendEmail = require("../utils/mailSender.js"); // استيراد دالة إرسال الإيميل
-const crypto = require("crypto"); // لإنشاء رمز التحقق العشوائي
-
+const sendEmail = require("../utils/mailSender.js"); 
+const crypto = require("crypto"); 
 exports.signup = async (req, res) => {
   try {
     const {
@@ -155,7 +154,7 @@ exports.signup = async (req, res) => {
       gender: null,
       dateOfBirth: null,
       about: null,
-      contactNumber: contactNumber || null, // الآن contactNumber ليس إجباريًا
+      contactNumber: contactNumber || null, 
     });
 
     let approved = accountType === "Instructor" ? false : true;
@@ -167,7 +166,7 @@ exports.signup = async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
-      contactNumber: contactNumber || null, // هنا أيضًا للتأكد
+      contactNumber: contactNumber || null, 
       accountType,
       additionalDetails: profileDetails._id,
       approved,

@@ -210,13 +210,9 @@ exports.getEnrolledCourses = async (req, res) => {
       .populate({
         path: "courses",
         select:
-          "courseName courseDescription price thumbnail instructor studentsEnrolled",
-      })
-      .populate({
-        path: "courses.instructor",
-        select: "firstName lastName email image",
-      })
-      .exec();
+        "courseName courseDescription price thumbnail studentsEnrolled",
+    })
+    .exec();
 
     if (!userDetails) {
       return res.status(400).json({

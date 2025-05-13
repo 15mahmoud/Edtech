@@ -31,12 +31,12 @@ exports.createRating = async (req, res) => {
       studentsEnrolled: userId,
     });
 
-    if (!courseDetails) {
-      return res.status(404).json({
-        success: false,
-        message: "Student is not enrolled in the course",
-      });
-    }
+    // if (!courseDetails) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "Student is not enrolled in the course",
+    //   });
+    // }
 
     const alreadyReviewed = await RatingAndReview.findOne({
       course: courseId,
@@ -46,7 +46,7 @@ exports.createRating = async (req, res) => {
     if (alreadyReviewed) {
       return res.status(403).json({
         success: false,
-        message: "Course is already reviewed by the user",
+        error: "Course is already reviewed by the user",
       });
     }
 
@@ -75,12 +75,7 @@ exports.createRating = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      data: {
-        ...ratingReview.toObject(),
-        newAverageRating,
-      },
-      
-      message: "Rating and Review created Successfully",
+      data: "Rating and Review created Successfully",
     });
   } catch (error) {
     console.error("Error while creating rating and review", error);
@@ -217,7 +212,7 @@ exports.getAverageRating = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Average Rating is 0, no ratings given till now",
-      averageRating: 0,
+      data: 0,
     });
   } catch (error) {
     console.log(error);
