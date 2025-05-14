@@ -4,21 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -182,8 +179,8 @@ fun GitHubAiScreen(navController: NavController, studentRepo: StudentRepo) {
                                 )
                                 .clip(RoundedCornerShape(12.dp))
                                 .border(
-                                    1.dp,
-                                    color = Color.Gray,
+                                    2.dp,
+                                    color = Color.White,
                                     shape = RoundedCornerShape(12.dp)
                                 )
                                 .background(aiBoxColor)
@@ -201,13 +198,28 @@ fun GitHubAiScreen(navController: NavController, studentRepo: StudentRepo) {
                             )
                         }
                     }
+                }?.onFailure {
+                    item {
+                        Text(
+                            modifier = Modifier.padding(
+                                start = Constant.smallPadding,
+                                end = Constant.smallPadding
+                            ),
+                            text = "Failed can't load due to " + it.message.toString(),
+                            color = buttonColor,
+                            fontSize = 15.sp,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight(600)
+                        )
+                    }
                 }
             }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .imePadding()
                     .align(alignment = Alignment.BottomCenter)
+                    .consumeWindowInsets(innerPadding)
+                    .imePadding()
             ) {
                 TextField(
                     value = aiPromptTextField,
@@ -217,23 +229,17 @@ fun GitHubAiScreen(navController: NavController, studentRepo: StudentRepo) {
                     onValueChange = {
                         aiPromptTextField = it
 
-//                            singleLine.value = !it.contains('\n') //This one useless
                     },
-//                        singleLine = singleLine.value,
                     modifier =
                     Modifier
-                        .padding(start = Constant.paddingComponentFromScreen)
-                        .width(screenWidth * 81 / 100)
+                        .width(screenWidth * 85 / 100)
                         .heightIn(min = 20.dp, max = 120.dp)
-//                                .height(screenHeight * 5 / 100)
-//                                .align(alignment = Alignment.CenterVertically)
                         .shadow(
                             elevation = 6.dp,
                             shape = MaterialTheme.shapes.small,
                             ambientColor = Color.Gray,
                             spotColor = Color.LightGray,
                         ),
-                    //  .shadow(elevation = 2.dp, ambientColor = Color.Gray),
                     placeholder = {
                         Text(
                             text = "Enter Github link ...",
