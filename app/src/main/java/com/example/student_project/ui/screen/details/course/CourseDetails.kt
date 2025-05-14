@@ -549,22 +549,22 @@ fun CourseDetailsScreen(navController: NavController, courseId: String?, courseR
                                                         getTransaction?.onSuccess { transaction ->
                                                             if (transaction == "paid") {
                                                                 lock = true
-                                                                CoroutineScope(Dispatchers.IO).launch {
-                                                                    courseRepo.capturePayment(
-                                                                        ApiBodyForCaptureAndVerifyPayment(
-                                                                            listOf(
-                                                                                courseId.toString()
-                                                                            )
-                                                                        )
-                                                                    )
-                                                                    courseRepo.verifyPayment(
-                                                                        ApiBodyForCaptureAndVerifyPayment(
-                                                                            listOf(
-                                                                                courseId.toString()
-                                                                            )
-                                                                        )
-                                                                    )
-                                                                }
+//                                                                CoroutineScope(Dispatchers.IO).launch {
+//                                                                    courseRepo.capturePayment(
+//                                                                        ApiBodyForCaptureAndVerifyPayment(
+//                                                                            listOf(
+//                                                                                courseId.toString()
+//                                                                            )
+//                                                                        )
+//                                                                    )
+//                                                                    courseRepo.verifyPayment(
+//                                                                        ApiBodyForCaptureAndVerifyPayment(
+//                                                                            listOf(
+//                                                                                courseId.toString()
+//                                                                            )
+//                                                                        )
+//                                                                    )
+//                                                                }
                                                                 dialogKeyForPayment = false
                                                             } else {
                                                                 Toast.makeText(

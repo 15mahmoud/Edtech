@@ -89,6 +89,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
      //viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
@@ -99,8 +100,10 @@ dependencies {
 
     //life cycle
     implementation(libs.androidx.lifecycle.runtime.compose)
+
     //navigation
     implementation("androidx.navigation:navigation-compose:2.8.6")
+
     //coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
@@ -114,7 +117,7 @@ dependencies {
     // For file operations
     implementation("commons-io:commons-io:2.11.0")
 
-    //for activity result
+    //for activity launcher result
     implementation("androidx.activity:activity-compose:1.8.1")
 
     //room
@@ -125,15 +128,19 @@ dependencies {
 
     //splash screen
     implementation("androidx.core:core-splashscreen:1.0.1")
+
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
     //viewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+
     //coil
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("com.google.accompanist:accompanist-coil:0.10.0")
-    //
+
+    //concurrent
     implementation("androidx.concurrent:concurrent-futures:1.2.0")
 
     // Kotlin

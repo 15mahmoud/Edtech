@@ -3,18 +3,14 @@ package com.example.student_project.ui.screen.ai
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,7 +47,6 @@ import com.example.student_project.ui.navigation.Screens
 import com.example.student_project.ui.screen.home.content.BottomNavBar
 import com.example.student_project.ui.theme.aiBoxColor
 import com.example.student_project.ui.theme.buttonColor
-import com.example.student_project.ui.theme.jopTitleColor
 import com.example.student_project.util.Constant
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,9 +67,6 @@ fun GitHubAiHistoryScreen(navController: NavController, studentRepo: StudentRepo
 
     val scope = rememberCoroutineScope()
 
-//    var aiPromptTextField by remember {
-//        mutableStateOf("")
-//    }
     LaunchedEffect(scope) {
         aiHistoryResult = studentRepo.codeExplainerHistory()
     }
@@ -83,9 +75,9 @@ fun GitHubAiHistoryScreen(navController: NavController, studentRepo: StudentRepo
             .fillMaxSize()
             .background(Color.White),
         topBar = {
-            Column() {
+            Column {
                 TopAppBar(modifier = Modifier.background(Color.White), title = {
-                    Text(text = "GitHubAi")
+                    Text(text = "GithubAiHistory")
                 },
                     actions = {
                         IconButton(onClick = { expanded = !expanded }) {
@@ -142,8 +134,8 @@ fun GitHubAiHistoryScreen(navController: NavController, studentRepo: StudentRepo
                                     )
                                     .clip(RoundedCornerShape(12.dp))
                                     .border(
-                                        1.dp,
-                                        color = Color.Gray,
+                                        2.dp,
+                                        color = Color.White,
                                         shape = RoundedCornerShape(12.dp)
                                     )
                                     .background(buttonColor)
@@ -228,40 +220,21 @@ fun GitHubAiHistoryScreen(navController: NavController, studentRepo: StudentRepo
                     }
                 }
             }?.onFailure {
-                Toast.makeText(context, "can't load data", Toast.LENGTH_SHORT).show()
+                item {
+                    Text(
+                        modifier = Modifier.padding(
+                            start = Constant.smallPadding,
+                            end = Constant.smallPadding
+                        ),
+                        text = "Failed can't load due to " + it.message.toString(),
+                        color = buttonColor,
+                        fontSize = 15.sp,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight(600)
+                    )
+                }
             }
         }
     }
 }
 
-@Composable
-fun RowButtonToTransformFromAiToHistoryForGithubAi(
-    ai: String,
-    history: String,
-    onAiClick: () -> Unit = {},
-    onHistoryClick: () -> Unit = {},
-    aiButtonSelected: Boolean,
-    historySelected: Boolean
-) {
-
-
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Button(modifier = Modifier.weight(.5f),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (aiButtonSelected) buttonColor else Color.White
-            ),
-            onClick = {
-                onAiClick()
-            }) {
-            Text(text = ai, color = if (aiButtonSelected) Color.White else buttonColor)
-        }
-        Button(modifier = Modifier.weight(.5f), colors = ButtonDefaults.buttonColors(
-            containerColor = if (historySelected) buttonColor else Color.White
-        ), onClick = {
-            onHistoryClick()
-        }) {
-            Text(text = history, color = if (historySelected) Color.White else buttonColor)
-        }
-    }
-
-}

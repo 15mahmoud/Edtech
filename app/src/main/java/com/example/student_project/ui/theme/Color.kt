@@ -39,3 +39,4 @@ val chatReceiverColor = Color(0xFFC6C6C6)
 
 val aiBoxColor = Color(0xFFD8D8D8)
 
+
