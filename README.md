@@ -40,4 +40,4 @@ This repository contains the mobile application component of a comprehensive cou
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/EhabAhmed1111/GraduationProject.git
+   git clone git@github.com:EhabAhmed1111/SmartCourse.git
