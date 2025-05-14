@@ -137,6 +137,7 @@ fun GitHubAiScreen(navController: NavController, studentRepo: StudentRepo) {
 
             LazyColumn {
                 aiResult?.onSuccess { results ->
+                    aiPromptTextField = ""
                     items(results.tutorialFiles) { result ->
                         Box(
                             modifier = Modifier

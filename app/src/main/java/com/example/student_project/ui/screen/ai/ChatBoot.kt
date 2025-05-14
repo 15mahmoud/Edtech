@@ -157,7 +157,7 @@ fun ChatBootScreen(navController: NavController, studentRepo: StudentRepo) {
                                 .clip(RoundedCornerShape(12.dp))
                                 .border(
                                     2.dp,
-                                    color = buttonColor,
+                                    color = Color.Gray,
                                     shape = RoundedCornerShape(12.dp)
                                 )
                                 .background(aiBoxColor)
@@ -170,7 +170,7 @@ fun ChatBootScreen(navController: NavController, studentRepo: StudentRepo) {
                                     bottom = Constant.smallPadding
                                 ),
                                 text = chatBootResult,
-                                color = Color.White,
+                                color = buttonColor,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight(400)
                             )
