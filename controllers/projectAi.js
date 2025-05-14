@@ -48,7 +48,7 @@ exports.getAllProjects = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // 🔴 جلب المشاريع الخاصة بالمستخدم فقط
+    
     const data = await ProjectAi.find({ user: userId }).sort({ createdAt: -1 });
 
     res.json({ data });
