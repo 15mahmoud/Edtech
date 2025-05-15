@@ -3,7 +3,6 @@ package com.example.student_project.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.student_project.data.model.Instructor
 import com.example.student_project.data.model.User
 import com.example.student_project.util.ListConverter
 
