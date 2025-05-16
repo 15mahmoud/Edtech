@@ -126,7 +126,7 @@ exports.getAllCoursesProgress = async (req, res) => {
           path: "courseContent",
           populate: {
             path: "subSection",
-            select: "timeDuration", // جلب الوقت فقط لتقليل البيانات
+            select: "timeDuration", 
           },
         },
       })
@@ -154,10 +154,10 @@ exports.getAllCoursesProgress = async (req, res) => {
       let progressPercentage =
         totalVideos > 0 ? (completedVideos / totalVideos) * 100 : 0;
 
-      // تقريب النسبة المئوية إلى منزلتين عشريتين
+    
       progressPercentage = Math.round(progressPercentage * 100) / 100;
 
-      // تحويل الثواني إلى صيغة مناسبة
+      
       const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
 
       return {

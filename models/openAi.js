@@ -7,8 +7,8 @@ const messageSchema = new mongoose.Schema({
 });
 
 const conversationSchema = new mongoose.Schema({
-  userId: { type: String, required: true }, // يمكن استبداله بـ ObjectId إذا كنت تدير مستخدمين
-  messages: [messageSchema], // تخزين الرسائل بداخل كل محادثة
+  userId: { type: String, required: true }, 
+  messages: [messageSchema],
   createdAt: { type: Date, default: Date.now },
 });
 

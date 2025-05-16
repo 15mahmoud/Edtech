@@ -5,7 +5,6 @@ const router = express.Router();
 const {
   signup,
   login,
-  sendOTP,
   changePassword,
   verifyEmail,
 } = require("../controllers/auth");
@@ -34,9 +33,6 @@ router.post('/signup', signup);
 // Route for user login
 router.post('/login', login);
 
-// Route for sending OTP to the user's email
-router.post('/sendotp', sendOTP);
-
 // Route for Changing the password
 router.post('/changepassword', auth, changePassword);
 
@@ -54,10 +50,12 @@ router.post("/reset-password", resetPassword)
 
 
 // ********************************************************************************************************
-//                                     Only for Admin - getAllStudents & getAllInstructors
+//                                     Only for Admin - getAllStudents 
 // ********************************************************************************************************
-
 router.get("/all-students", auth, isAdmin, getAllStudents)
+
+
+// ********************************************************************************************************
 router.get("/all-instructors", auth, getAllInstructors)
 
 

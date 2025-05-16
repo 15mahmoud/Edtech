@@ -1,14 +1,13 @@
 const axios = require("axios");
 const Conversation = require("../models/openAi.js");
 
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY; // تأكد من إضافة API Key في .env
-
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY; 
 async function chatWithAI(messages) {
   try {
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "mistralai/mistral-7b-instruct", // يمكنك تغيير النموذج حسب الحاجة
+        model: "mistralai/mistral-7b-instruct", 
         messages,
       },
       {
@@ -82,7 +81,7 @@ exports.getConversation = async (req, res) => {
 
     res.json({ data: conversation.messages }); //res.json({ data: conversation });
   } catch (error) {
-    console.error("🔴 Error:", error.message);
+    console.error(" Error:", error.message);
     res.status(500).json({ error: "An error occurred while fetching data." });
   }
 };

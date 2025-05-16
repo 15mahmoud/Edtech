@@ -22,7 +22,7 @@ exports.createProjectAi = async (req, res) => {
     // Save to DB with user
     const data = await ProjectAi.create({
       repo_url,
-      user: req.user.id, // 🔴 ربط المشروع بالمستخدم
+      user: req.user.id, 
       tutorial_files: Object.entries(tutorial_files).map(
         ([filename, content]) => ({
           filename,

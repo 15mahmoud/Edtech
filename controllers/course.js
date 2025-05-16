@@ -11,8 +11,6 @@ const { convertSecondsToDuration } = require("../utils/secToDuration")
 
 
 // ================ create new course ================
-
-
 exports.createCourse = async (req, res) => {
     try {
         let { courseName, courseDescription, whatYouWillLearn, price, category, instructions: _instructions, status, tag: _tag } = req.body;
@@ -147,7 +145,7 @@ exports.getAllCourses = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
-      // >>>>>>>>>>>>>>>>>>>> إضافة التحقق من الكورسات المحفوظة للمستخدم
+    
       userId
         ? {
             $lookup: {
@@ -217,93 +215,6 @@ exports.getAllCourses = async (req, res) => {
     });
   }
 };
-// exports.getAllCourses = async (req, res) => {
-//   try {
-//     const allCourses = await Course.aggregate([
-//       {
-//         $lookup: {
-//           from: "ratingandreviews",
-//           localField: "_id",
-//           foreignField: "course",
-//           as: "ratings",
-//         },
-//       },
-//       {
-//         $addFields: {
-//           averageRating: {
-//             $cond: {
-//               if: { $gt: [{ $size: "$ratings" }, 0] },
-//               then: { $avg: "$ratings.rating" },
-//               else: 0,
-//             },
-//           },
-//         },
-//       },
-//       {
-//         $lookup: {
-//           from: "users",
-//           localField: "instructor",
-//           foreignField: "_id",
-//           as: "instructor",
-//         },
-//       },
-//       {
-//         $unwind: "$instructor",
-//       },
-//       //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-//       {
-//         $lookup: {
-//           from: "categories",
-//           localField: "category",
-//           foreignField: "_id",
-//           as: "category",
-//         },
-//       },
-//       {
-//         $unwind: {
-//           path: "$category",
-//           preserveNullAndEmptyArrays: true,
-//         },
-//       },
-//       //........>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-//       {
-//         $project: {
-//           courseName: 1,
-//           courseDescription: 1,
-//           price: 1,
-//           thumbnail: 1,
-//           studentsEnrolled: 1,
-//           averageRating: 1,
-//           //>>>>>>>>>>>>>>>>>>>>>>>
-//           category: {
-//             _id: "$category._id",
-//             name: "$category.name",
-//             description: "$category.description",
-//           },
-//           //>>>>>>>>>>>>>>>>>>>>>>>
-//           "instructor.firstName": 1,
-//           "instructor.lastName": 1,
-//           "instructor.email": 1,
-//           "instructor.image": 1,
-//         },
-//       },
-//     ]);
-
-//     return res.status(200).json({
-//       success: true,
-//       data: allCourses,
-//       message: "Data for all courses fetched successfully",
-//     });
-//   } catch (error) {
-//     console.log("Error while fetching data of all courses", error);
-//     res.status(500).json({
-//       success: false,
-//       error: error.message,
-//       message: "Error while fetching data of all courses",
-//     });
-//   }
-// };
-
 
 
 
@@ -399,13 +310,9 @@ exports.getFullCourseDetails = async (req, res) => {
         path: "instructor",
         populate: [
           { path: "additionalDetails" },
-          { path: "courses", select: "courseName thumbnail" }, // تعديل هنا لإحضار الكورسات كـ List of Objects
+          { path: "courses", select: "courseName thumbnail" }, 
         ],
       })
-      // .populate({
-      //   path: "instructor",
-      //   populate: { path: "additionalDetails" },
-      // })
       .populate({
         path: "category",
         select: "-courses",
@@ -566,16 +473,16 @@ exports.getInstructorWithCourses = async (req, res) => {
       });
     }
 
-    // تحويل المدرب إلى كائن عادي لحذف `courses`
+    
     instructor = instructor.toObject();
-    delete instructor.courses; // حذف الكورسات من بيانات المدرب
+    delete instructor.courses; 
 
-    // جلب قائمة الكورسات
+    
     const courses = await Course.find({ instructor: instructorId }).select(
       "courseName _id thumbnail"
     );
 
-    // استخراج الطلاب بدون تكرار
+    
     const studentIds = new Set();
     const coursesWithStudents = await Course.find({
       instructor: instructorId,
@@ -587,7 +494,7 @@ exports.getInstructorWithCourses = async (req, res) => {
       });
     });
 
-    // جلب بيانات الطلاب الفريدة
+    
     const uniqueStudents = await User.find({
       _id: { $in: Array.from(studentIds) },
     }).select("firstName lastName email image _id");
@@ -595,9 +502,9 @@ exports.getInstructorWithCourses = async (req, res) => {
     res.status(200).json({
       success: true,
       data: {
-        instructor, // المدرب بدون courses
-        courses, // قائمة الكورسات
-        students: uniqueStudents, // قائمة الطلاب
+        instructor, 
+        courses, 
+        students: uniqueStudents, 
       },
       message: "Instructor details, courses, and students fetched successfully",
     });
@@ -610,53 +517,6 @@ exports.getInstructorWithCourses = async (req, res) => {
     });
   }
 };
-// exports.getInstructorWithCourses = async (req, res) => {
-//   try {
-//     const { instructorId } = req.body; // استلام ID من الـ body
-
-//     // التأكد من تمرير معرف المدرب
-//     if (!instructorId) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Instructor ID is required",
-//       });
-//     }
-
-//     // البحث عن المدرب مع بياناته وملفه الشخصي وكورسات مختصرة
-//     const instructor = await User.findOne({
-//       _id: instructorId,
-//       accountType: "Instructor",
-//     })
-//       .populate("additionalDetails") // جلب بيانات Profile
-//       .populate({
-//         path: "courses",
-//         select: "courseName _id thumbnail",
-//       });
-
-//     // التحقق مما إذا كان المدرب موجودًا
-//     if (!instructor) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Instructor not found",
-//       });
-//     }
-
-//     // إرجاع بيانات المدرب فقط (الكورسات موجودة داخل `instructor`)
-//     res.status(200).json({
-//       success: true,
-//       data: instructor, // لا نكرر الكورسات في response
-//       message: "Instructor details and courses fetched successfully",
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Failed to retrieve instructor details and courses",
-//       error: error.message,
-//     });
-//   }
-// };
-
 
 
 // ================ Delete the Course ================

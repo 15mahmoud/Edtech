@@ -122,14 +122,14 @@ exports.handleWebhook = async (req, res) => {
   try {
     const { obj } = req.body;
 
-    // تأكد من أن obj موجود وبه id، وأن success ليس undefined
+    
     if (!obj || !obj.id || obj.success === undefined) {
       return res
         .status(400)
         .json({ success: false, message: "Invalid webhook data" });
     }
 
-    // البحث عن المعاملة بناءً على transactionId
+   
     const transaction = await Transaction.findOne({ transactionId: obj.id });
     if (!transaction) {
       return res
@@ -137,11 +137,11 @@ exports.handleWebhook = async (req, res) => {
         .json({ success: false, message: "Transaction not found" });
     }
 
-    // تحديث حالة الدفع بناءً على قيمة success
+    
     transaction.status = obj.success ? "paid" : "failed";
     await transaction.save();
 
-    // إذا كانت المعاملة ناجحة، أضف الكورس إلى المستخدم
+    
     if (obj.success) {
       await User.findByIdAndUpdate(transaction.user.toString(), {
         $push: { courses: transaction.course },

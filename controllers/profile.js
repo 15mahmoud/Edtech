@@ -240,7 +240,7 @@ exports.getEnrolledCourses = async (req, res) => {
           ? 100
           : Math.round((completedVideos / totalSubsections) * 100 * 100) / 100;
 
-      // إزالة التكرارات من studentsEnrolled
+     
       course.studentsEnrolled = [
         ...new Set(course.studentsEnrolled.map((id) => id.toString())),
       ];
@@ -262,71 +262,6 @@ exports.getEnrolledCourses = async (req, res) => {
 
 
 
-// exports.getEnrolledCourses = async (req, res) => {
-//     try {
-//         const userId = req.user.id
-//         let userDetails = await User.findOne({ _id: userId, })
-//             .populate({
-//                 path: "courses",
-//                 populate: {
-//                     path: "courseContent",
-//                     populate: {
-//                         path: "subSection",
-//                     },
-//                 },
-//             })
-//             .exec()
-
-//         userDetails = userDetails.toObject()
-
-//         var SubsectionLength = 0
-//         for (var i = 0; i < userDetails.courses.length; i++) {
-//             let totalDurationInSeconds = 0
-//             SubsectionLength = 0
-//             for (var j = 0; j < userDetails.courses[i].courseContent.length; j++) {
-//                 totalDurationInSeconds += userDetails.courses[i].courseContent[
-//                     j
-//                 ].subSection.reduce((acc, curr) => acc + parseInt(curr.timeDuration), 0)
-
-//                 userDetails.courses[i].totalDuration = convertSecondsToDuration(totalDurationInSeconds)
-//                 SubsectionLength += userDetails.courses[i].courseContent[j].subSection.length
-//             }
-
-//             let courseProgressCount = await CourseProgress.findOne({
-//                 courseID: userDetails.courses[i]._id,
-//                 userId: userId,
-//             })
-
-//             courseProgressCount = courseProgressCount?.completedVideos.length
-
-//             if (SubsectionLength === 0) {
-//                 userDetails.courses[i].progressPercentage = 100
-//             } else {
-//                 // To make it up to 2 decimal point
-//                 const multiplier = Math.pow(10, 2)
-//                 userDetails.courses[i].progressPercentage =
-//                     Math.round((courseProgressCount / SubsectionLength) * 100 * multiplier) / multiplier
-//             }
-//         }
-
-//         if (!userDetails) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: `Could not find user with id: ${userDetails}`,
-//             })
-//         }
-
-//         return res.status(200).json({
-//             success: true,
-//             data: userDetails.courses,
-//         })
-//     } catch (error) {
-//         return res.status(500).json({
-//             success: false,
-//             message: error.message,
-//         })
-//     }
-// }
 
 
 
@@ -439,33 +374,6 @@ exports.getAllInstructors = async (req, res) => {
 
 
 
-//  exports.getAllInstructors = async (req, res) => {
-//    try {
-//      const allInstructorsDetails = await User.find({
-//        accountType: "Instructor",
-//      })
-//        .populate("additionalDetails")
-//        .populate("courses")
-//        .sort({ createdAt: -1 });
-
-//      const instructorsCount = await User.countDocuments({
-//        accountType: "Instructor",
-//      });
-
-//      res.status(200).json({
-//        allInstructorsDetails,
-//        instructorsCount,
-//        message: "All Instructors Data fetched successfully",
-//      });
-//    } catch (error) {
-//      console.error(error);
-//      res.status(500).json({
-//        message: "Error while fetching all Instructors",
-//        error: error.message,
-//      });
-//    }
-//  };
-
 
 
 
@@ -516,42 +424,7 @@ exports.saveCourse = async (req, res) => {
   }
 };
 
-// حفظ كورس معين للطالب
-// exports.saveCourse = async (req, res) => {
-//   try {
-//     const userId = req.user.id;
-//     const { courseId } = req.body;
 
-//     // التحقق من وجود المستخدم والكورس
-//     const user = await User.findById(userId);
-//     const course = await Course.findById(courseId);
-    
-//     if (!user || !course) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "User or Course not found",
-//       });
-//     }
-
-//     // إضافة الكورس إلى قائمة الكورسات المحفوظة إذا لم يكن موجودًا بالفعل
-//     if (!user.savedCourses.includes(courseId)) {
-//       user.savedCourses.push(courseId);
-//       await user.save();
-//     }
-
-//     return res.status(200).json({
-//       success: true,
-//       data: "Course saved successfully",
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-// جلب جميع الكورسات المحفوظة للطالب
 
 exports.getSavedCourses = async (req, res) => {
   try {
@@ -562,7 +435,7 @@ exports.getSavedCourses = async (req, res) => {
       select: "courseName courseDescription price thumbnail instructor",
       populate: {
         path: "instructor",
-        select: "firstName lastName email image", // select the details of the instructor you need
+        select: "firstName lastName email image",
       },
     });
 
