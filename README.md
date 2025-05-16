@@ -74,6 +74,13 @@ Below is the ER diagram representing the database structure of this project:
    ```bash
    npm run dev
 
+## 🧪 API Documentation
+
+You can explore and test all backend endpoints using the public Postman documentation:
+
+👉 [View Postman API Docs](https://documenter.getpostman.com/view/34052771/2sB2qWH4At)
+
+
 ### 👨‍💻 About the Developer
 
 Developed by [Mahmoud Soliman](https://www.linkedin.com/in/mahmoud-soliman-703342228)
