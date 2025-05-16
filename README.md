@@ -1,6 +1,13 @@
 # Graduation Project Backend
 
-This repository contains the backend code for the Graduation Project. It is built using Node.js and Express.js, providing APIs and services to support the project's functionalities.
+Backend for an online learning platform built with Node.js, Express, and MongoDB (MongoDB Atlas). Supports user roles (Mentors & Students), course management, progress tracking, and real-time features including chat (with AI), meetings, and payments.
+
+🧠 Integrated with OpenAI for AI chat and an external AI API that explains GitHub repos.
+📧 Includes email verification via user signup.
+💳 Real payments powered by Paymob.
+📹 Meetings auto-generated via Jitsi when mentors create them.
+☁ Media stored on Cloudinary.
+🚀 Live on Glitch. Postman collection availabl
 
 ## Entity-Relationship Diagram (ERD)
 
