@@ -73,3 +73,7 @@ Below is the ER diagram representing the database structure of this project:
  
    ```bash
    npm run dev
+
+### 👨‍💻 About the Developer
+
+Developed by [Mahmoud Soliman](https://www.linkedin.com/in/mahmoud-soliman-703342228)
