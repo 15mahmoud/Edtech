@@ -3,7 +3,7 @@
 This is the unified repository for our graduation project: **Edtech**, an educational platform with:
 
 - 🧠 A backend API built with Node.js, Express, MongoDB
-- 📱 A mobile application built using Flutter (or React Native)
+- 📱 A mobile application built natively using Kotlin for Android
 
 ---
 
